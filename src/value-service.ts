@@ -1,13 +1,16 @@
-import { CustomError } from './custom-error';
 import { INowTime } from './i-now-time';
 import { IValue } from './i-value';
 import { IValueCondition } from './i-value-condition';
 import { RelationOperator } from './relation-operator';
+import { ValueHandelrBase } from './value-hanlder-base';
 
-export abstract class ValueServiceBase {
+export class ValueService {
     public constructor(
         protected nowTime: INowTime,
-        protected notEnoughtErrorCode: number,
+        protected ownValue: Promise<{ [valueType: number]: number }>,
+        protected getCountHandler: ValueHandelrBase,
+        protected updateHandler: ValueHandelrBase,
+        protected buildNotEnoughError: (consume: number, count: number, valueType: number) => Error,
     ) { }
 
     public async checkConditions(conditions: IValueCondition[][]) {
@@ -54,11 +57,11 @@ export abstract class ValueServiceBase {
         for (const r of values) {
             const count = await this.getCount(r.valueType);
             if (count + r.count * times < 0) {
-                throw new CustomError(this.notEnoughtErrorCode, {
-                    consume: Math.abs(r.count * times),
-                    count: count,
-                    valueType: r.valueType,
-                });
+                throw this.buildNotEnoughError(
+                    Math.abs(r.count * times),
+                    count,
+                    r.valueType,
+                );
             }
         }
     }
@@ -72,6 +75,34 @@ export abstract class ValueServiceBase {
         }
     }
 
-    public abstract getCount(valueType: number): Promise<number>;
-    public abstract update(values: IValue[]): Promise<void>;
+    public async getCount(valueType: number) {
+        valueType = Number(valueType);
+        if (isNaN(valueType))
+            return 0;
+
+        const ownValue = await this.ownValue;
+        const res = {
+            count: ownValue[valueType] ?? 0,
+            valueType,
+        };
+        await this.getCountHandler?.handle?.(res);
+        return res.count;
+    }
+
+    public async update(values: IValue[]) {
+        if (!values?.length)
+            return;
+
+        for (const r of values) {
+            r.valueType = Number(r.valueType);
+            if (isNaN(r.valueType))
+                continue;
+
+            r.count = Number(r.count);
+            if (isNaN(r.count))
+                continue;
+
+            await this.updateHandler.handle(r);
+        }
+    }
 }

@@ -1,18 +1,26 @@
-import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
+import { deepStrictEqual, strictEqual } from 'assert';
 import { Mock } from 'lite-ts-mock';
 
-import { CustomError } from './custom-error';
 import { INowTime } from './i-now-time';
 import { RelationOperator } from './relation-operator';
-import { ValueServiceBase } from './value-service-base';
+import { ValueHandelrBase } from './value-hanlder-base';
+import { ValueService } from './value-service';
 
-class Self extends ValueServiceBase {
+class Self extends ValueService {
     public constructor(
         private m_GetCountFunc: (valueType: number) => Promise<number>,
         nowTime: INowTime,
-        notEnoughtErrorCode: number,
+        getCountHander: ValueHandelrBase,
     ) {
-        super(nowTime, notEnoughtErrorCode);
+        super(
+            nowTime,
+            Promise.resolve({}),
+            getCountHander,
+            null,
+            (consume, count, valueType) => {
+                return [consume, count, valueType] as any;
+            }
+        );
     }
 
     public async getCount(valueType: number) {
@@ -737,7 +745,7 @@ describe('src/value-service-base.ts', () => {
             const self = new Self(async (arg: number) => {
                 strictEqual(arg, 2);
                 return 0;
-            }, mockNowTime.actual, 3);
+            }, mockNowTime.actual, null);
 
             mockNowTime.expectReturn(
                 r => r.unix(),
@@ -753,14 +761,30 @@ describe('src/value-service-base.ts', () => {
             } catch (ex) {
                 err = ex;
             }
-            notStrictEqual(err, undefined);
-            const customErr = err as CustomError;
-            strictEqual(customErr.code, 3);
-            deepStrictEqual(customErr.data, {
-                consume: 2,
-                count: 0,
-                valueType: 2,
+            deepStrictEqual(err, [2, 0, 2]);
+        });
+    });
+
+    describe('.getCount(valueType: number)', () => {
+        it('ok', async () => {
+            const mockValueHandler = new Mock<ValueHandelrBase>();
+            const self = new ValueService(
+                null,
+                Promise.resolve({
+                    1: 11
+                }),
+                mockValueHandler.actual,
+                null,
+                null,
+            );
+
+            mockValueHandler.expected.handle({
+                count: 11,
+                valueType: 1
             });
+
+            const res = await self.getCount(1);
+            strictEqual(res, 11);
         });
     });
 });
