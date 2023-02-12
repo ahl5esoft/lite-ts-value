@@ -1,8 +1,12 @@
 import moment from 'moment';
 
-import { ITime } from './i-time';
 import { IValue } from './i-value';
 import { ValueHandelrBase } from './value-hanlder-base';
+
+interface ITime {
+    valueType: number;
+    momentType: moment.unitOfTime.StartOf;
+}
 
 export abstract class TimeHandlerBase extends ValueHandelrBase {
     public constructor(

@@ -1,8 +1,24 @@
-import { INowTime } from './i-now-time';
 import { IValue } from './i-value';
-import { IValueCondition } from './i-value-condition';
-import { RelationOperator } from './relation-operator';
+import { BuildNotEnoughErrorFunc } from './not-enough';
 import { ValueHandelrBase } from './value-hanlder-base';
+
+export enum RelationOperator {
+    eq = '=',
+    ge = '>=',
+    gt = '>',
+    le = '<=',
+    lt = '<',
+    nowDiff = 'now-diff',
+    mod = '%'
+}
+
+export interface INowTime {
+    unix(): Promise<number>;
+}
+
+interface IValueCondition extends IValue {
+    op: string;
+}
 
 export class ValueService {
     public constructor(
@@ -10,7 +26,7 @@ export class ValueService {
         protected ownValue: Promise<{ [valueType: number]: number }>,
         protected getCountHandler: ValueHandelrBase,
         protected updateHandler: ValueHandelrBase,
-        protected buildNotEnoughError: (consume: number, count: number, valueType: number) => Error,
+        protected buildNotEnoughErrorFunc: BuildNotEnoughErrorFunc,
     ) { }
 
     public async checkConditions(conditions: IValueCondition[][]) {
@@ -57,7 +73,7 @@ export class ValueService {
         for (const r of values) {
             const count = await this.getCount(r.valueType);
             if (count + r.count * times < 0) {
-                throw this.buildNotEnoughError(
+                throw this.buildNotEnoughErrorFunc(
                     Math.abs(r.count * times),
                     count,
                     r.valueType,

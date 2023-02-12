@@ -1,3 +1,3 @@
 export interface IReplacer {
-    isReplace: boolean;
+    readonly isReplace: boolean;
 }

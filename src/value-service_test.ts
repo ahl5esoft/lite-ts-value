@@ -1,10 +1,8 @@
 import { deepStrictEqual, strictEqual } from 'assert';
 import { Mock } from 'lite-ts-mock';
 
-import { INowTime } from './i-now-time';
-import { RelationOperator } from './relation-operator';
 import { ValueHandelrBase } from './value-hanlder-base';
-import { ValueService } from './value-service';
+import { INowTime, RelationOperator, ValueService } from './value-service';
 
 class Self extends ValueService {
     public constructor(
