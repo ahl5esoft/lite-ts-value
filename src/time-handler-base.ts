@@ -3,7 +3,7 @@ import moment from 'moment';
 import { IValue } from './i-value';
 import { ValueHandelrBase } from './value-hanlder-base';
 
-interface ITime {
+export interface ITime {
     valueType: number;
     momentType: moment.unitOfTime.StartOf;
 }

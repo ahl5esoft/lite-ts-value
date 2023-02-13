@@ -1,8 +1,14 @@
-import { deepStrictEqual, strictEqual } from 'assert';
+import { deepStrictEqual } from 'assert';
 import { Mock } from 'lite-ts-mock';
 
-import { CheckNegativeHandler as Self } from './check-negative-handler';
+import { CheckNegativeHandlerBase } from './check-negative-handler-base';
 import { ValueHandelrBase } from './value-hanlder-base';
+
+class Self extends CheckNegativeHandlerBase {
+    protected createNotEnoughError(consume: number, count: number, valueType: number) {
+        return [consume, count, valueType] as any;
+    }
+}
 
 describe('src/check-negative-handler.ts', () => {
     describe('.handle(value: IValue)', () => {
@@ -14,7 +20,6 @@ describe('src/check-negative-handler.ts', () => {
                 Promise.resolve({
                     3: -1
                 }),
-                null,
             );
 
             const mockNext = new Mock<ValueHandelrBase>();
@@ -37,12 +42,6 @@ describe('src/check-negative-handler.ts', () => {
                 Promise.resolve({
                     3: -1
                 }),
-                (arg, arg1, arg2) => {
-                    strictEqual(arg, -2);
-                    strictEqual(arg1, 1);
-                    strictEqual(arg2, 3);
-                    return [] as any;
-                }
             );
 
             let err: Error;
@@ -54,7 +53,7 @@ describe('src/check-negative-handler.ts', () => {
             } catch (ex) {
                 err = ex;
             }
-            deepStrictEqual(err, []);
+            deepStrictEqual(err, [-2, 1, 3]);
         });
     });
 });

@@ -1,7 +1,7 @@
 import { IValue } from './i-value';
 import { ValueHandelrBase } from './value-hanlder-base';
 
-interface IRange {
+export interface IRange {
     readonly max: number;
     readonly min: number;
 }

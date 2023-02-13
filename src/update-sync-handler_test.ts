@@ -1,12 +1,12 @@
 import { Mock } from 'lite-ts-mock';
 
-import { IValueService } from './i-value-service';
 import { UpdateSyncHandler as Self } from './update-sync-handler';
+import { ValueServiceBase } from './value-service-base';
 
 describe('src/update-sync-handler.ts', () => {
     describe('.handle(value: IValue)', () => {
         it('ok', async () => {
-            const mockValueService = new Mock<IValueService>();
+            const mockValueService = new Mock<ValueServiceBase>();
             const self = new Self(
                 mockValueService.actual,
                 Promise.resolve({

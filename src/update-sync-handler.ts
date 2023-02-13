@@ -1,6 +1,6 @@
 import { IValue } from './i-value';
-import { IValueService } from './i-value-service';
 import { ValueHandelrBase } from './value-hanlder-base';
+import { ValueServiceBase } from './value-service-base';
 
 interface ISync {
     valueTypes: number[];
@@ -8,12 +8,11 @@ interface ISync {
 
 export class UpdateSyncHandler extends ValueHandelrBase {
     public constructor(
-        private m_ValueService: IValueService,
+        private m_ValueService: ValueServiceBase,
         private m_Sync: Promise<ISync>,
     ) {
         super();
     }
-
 
     public async handle(value: IValue) {
         const sync = await this.m_Sync;
