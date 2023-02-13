@@ -1,4 +1,6 @@
 import { IValue } from './i-value';
+import { IValueCondition } from './i-value-condition';
+import { IValueService } from './i-value-service';
 import { BuildNotEnoughErrorFunc } from './not-enough';
 import { ValueHandelrBase } from './value-hanlder-base';
 
@@ -16,11 +18,7 @@ export interface INowTime {
     unix(): Promise<number>;
 }
 
-interface IValueCondition extends IValue {
-    op: string;
-}
-
-export class ValueService {
+export class ValueService implements IValueService {
     public constructor(
         protected nowTime: INowTime,
         protected ownValue: Promise<{ [valueType: number]: number }>,
@@ -70,19 +68,6 @@ export class ValueService {
     }
 
     public async checkEnough(times: number, values: IValue[]) {
-        for (const r of values) {
-            const count = await this.getCount(r.valueType);
-            if (count + r.count * times < 0) {
-                throw this.buildNotEnoughErrorFunc(
-                    Math.abs(r.count * times),
-                    count,
-                    r.valueType,
-                );
-            }
-        }
-    }
-
-    public async mustCheckEnough(times: number, values: IValue[]) {
         try {
             await this.checkEnough(times, values);
             return true;
@@ -103,6 +88,19 @@ export class ValueService {
         };
         await this.getCountHandler?.handle?.(res);
         return res.count;
+    }
+
+    public async tryCheckEnough(times: number, values: IValue[]) {
+        for (const r of values) {
+            const count = await this.getCount(r.valueType);
+            if (count + r.count * times < 0) {
+                throw this.buildNotEnoughErrorFunc(
+                    Math.abs(r.count * times),
+                    count,
+                    r.valueType,
+                );
+            }
+        }
     }
 
     public async update(values: IValue[]) {
