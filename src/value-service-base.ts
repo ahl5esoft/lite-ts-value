@@ -1,7 +1,5 @@
 import { IValue } from './i-value';
 import { IValueCondition } from './i-value-condition';
-import { IValueService } from './i-value-service';
-import { BuildNotEnoughErrorFunc } from './not-enough';
 import { ValueHandelrBase } from './value-hanlder-base';
 
 export enum RelationOperator {
@@ -18,13 +16,10 @@ export interface INowTime {
     unix(): Promise<number>;
 }
 
-export class ValueService implements IValueService {
+export abstract class ValueServiceBase {
     public constructor(
         protected nowTime: INowTime,
         protected ownValue: Promise<{ [valueType: number]: number }>,
-        protected getCountHandler: ValueHandelrBase,
-        protected updateHandler: ValueHandelrBase,
-        protected buildNotEnoughErrorFunc: BuildNotEnoughErrorFunc,
     ) { }
 
     public async checkConditions(conditions: IValueCondition[][]) {
@@ -67,13 +62,14 @@ export class ValueService implements IValueService {
         return false;
     }
 
-    public async checkEnough(times: number, values: IValue[]) {
-        try {
-            await this.checkEnough(times, values);
-            return true;
-        } catch {
-            return false;
+    public async checkEnough(values: IValue[]) {
+        for (const r of values) {
+            const count = await this.getCount(r.valueType);
+            if (count + r.count < 0)
+                return false;
         }
+
+        return true;
     }
 
     public async getCount(valueType: number) {
@@ -86,21 +82,8 @@ export class ValueService implements IValueService {
             count: ownValue[valueType] ?? 0,
             valueType,
         };
-        await this.getCountHandler?.handle?.(res);
+        await this.createGetCountHandler(this)?.handle?.(res);
         return res.count;
-    }
-
-    public async tryCheckEnough(times: number, values: IValue[]) {
-        for (const r of values) {
-            const count = await this.getCount(r.valueType);
-            if (count + r.count * times < 0) {
-                throw this.buildNotEnoughErrorFunc(
-                    Math.abs(r.count * times),
-                    count,
-                    r.valueType,
-                );
-            }
-        }
     }
 
     public async update(values: IValue[]) {
@@ -116,7 +99,11 @@ export class ValueService implements IValueService {
             if (isNaN(r.count))
                 continue;
 
-            await this.updateHandler.handle(r);
+            const copy = { ...r };
+            await this.createUpdateHandler(this)?.handle?.(copy);
         }
     }
+
+    protected abstract createGetCountHandler(valueService: ValueServiceBase): ValueHandelrBase;
+    protected abstract createUpdateHandler(valueService: ValueServiceBase): ValueHandelrBase;
 }

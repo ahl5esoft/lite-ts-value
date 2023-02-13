@@ -1,31 +1,43 @@
-import { deepStrictEqual, strictEqual } from 'assert';
+import { strictEqual } from 'assert';
 import { Mock } from 'lite-ts-mock';
 
 import { ValueHandelrBase } from './value-hanlder-base';
-import { INowTime, RelationOperator, ValueService } from './value-service';
+import { INowTime, RelationOperator, ValueServiceBase } from './value-service-base';
 
-class Self extends ValueService {
+class Self extends ValueServiceBase {
+    public getCountHandler: ValueHandelrBase;
+    public updateHandler: ValueHandelrBase;
+
     public constructor(
         private m_GetCountFunc: (valueType: number) => Promise<number>,
         nowTime: INowTime,
-        getCountHander: ValueHandelrBase,
+        ownValue: Promise<{ [valueType: number]: number }>,
     ) {
         super(
             nowTime,
-            Promise.resolve({}),
-            getCountHander,
-            null,
-            (consume, count, valueType) => {
-                return [consume, count, valueType] as any;
-            }
+            ownValue,
         );
     }
 
     public async getCount(valueType: number) {
-        return this.m_GetCountFunc(valueType);
+        return this.m_GetCountFunc ? this.m_GetCountFunc(valueType) : super.getCount(valueType);
     }
 
     public async update() { }
+
+    protected createGetCountHandler(valueService: ValueServiceBase) {
+        strictEqual(valueService, this);
+        return this.getCountHandler;
+    }
+
+    protected createNotEnoughError(consume: number, count: number, valueType: number) {
+        return [consume, count, valueType] as any;
+    }
+
+    protected createUpdateHandler(valueService: ValueServiceBase) {
+        strictEqual(valueService, this);
+        return this.updateHandler;
+    }
 }
 
 describe('src/value-service-base.ts', () => {
@@ -726,16 +738,11 @@ describe('src/value-service-base.ts', () => {
                 10
             );
 
-            let err: Error;
-            try {
-                await self.checkEnough(2, [{
-                    count: -1,
-                    valueType: 2
-                }]);
-            } catch (ex) {
-                err = ex;
-            }
-            strictEqual(err, undefined);
+            const res = await self.checkEnough([{
+                count: -1,
+                valueType: 2
+            }]);
+            strictEqual(res, true);
         });
 
         it('false', async () => {
@@ -750,31 +757,26 @@ describe('src/value-service-base.ts', () => {
                 10
             );
 
-            let err: Error;
-            try {
-                await self.checkEnough(2, [{
-                    count: -1,
-                    valueType: 2
-                }]);
-            } catch (ex) {
-                err = ex;
-            }
-            deepStrictEqual(err, [2, 0, 2]);
+            const res = await self.checkEnough([{
+                count: -1,
+                valueType: 2
+            }]);
+            strictEqual(res, false);
         });
     });
 
     describe('.getCount(valueType: number)', () => {
         it('ok', async () => {
-            const mockValueHandler = new Mock<ValueHandelrBase>();
-            const self = new ValueService(
+            const self = new Self(
+                null,
                 null,
                 Promise.resolve({
                     1: 11
-                }),
-                mockValueHandler.actual,
-                null,
-                null,
+                })
             );
+
+            const mockValueHandler = new Mock<ValueHandelrBase>();
+            self.getCountHandler = mockValueHandler.actual;
 
             mockValueHandler.expected.handle({
                 count: 11,
