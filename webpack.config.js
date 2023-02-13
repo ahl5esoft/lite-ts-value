@@ -1,4 +1,5 @@
 const pck = require('./package.json');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
     entry: ['./src/index.ts'],
@@ -11,6 +12,10 @@ module.exports = {
                 exclude: /node_modules/,
             }
         ]
+    },
+    optimization: {
+        minimize: true,
+        minimizer: [new TerserPlugin()],
     },
     output: {
         path: __dirname,
