@@ -1,5 +1,4 @@
 import { IValue } from './i-value';
-import { IValueCondition } from './i-value-condition';
 import { ValueHandelrBase } from './value-hanlder-base';
 
 export enum RelationOperator {
@@ -14,6 +13,10 @@ export enum RelationOperator {
 
 export interface INowTime {
     unix(): Promise<number>;
+}
+
+export interface IValueCondition extends IValue {
+    op: string;
 }
 
 export abstract class ValueServiceBase {
@@ -82,7 +85,7 @@ export abstract class ValueServiceBase {
             count: ownValue[valueType] ?? 0,
             valueType,
         };
-        await this.createGetCountHandler(this)?.handle?.(res);
+        await this.getGetCountHandler(this)?.handle?.(res);
         return res.count;
     }
 
@@ -99,11 +102,12 @@ export abstract class ValueServiceBase {
             if (isNaN(r.count))
                 continue;
 
-            const copy = { ...r };
-            await this.createUpdateHandler(this)?.handle?.(copy);
+            await this.getUpdateHandler(this)?.handle?.({
+                ...r
+            });
         }
     }
 
-    protected abstract createGetCountHandler(valueService: ValueServiceBase): ValueHandelrBase;
-    protected abstract createUpdateHandler(valueService: ValueServiceBase): ValueHandelrBase;
+    protected abstract getGetCountHandler(valueService: ValueServiceBase): ValueHandelrBase;
+    protected abstract getUpdateHandler(valueService: ValueServiceBase): ValueHandelrBase;
 }

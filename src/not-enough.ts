@@ -1,1 +1,0 @@
-export type BuildNotEnoughErrorFunc = (consume: number, count: number, valueType: number) => Error;

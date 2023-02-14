@@ -25,16 +25,12 @@ class Self extends ValueServiceBase {
 
     public async update() { }
 
-    protected createGetCountHandler(valueService: ValueServiceBase) {
+    protected getGetCountHandler(valueService: ValueServiceBase) {
         strictEqual(valueService, this);
         return this.getCountHandler;
     }
 
-    protected createNotEnoughError(consume: number, count: number, valueType: number) {
-        return [consume, count, valueType] as any;
-    }
-
-    protected createUpdateHandler(valueService: ValueServiceBase) {
+    protected getUpdateHandler(valueService: ValueServiceBase) {
         strictEqual(valueService, this);
         return this.updateHandler;
     }

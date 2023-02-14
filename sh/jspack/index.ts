@@ -1,5 +1,4 @@
 import { FileFactory } from 'lite-ts-fs';
-import { IFileFactory } from 'lite-ts-fs/dist/i-file-factory';
 import { join } from 'path';
 
 const exportReg = /["|'](.*)["|']/;
@@ -9,8 +8,7 @@ const importReg = /import.*["|'](.*)["|']/;
 const ignoreLine = 'export {};';
 // 已解析的文件
 const parsedFiles: string[] = [];
-
-const fsFactory: IFileFactory = new FileFactory();
+const fsFactory = new FileFactory();
 
 /**
  * 解析整个目录，从该目录底下的 index.d.ts 的 export 内容一个一个解析过去
@@ -22,11 +20,9 @@ async function getDirContent(dirPath: string) {
     const path = join(dirPath, 'index.d.ts');
     const indexTsFile = fsFactory.buildFile(path);
     const dirExists = await indexTsFile.exists();
-    if (!dirExists)
+    if (!dirExists || parsedFiles.includes(path))
         return '';
 
-    if (parsedFiles.includes(path))
-        return '';
     parsedFiles.push(path);
 
     const indexTsFileContent = await indexTsFile.readString();
@@ -42,11 +38,13 @@ async function getDirContent(dirPath: string) {
             const filePath = join(dirPath, ...paths);
             if (parsedFiles.includes(filePath))
                 continue;
+
             parsedFiles.push(filePath);
 
             const file = fsFactory.buildFile(filePath);
-            const data = await file.readString();
-            content += await getFileContent(data, dirPath) + '\n';
+            let fileText = await file.readString();
+            fileText = await getFileContent(fileText, dirPath);
+            content += fileText + '\n';
         } else if (line && line != ignoreLine) {
             content += line + '\n';
         }
@@ -87,9 +85,11 @@ async function getFileContent(fileContent: string, dirPath: string) {
                 }
 
                 parsedFiles.push(path);
-                const data = await file.readString();
-                if (data)
-                    content += await getFileContent(data, dirPath) + '\n';
+                let fileText = await file.readString();
+                if (fileText) {
+                    fileText = await getFileContent(fileText, dirPath);
+                    content += fileText + '\n';
+                }
             }
         } else if (line && line != ignoreLine) {
             content += line + '\n';
