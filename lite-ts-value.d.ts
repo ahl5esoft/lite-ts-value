@@ -1,3 +1,17 @@
+interface IEnumItem {
+    readonly value: number;
+    readonly key?: string;
+    readonly text?: string;
+}
+interface IEnum<T extends IEnumItem> {
+    readonly allItem: Promise<{
+        [no: number]: T;
+    }>;
+}
+interface IEnumFactory {
+    build<T extends IEnumItem>(name: string): IEnum<T>;
+}
+
 interface IValue {
     count: number;
     valueType: number;
@@ -7,6 +21,47 @@ declare abstract class ValueHandelrBase {
     protected next: ValueHandelrBase;
     setNext(next: ValueHandelrBase): ValueHandelrBase;
     abstract handle(value: IValue): Promise<void>;
+}
+
+declare class CustomError extends Error {
+    code: number;
+    data?: any;
+    constructor(code: number, data?: any);
+}
+declare class CheckNegativeHandler extends ValueHandelrBase {
+    private m_EnumFactory;
+    private m_OwnValue;
+    static notEnoughErrorCode: number;
+    constructor(m_EnumFactory: IEnumFactory, m_OwnValue: Promise<{
+        [valueType: number]: number;
+    }>);
+    handle(value: IValue): Promise<void>;
+}
+
+declare class FilterIsReplaceHandler extends ValueHandelrBase {
+    private m_EnumFactory;
+    private m_OwnValue;
+    constructor(m_EnumFactory: IEnumFactory, m_OwnValue: Promise<{
+        [valueType: number]: number;
+    }>);
+    handle(value: IValue): Promise<void>;
+}
+
+declare abstract class TimeHandlerBase extends ValueHandelrBase {
+    protected enumFactory: IEnumFactory;
+    protected now: Promise<number>;
+    protected ownValue: Promise<{
+        [valueType: number]: number;
+    }>;
+    constructor(enumFactory: IEnumFactory, now: Promise<number>, ownValue: Promise<{
+        [valueType: number]: number;
+    }>);
+    handle(value: IValue): Promise<void>;
+    protected abstract handleDiff(value: IValue, timeValueType: number): Promise<void>;
+}
+
+declare class GetTimeValueHandler extends TimeHandlerBase {
+    protected handleDiff(value: IValue): Promise<void>;
 }
 
 declare enum RelationOperator {
@@ -48,5 +103,52 @@ declare class UpdateCountHandler extends ValueHandelrBase {
         [valueType: number]: number;
     }>);
     handle(value: IValue): Promise<void>;
+}
+
+declare class UpdateIsReplaceHandler extends ValueHandelrBase {
+    private m_EnumFactory;
+    private m_OwnValue;
+    constructor(m_EnumFactory: IEnumFactory, m_OwnValue: Promise<{
+        [valueType: number]: number;
+    }>);
+    handle(value: IValue): Promise<void>;
+}
+
+declare class UpdateRangeHandler extends ValueHandelrBase {
+    private m_EnumFactory;
+    private m_OwnValue;
+    constructor(m_EnumFactory: IEnumFactory, m_OwnValue: Promise<{
+        [valueType: number]: number;
+    }>);
+    handle(value: IValue): Promise<void>;
+}
+
+declare class UpdateSyncHandler extends ValueHandelrBase {
+    private m_EnumFactory;
+    private m_ValueService;
+    constructor(m_EnumFactory: IEnumFactory, m_ValueService: ValueServiceBase);
+    handle(value: IValue): Promise<void>;
+}
+
+declare class UpdateTimeHandler extends TimeHandlerBase {
+    protected handleDiff(value: IValue, timeValueType: number): Promise<void>;
+}
+
+declare class ValueTypeData implements IEnumItem {
+    isNegative: boolean;
+    isReplace: boolean;
+    value: number;
+    text: string;
+    range: {
+        max: number;
+        min: number;
+    };
+    sync: {
+        valueTypes: number[];
+    };
+    time: {
+        valueType: number;
+        momentType: string;
+    };
 }
 
