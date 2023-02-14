@@ -101,8 +101,14 @@ async function getFileContent(fileContent: string, dirPath: string) {
 (async () => {
     const res = await getDirContent('dist');
     const pkg = await fsFactory.buildFile('package.json').read<{ name: string; }>();
+
     await fsFactory.buildFile(`${pkg.name}.d.ts`).write(
         res.replace(/export\ /g, '')
             .replace(/moment\.unitOfTime\.StartOf/g, 'string')
     );
+
+    const licenseFile = fsFactory.buildFile(`${pkg.name}.min.js.LICENSE.txt`);
+    const exists = await licenseFile.exists();
+    if (exists)
+        await licenseFile.remove();
 })();
