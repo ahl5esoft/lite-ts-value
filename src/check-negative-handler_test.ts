@@ -3,7 +3,7 @@ import { Mock } from 'lite-ts-mock';
 
 import { CheckNegativeHandler as Self, CustomError } from './check-negative-handler';
 import { IEnum, IEnumFactory } from './i-enum-factory';
-import { ValueHandelrBase } from './value-hanlder-base';
+import { ValueHandlerBase } from './value-handler-base';
 import { ValueTypeData } from './value-type-data';
 
 describe('src/check-negative-handler.ts', () => {
@@ -29,7 +29,7 @@ describe('src/check-negative-handler.ts', () => {
                 mockEnum.actual
             );
 
-            const mockNext = new Mock<ValueHandelrBase>();
+            const mockNext = new Mock<ValueHandlerBase>();
             self.setNext(mockNext.actual);
 
             mockNext.expected.handle({

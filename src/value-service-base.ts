@@ -1,5 +1,5 @@
 import { IValue } from './i-value';
-import { ValueHandelrBase } from './value-hanlder-base';
+import { ValueHandlerBase } from './value-handler-base';
 
 export enum RelationOperator {
     eq = '=',
@@ -108,6 +108,6 @@ export abstract class ValueServiceBase {
         }
     }
 
-    protected abstract getGetCountHandler(valueService: ValueServiceBase): ValueHandelrBase;
-    protected abstract getUpdateHandler(valueService: ValueServiceBase): ValueHandelrBase;
+    protected abstract getGetCountHandler(valueService: ValueServiceBase): ValueHandlerBase;
+    protected abstract getUpdateHandler(valueService: ValueServiceBase): ValueHandlerBase;
 }

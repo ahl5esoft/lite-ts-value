@@ -1,12 +1,12 @@
 import { strictEqual } from 'assert';
 import { Mock } from 'lite-ts-mock';
 
-import { ValueHandelrBase } from './value-hanlder-base';
+import { ValueHandlerBase } from './value-handler-base';
 import { INowTime, RelationOperator, ValueServiceBase } from './value-service-base';
 
 class Self extends ValueServiceBase {
-    public getCountHandler: ValueHandelrBase;
-    public updateHandler: ValueHandelrBase;
+    public getCountHandler: ValueHandlerBase;
+    public updateHandler: ValueHandlerBase;
 
     public constructor(
         private m_GetCountFunc: (valueType: number) => Promise<number>,
@@ -771,7 +771,7 @@ describe('src/value-service-base.ts', () => {
                 })
             );
 
-            const mockValueHandler = new Mock<ValueHandelrBase>();
+            const mockValueHandler = new Mock<ValueHandlerBase>();
             self.getCountHandler = mockValueHandler.actual;
 
             mockValueHandler.expected.handle({

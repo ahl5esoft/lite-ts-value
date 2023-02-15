@@ -4,10 +4,10 @@ import moment from 'moment';
 
 import { IEnum, IEnumFactory } from './i-enum-factory';
 import { IValue } from './i-value';
-import { TimeHandlerBase } from './time-handler-base';
+import { TimeValueHandlerBase } from './time-handler-base';
 import { ValueTypeData } from './value-type-data';
 
-class Self extends TimeHandlerBase {
+class Self extends TimeValueHandlerBase {
     public callHandleDiffArg: IValue;
 
     protected async handleDiff(value: IValue) {

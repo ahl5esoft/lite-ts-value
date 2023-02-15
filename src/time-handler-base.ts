@@ -2,10 +2,10 @@ import moment from 'moment';
 
 import { IEnumFactory } from './i-enum-factory';
 import { IValue } from './i-value';
-import { ValueHandelrBase } from './value-hanlder-base';
+import { ValueHandlerBase } from './value-handler-base';
 import { ValueTypeData } from './value-type-data';
 
-export abstract class TimeHandlerBase extends ValueHandelrBase {
+export abstract class TimeValueHandlerBase extends ValueHandlerBase {
     public constructor(
         protected enumFactory: IEnumFactory,
         protected now: Promise<number>,

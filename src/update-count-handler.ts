@@ -1,7 +1,7 @@
 import { IValue } from './i-value';
-import { ValueHandelrBase } from './value-hanlder-base';
+import { ValueHandlerBase } from './value-handler-base';
 
-export class UpdateCountHandler extends ValueHandelrBase {
+export class UpdateCountHandler extends ValueHandlerBase {
     public constructor(
         protected ownValue: Promise<{ [valueType: number]: number }>,
     ) {

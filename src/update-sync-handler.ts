@@ -1,10 +1,10 @@
 import { IEnumFactory } from './i-enum-factory';
 import { IValue } from './i-value';
-import { ValueHandelrBase } from './value-hanlder-base';
+import { ValueHandlerBase } from './value-handler-base';
 import { ValueServiceBase } from './value-service-base';
 import { ValueTypeData } from './value-type-data';
 
-export class UpdateSyncHandler extends ValueHandelrBase {
+export class UpdateSyncHandler extends ValueHandlerBase {
     public constructor(
         private m_EnumFactory: IEnumFactory,
         private m_ValueService: ValueServiceBase,

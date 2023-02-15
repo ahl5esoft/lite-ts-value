@@ -3,7 +3,7 @@ import { Mock } from 'lite-ts-mock';
 
 import { IEnum, IEnumFactory } from './i-enum-factory';
 import { UpdateIsReplaceHandler as Self } from './update-is-replace-handler';
-import { ValueHandelrBase } from './value-hanlder-base';
+import { ValueHandlerBase } from './value-handler-base';
 import { ValueTypeData } from './value-type-data';
 
 describe('src/update-is-replace-handler.ts', () => {
@@ -23,7 +23,7 @@ describe('src/update-is-replace-handler.ts', () => {
                 mockEnum.actual
             );
 
-            const mockHandler = new Mock<ValueHandelrBase>();
+            const mockHandler = new Mock<ValueHandlerBase>();
             self.setNext(mockHandler.actual);
 
             mockHandler.expected.handle({

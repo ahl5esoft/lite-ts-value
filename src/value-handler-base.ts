@@ -1,9 +1,9 @@
 import { IValue } from './i-value';
 
-export abstract class ValueHandelrBase {
-    protected next: ValueHandelrBase;
+export abstract class ValueHandlerBase {
+    protected next: ValueHandlerBase;
 
-    public setNext(next: ValueHandelrBase) {
+    public setNext(next: ValueHandlerBase) {
         return this.next = next;
     }
 

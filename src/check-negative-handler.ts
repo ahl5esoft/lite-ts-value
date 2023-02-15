@@ -1,6 +1,6 @@
 import { IEnumFactory } from './i-enum-factory';
 import { IValue } from './i-value';
-import { ValueHandelrBase } from './value-hanlder-base';
+import { ValueHandlerBase } from './value-handler-base';
 import { ValueTypeData } from './value-type-data';
 
 export class CustomError extends Error {
@@ -9,7 +9,7 @@ export class CustomError extends Error {
     }
 }
 
-export class CheckNegativeHandler extends ValueHandelrBase {
+export class CheckNegativeHandler extends ValueHandlerBase {
     public static notEnoughErrorCode = 505;
 
     public constructor(

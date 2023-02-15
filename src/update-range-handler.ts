@@ -1,9 +1,9 @@
 import { IEnumFactory } from './i-enum-factory';
 import { IValue } from './i-value';
-import { ValueHandelrBase } from './value-hanlder-base';
+import { ValueHandlerBase } from './value-handler-base';
 import { ValueTypeData } from './value-type-data';
 
-export class UpdateRangeHandler extends ValueHandelrBase {
+export class UpdateRangeHandler extends ValueHandlerBase {
     public constructor(
         private m_EnumFactory: IEnumFactory,
         private m_OwnValue: Promise<{ [valueType: number]: number }>,

@@ -1,13 +1,13 @@
 import { UpdateCountHandler } from './update-count-handler';
-import { ValueHandelrBase } from './value-hanlder-base';
+import { ValueHandlerBase } from './value-handler-base';
 import { INowTime, ValueServiceBase } from './value-service-base';
 
 export class ValueService extends ValueServiceBase {
-    private m_UpdateHandler: ValueHandelrBase;
+    private m_UpdateHandler: ValueHandlerBase;
 
     public constructor(
         nowTime: INowTime,
-        value: { [valueType: number]: number },
+        value: Promise<{ [valueType: number]: number }>,
     ) {
         super(
             nowTime,
