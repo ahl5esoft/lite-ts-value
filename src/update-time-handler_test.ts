@@ -1,90 +1,32 @@
 import { deepStrictEqual } from 'assert';
 import { Mock } from 'lite-ts-mock';
-import moment from 'moment';
 
-import { IEnum, IEnumFactory } from './i-enum-factory';
 import { UpdateTimeHandler as Self } from './update-time-handler';
-import { ValueTypeData } from './value-type-data';
+import { Value } from './value';
+import { ValueService } from './value-service';
 
 describe('src/update-time-handler.ts', () => {
-    describe('.handleDiff(value: IValue)', () => {
-        it('same', async () => {
-            const mockEnumFactory = new Mock<IEnumFactory>();
-            const res = {
-                2: 1
-            };
+    describe('.handleDiff(value: Value, valueService: ValueService, timeValueType: number)', () => {
+        it('ok', async () => {
             const self = new Self(
-                mockEnumFactory.actual,
-                Promise.resolve(0),
-                Promise.resolve(res),
+                null,
+                Promise.resolve(100),
             );
 
-            const mockEnum = new Mock<IEnum<ValueTypeData>>({
-                allItem: {
-                    2: {
-                        time: {
-                            valueType: 3,
-                        }
-                    } as ValueTypeData,
-                    3: {
-                        time: {
-                            momentType: 'day'
-                        }
-                    } as ValueTypeData,
-                }
-            });
-            mockEnumFactory.expectReturn(
-                r => r.build('ValueTypeData'),
-                mockEnum.actual
-            );
-
-            await self.handle({
-                count: 3,
-                valueType: 2
-            });
-            deepStrictEqual(res, {
-                2: 1,
-            });
-        });
-
-        it('diff', async () => {
-            const mockEnumFactory = new Mock<IEnumFactory>();
-            const res = {
-                2: 1
+            const ownValue = {
+                2: 11
             };
-            const now = moment().unix();
-            const self = new Self(
-                mockEnumFactory.actual,
-                Promise.resolve(now),
-                Promise.resolve(res),
-            );
-
-            const mockEnum = new Mock<IEnum<ValueTypeData>>({
-                allItem: {
-                    2: {
-                        time: {
-                            valueType: 3,
-                        }
-                    } as ValueTypeData,
-                    3: {
-                        time: {
-                            momentType: 'day'
-                        }
-                    } as ValueTypeData,
-                }
+            const mockValueService = new Mock<ValueService>({
+                ownValue
             });
-            mockEnumFactory.expectReturn(
-                r => r.build('ValueTypeData'),
-                mockEnum.actual
-            );
-
-            await self.handle({
-                count: 3,
+            const fn = Reflect.get(self, 'handleDiff').bind(self) as (_: number, __: Value, ___: ValueService) => Promise<void>;
+            await fn(3, {
+                count: 1,
                 valueType: 2
-            });
-            deepStrictEqual(res, {
+            }, mockValueService.actual);
+            deepStrictEqual(ownValue, {
                 2: 0,
-                3: now
+                3: 100,
             });
         });
     });

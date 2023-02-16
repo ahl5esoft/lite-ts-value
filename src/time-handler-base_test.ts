@@ -1,27 +1,22 @@
-import { notStrictEqual, strictEqual } from 'assert';
+import { deepStrictEqual, strictEqual } from 'assert';
 import { Mock } from 'lite-ts-mock';
 import moment from 'moment';
 
 import { IEnum, IEnumFactory } from './i-enum-factory';
-import { IValue } from './i-value';
 import { TimeValueHandlerBase } from './time-handler-base';
+import { ValueService } from './value-service';
 import { ValueTypeData } from './value-type-data';
 
 class Self extends TimeValueHandlerBase {
-    public callHandleDiffArg: IValue;
-
-    protected async handleDiff(value: IValue) {
-        this.callHandleDiffArg = value;
-    }
+    protected async handleDiff() { }
 }
 
 describe('src/time-handler-base.ts', () => {
-    describe('.handle(res: IValue)', () => {
+    describe('.handle(value: IValue, valueService: ValueService)', () => {
         it('无valueTypeTime', async () => {
             const mockEnumFactory = new Mock<IEnumFactory>();
             const self = new Self(
                 mockEnumFactory.actual,
-                null,
                 null,
             );
 
@@ -33,12 +28,17 @@ describe('src/time-handler-base.ts', () => {
                 mockEnum.actual
             );
 
+            let callCount = 0;
+            Reflect.set(self, 'handleDiff', () => {
+                callCount++;
+            });
+
             const res = {
                 count: 1,
                 valueType: 2,
             };
-            await self.handle(res);
-            notStrictEqual(self.callHandleDiffArg, res);
+            await self.handle(res, null);
+            strictEqual(callCount, 0);
         });
 
         it('diff', async () => {
@@ -48,7 +48,6 @@ describe('src/time-handler-base.ts', () => {
                 Promise.resolve(
                     moment().unix(),
                 ),
-                Promise.resolve({}),
             );
 
             const mockEnum = new Mock<IEnum<ValueTypeData>>({
@@ -70,12 +69,23 @@ describe('src/time-handler-base.ts', () => {
                 mockEnum.actual
             );
 
+            const mockValueService = new Mock<ValueService>();
+            mockValueService.expectReturn(
+                r => r.getCount(3),
+                0
+            );
+
             const res = {
                 count: 1,
                 valueType: 2,
             };
-            await self.handle(res);
-            strictEqual(res, self.callHandleDiffArg);
+            Reflect.set(self, 'handleDiff', (arg: any, arg1: any, arg2: any) => {
+                strictEqual(arg, 3);
+                deepStrictEqual(arg1, res);
+                strictEqual(arg2, mockValueService.actual);
+            });
+
+            await self.handle(res, mockValueService.actual);
         });
 
         it('same', async () => {
@@ -85,9 +95,6 @@ describe('src/time-handler-base.ts', () => {
                 Promise.resolve(
                     moment().unix(),
                 ),
-                Promise.resolve({
-                    3: moment().unix(),
-                }),
             );
 
             const mockEnum = new Mock<IEnum<ValueTypeData>>({
@@ -109,12 +116,19 @@ describe('src/time-handler-base.ts', () => {
                 mockEnum.actual
             );
 
+            const mockValueService = new Mock<ValueService>();
+            mockValueService.expectReturn(
+                r => r.getCount(3),
+                moment().unix()
+            );
+
             const res = {
                 count: 1,
                 valueType: 2,
             };
-            await self.handle(res);
-            notStrictEqual(self.callHandleDiffArg, res);
+            Reflect.set(self, 'handleDiff', () => { });
+
+            await self.handle(res, mockValueService.actual);
         });
     });
 });

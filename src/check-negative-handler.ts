@@ -1,6 +1,7 @@
 import { IEnumFactory } from './i-enum-factory';
-import { IValue } from './i-value';
+import { Value } from './value';
 import { ValueHandlerBase } from './value-handler-base';
+import { ValueService } from './value-service';
 import { ValueTypeData } from './value-type-data';
 
 export class CustomError extends Error {
@@ -14,14 +15,12 @@ export class CheckNegativeHandler extends ValueHandlerBase {
 
     public constructor(
         private m_EnumFactory: IEnumFactory,
-        private m_OwnValue: Promise<{ [valueType: number]: number }>,
     ) {
         super();
     }
 
-    public async handle(value: IValue) {
-        const ownValue = await this.m_OwnValue;
-        const count = ownValue?.[value.valueType] ?? 0;
+    public async handle(value: Value, valueService: ValueService) {
+        const count = await valueService.getCount(value.valueType);
         const allItem = await this.m_EnumFactory.build<ValueTypeData>('ValueTypeData').allItem;
         if (count < 0 && !allItem[value.valueType]?.isNegative) {
             throw new CustomError(CheckNegativeHandler.notEnoughErrorCode, {
@@ -31,6 +30,6 @@ export class CheckNegativeHandler extends ValueHandlerBase {
             });
         }
 
-        await this.next?.handle?.(value);
+        await this.next?.handle?.(value, valueService);
     }
 }

@@ -3,15 +3,15 @@ import { Mock } from 'lite-ts-mock';
 import { FilterIsReplaceHandler as Self } from './filter-is-replace-handler';
 import { IEnum, IEnumFactory } from './i-enum-factory';
 import { ValueHandlerBase } from './value-handler-base';
+import { ValueService } from './value-service';
 import { ValueTypeData } from './value-type-data';
 
 describe('src/filter-is-replace-handler.ts', () => {
-    describe('.handle(value: IValue)', () => {
+    describe('.handle(value: Value, valueService: ValueService)', () => {
         it('ok', async () => {
             const mockEnumFactory = new Mock<IEnumFactory>();
             const self = new Self(
                 mockEnumFactory.actual,
-                Promise.resolve(null),
             );
 
             const mockEnum = new Mock<IEnum<ValueTypeData>>({
@@ -22,27 +22,36 @@ describe('src/filter-is-replace-handler.ts', () => {
                 mockEnum.actual
             );
 
+            const mockValueService = new Mock<ValueService>();
+            mockValueService.expectReturn(
+                r => r.getCount(2),
+                11
+            );
+
             const mockHandler = new Mock<ValueHandlerBase>();
             self.setNext(mockHandler.actual);
 
             mockHandler.expected.handle({
                 count: 1,
                 valueType: 2
-            });
+            }, mockValueService.actual);
 
             await self.handle({
                 count: 1,
                 valueType: 2
-            });
+            }, mockValueService.actual);
         });
 
         it('isReplace && count == oldCount', async () => {
             const mockEnumFactory = new Mock<IEnumFactory>();
             const self = new Self(
                 mockEnumFactory.actual,
-                Promise.resolve({
-                    2: 1
-                })
+            );
+
+            const mockValueService = new Mock<ValueService>();
+            mockValueService.expectReturn(
+                r => r.getCount(2),
+                1
             );
 
             const mockEnum = new Mock<IEnum<ValueTypeData>>({
@@ -63,16 +72,19 @@ describe('src/filter-is-replace-handler.ts', () => {
             await self.handle({
                 count: 1,
                 valueType: 2
-            });
+            }, mockValueService.actual);
         });
 
         it('count == 0', async () => {
             const mockEnumFactory = new Mock<IEnumFactory>();
             const self = new Self(
                 mockEnumFactory.actual,
-                Promise.resolve({
-                    2: 1
-                })
+            );
+
+            const mockValueService = new Mock<ValueService>();
+            mockValueService.expectReturn(
+                r => r.getCount(2),
+                11
             );
 
             const mockEnum = new Mock<IEnum<ValueTypeData>>({
@@ -89,7 +101,7 @@ describe('src/filter-is-replace-handler.ts', () => {
             await self.handle({
                 count: 0,
                 valueType: 2
-            });
+            }, mockValueService.actual);
         });
     });
 });

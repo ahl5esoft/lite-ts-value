@@ -4,15 +4,15 @@ import { Mock } from 'lite-ts-mock';
 import { IEnum, IEnumFactory } from './i-enum-factory';
 import { UpdateIsReplaceHandler as Self } from './update-is-replace-handler';
 import { ValueHandlerBase } from './value-handler-base';
+import { ValueService } from './value-service';
 import { ValueTypeData } from './value-type-data';
 
 describe('src/update-is-replace-handler.ts', () => {
-    describe('.handle(value: IValue)', () => {
+    describe('.handle(value: Value, valueService: ValueService)', () => {
         it('ok', async () => {
             const mockEnumFactory = new Mock<IEnumFactory>();
             const self = new Self(
                 mockEnumFactory.actual,
-                null
             );
 
             const mockEnum = new Mock<IEnum<ValueTypeData>>({
@@ -26,25 +26,24 @@ describe('src/update-is-replace-handler.ts', () => {
             const mockHandler = new Mock<ValueHandlerBase>();
             self.setNext(mockHandler.actual);
 
+            const mockValueService = new Mock<ValueService>({
+                ownValue: null
+            });
             mockHandler.expected.handle({
                 count: 1,
                 valueType: 2
-            });
+            }, mockValueService.actual);
 
             await self.handle({
                 count: 1,
                 valueType: 2
-            });
+            }, mockValueService.actual);
         });
 
         it('isReplace', async () => {
             const mockEnumFactory = new Mock<IEnumFactory>();
-            const res = {
-                2: 11
-            };
             const self = new Self(
                 mockEnumFactory.actual,
-                Promise.resolve(res),
             );
 
             const mockEnum = new Mock<IEnum<ValueTypeData>>({
@@ -59,10 +58,16 @@ describe('src/update-is-replace-handler.ts', () => {
                 mockEnum.actual
             );
 
+            const res = {
+                2: 11
+            };
+            const mockValueService = new Mock<ValueService>({
+                ownValue: res
+            });
             await self.handle({
                 count: 1,
                 valueType: 2
-            });
+            }, mockValueService.actual);
             deepStrictEqual(res, {
                 2: 0,
             });

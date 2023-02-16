@@ -1,13 +1,12 @@
 export { CheckNegativeHandler } from './check-negative-handler';
 export * from './filter-is-replace-handler';
 export * from './get-time-handler';
-export * from './i-value';
 export * from './update-count-handler';
 export * from './update-is-replace-handler';
 export * from './update-range-handler';
 export * from './update-sync-handler';
 export * from './update-time-handler';
+export * from './value';
 export * from './value-handler-base';
-export * from './value-service';
-export { ValueServiceBase } from './value-service-base';
+export { ValueService } from './value-service';
 export * from './value-type-data'; 

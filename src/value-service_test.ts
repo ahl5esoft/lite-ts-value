@@ -2,20 +2,21 @@ import { strictEqual } from 'assert';
 import { Mock } from 'lite-ts-mock';
 
 import { ValueHandlerBase } from './value-handler-base';
-import { INowTime, RelationOperator, ValueServiceBase } from './value-service-base';
+import { RelationOperator, ValueService } from './value-service';
 
-class Self extends ValueServiceBase {
+class Self extends ValueService {
     public getCountHandler: ValueHandlerBase;
-    public updateHandler: ValueHandlerBase;
 
     public constructor(
         private m_GetCountFunc: (valueType: number) => Promise<number>,
-        nowTime: INowTime,
+        now: number,
         ownValue: Promise<{ [valueType: number]: number }>,
     ) {
         super(
-            nowTime,
             ownValue,
+            null,
+            null,
+            Promise.resolve(now),
         );
     }
 
@@ -24,30 +25,14 @@ class Self extends ValueServiceBase {
     }
 
     public async update() { }
-
-    protected getGetCountHandler(valueService: ValueServiceBase) {
-        strictEqual(valueService, this);
-        return this.getCountHandler;
-    }
-
-    protected getUpdateHandler(valueService: ValueServiceBase) {
-        strictEqual(valueService, this);
-        return this.updateHandler;
-    }
 }
 
-describe('src/value-service-base.ts', () => {
+describe('src/value-service.ts', () => {
     describe('.checkConditions(conditions: contract.IValueCondition[])', () => {
         it(`${RelationOperator.eq}(单组)`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 11;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([
                 [{
@@ -60,15 +45,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.eq}(单组)不通过`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 1;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([
                 [{
@@ -81,15 +60,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.nowDiff}${RelationOperator.eq}(单组)`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 9;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 1,
@@ -100,15 +73,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.nowDiff}${RelationOperator.eq}(单组)不通过`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 10;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 1,
@@ -119,15 +86,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.ge}(单组)`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 11;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 11,
@@ -138,15 +99,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.ge}(单组)不通过`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 10;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 11,
@@ -157,15 +112,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.nowDiff}${RelationOperator.ge}(单组)`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 9;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 1,
@@ -176,15 +125,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.nowDiff}${RelationOperator.ge}(单组)不通过`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 10;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 1,
@@ -195,15 +138,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.gt}(单组)`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 12;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 11,
@@ -214,15 +151,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.gt}(单组)不通过`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 11;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 11,
@@ -233,15 +164,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.nowDiff}${RelationOperator.gt}(单组)`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 8;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 1,
@@ -252,15 +177,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.nowDiff}${RelationOperator.gt}(单组)不通过`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 11;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 1,
@@ -271,15 +190,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.le}(单组)`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 11;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 11,
@@ -290,15 +203,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.le}(单组)不通过`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 12;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 11,
@@ -309,15 +216,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.nowDiff}${RelationOperator.lt}(单组)`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 9;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 1,
@@ -328,15 +229,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.nowDiff}${RelationOperator.le}(单组)不通过`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 8;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 1,
@@ -347,15 +242,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.lt}(单组)`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 10;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 11,
@@ -366,15 +255,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.lt}(单组)不通过`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 11;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 11,
@@ -385,15 +268,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.nowDiff}${RelationOperator.lt}(单组)`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 10;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 1,
@@ -404,15 +281,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.nowDiff}${RelationOperator.lt}(单组)不通过`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 8;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 1,
@@ -423,15 +294,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.mod}${RelationOperator.eq}(单组)`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 11;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 201,
@@ -442,15 +307,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.mod}${RelationOperator.eq}(单组)不通过`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 10;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 201,
@@ -461,15 +320,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.mod}${RelationOperator.ge}(单组)`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 11;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 200,
@@ -480,15 +333,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.mod}${RelationOperator.ge}(单组)不通过`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 3;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 301,
@@ -499,15 +346,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.mod}${RelationOperator.gt}(单组)`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 11;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 200,
@@ -518,15 +359,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.mod}${RelationOperator.gt}(单组)不通过`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 3;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 301,
@@ -537,15 +372,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.mod}${RelationOperator.le}(单组)`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 11;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 201,
@@ -556,15 +385,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.mod}${RelationOperator.le}(单组)不通过`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 2;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 301,
@@ -575,15 +398,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.mod}${RelationOperator.lt}(单组)`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 10;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 201,
@@ -594,15 +411,9 @@ describe('src/value-service-base.ts', () => {
         });
 
         it(`${RelationOperator.mod}${RelationOperator.lt}(单组)不通过`, async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async () => {
                 return 2;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 301,
@@ -613,19 +424,13 @@ describe('src/value-service-base.ts', () => {
         });
 
         it('all(单组)', async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async (valueType: number) => {
                 return {
                     1: 11,
                     2: 22,
                     3: 33
                 }[valueType];
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 11,
@@ -644,19 +449,13 @@ describe('src/value-service-base.ts', () => {
         });
 
         it('some(单组)', async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async (valueType: number) => {
                 return {
                     1: 11,
                     2: 22,
                     3: 33
                 }[valueType];
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([[{
                 count: 9,
@@ -675,19 +474,13 @@ describe('src/value-service-base.ts', () => {
         });
 
         it('多组', async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async (valueType: number) => {
                 return {
                     1: 11,
                     2: 22,
                     3: 33
                 }[valueType];
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkConditions([
                 [{
@@ -723,16 +516,10 @@ describe('src/value-service-base.ts', () => {
 
     describe('.checkEnough(uow: IUnitOfWork, times: number, consumeValues: model.contract.IValue[])', () => {
         it('ok', async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async (arg: number) => {
                 strictEqual(arg, 2);
                 return 99;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkEnough([{
                 count: -1,
@@ -742,16 +529,10 @@ describe('src/value-service-base.ts', () => {
         });
 
         it('false', async () => {
-            const mockNowTime = new Mock<INowTime>();
             const self = new Self(async (arg: number) => {
                 strictEqual(arg, 2);
                 return 0;
-            }, mockNowTime.actual, null);
-
-            mockNowTime.expectReturn(
-                r => r.unix(),
-                10
-            );
+            }, 10, null);
 
             const res = await self.checkEnough([{
                 count: -1,
@@ -777,7 +558,7 @@ describe('src/value-service-base.ts', () => {
             mockValueHandler.expected.handle({
                 count: 11,
                 valueType: 1
-            });
+            }, self);
 
             const res = await self.getCount(1);
             strictEqual(res, 11);

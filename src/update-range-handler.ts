@@ -1,22 +1,22 @@
 import { IEnumFactory } from './i-enum-factory';
-import { IValue } from './i-value';
+import { Value } from './value';
 import { ValueHandlerBase } from './value-handler-base';
+import { ValueService } from './value-service';
 import { ValueTypeData } from './value-type-data';
 
 export class UpdateRangeHandler extends ValueHandlerBase {
     public constructor(
         private m_EnumFactory: IEnumFactory,
-        private m_OwnValue: Promise<{ [valueType: number]: number }>,
     ) {
         super();
     }
 
-    public async handle(value: IValue) {
+    public async handle(value: Value, valueService: ValueService) {
         const allItem = await this.m_EnumFactory.build<ValueTypeData>('ValueTypeData').allItem;
         const range = allItem[value.valueType]?.range;
         if (range) {
-            const ownValue = await this.m_OwnValue;
-            const count = ownValue?.[value.valueType] ?? 0;
+            const count = await valueService.getCount(value.valueType);
+            const ownValue = await valueService.ownValue;
             if (count > range.max)
                 ownValue[value.valueType] = range.max;
 
@@ -24,6 +24,6 @@ export class UpdateRangeHandler extends ValueHandlerBase {
                 ownValue[value.valueType] = range.min;
         }
 
-        this.next?.handle?.(value);
+        this.next?.handle?.(value, valueService);
     }
 }
