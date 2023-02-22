@@ -16,7 +16,7 @@ class Self extends ValueService {
             ownValue,
             null,
             null,
-            Promise.resolve(now),
+            async () => now,
         );
     }
 

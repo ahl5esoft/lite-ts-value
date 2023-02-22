@@ -1,4 +1,4 @@
-# ![Version](https://img.shields.io/badge/version-1.8.0-green.svg)
+# ![Version](https://img.shields.io/badge/version-1.9.0-green.svg)
 
 ## install
 
@@ -96,22 +96,99 @@ await valueService.update([{
 
 ## ValueHandlerBase
 
+### isReplace
+
+```
+cosnt ownValue = Promise.resolve({
+    1: 2
+});
+const valueService = new ValueService(ownValue, null, null, null);
+await valueService.update([{
+    count: 11,
+    valueType: 1
+}]);
+// ownValue = { 1: -1 }
+```
+
 ### negative
 
 ```
 cosnt ownValue = Promise.resolve({
     1: 2
 });
-const valueService = new ValueService(ownValue, null, null);
-const res = await valueService.getCount(1);
-// res = 10
+const valueService = new ValueService(ownValue, null, null, null);
+await valueService.update([{
+    count: -3,
+    valueType: 1
+}]);
+// ownValue = { 1: -1 }
+```
+
+### range.max
+
+```
+// range.max = 10
+cosnt ownValue = Promise.resolve({
+    1: 2,
+});
+const valueService = new ValueService(ownValue, null, null, null);
+await valueService.update([{
+    count: 20,
+    valueType: 1
+}]);
+// ownValue = { 1: 10 }
+```
+
+### range.min
+
+```
+// range.min = 0
+cosnt ownValue = Promise.resolve({
+    1: 2,
+});
+const valueService = new ValueService(ownValue, null, null, null);
+await valueService.update([{
+    count: -100,
+    valueType: 1
+}]);
+// ownValue = { 1: 0 }
+```
+
+### sync
+
+```
+// sync.valueTypes = [11, 111]
+cosnt ownValue = Promise.resolve({
+    1: 2,
+});
+const valueService = new ValueService(ownValue, null, null, null);
+await valueService.update([{
+    count: 5,
+    valueType: 1
+}]);
+// ownValue = { 1: 7, 11: 5, 111: 5 }
+```
+
+### time
+
+```
+// different day
+cosnt ownValue = Promise.resolve({
+    1: 2,
+});
+const valueService = new ValueService(ownValue, null, null, null);
+await valueService.update([{
+    count: 3,
+    valueType: 1
+}]);
+// ownValue = { 1: 3 }
 ```
 
 ### custom
 
 ```
 class CustomValueHandler extends ValueHandlerBase {
-    public async handle(value: IValue, valueService: ValueService) {
+    public async handle(value: Value, valueService: ValueService) {
         value.count += 10;
         this.next?.handle?.(value, valueService);
     }   
@@ -124,5 +201,5 @@ cosnt ownValue = Promise.resolve({
 const nowUnix = momnet().unix();
 const valueService = new ValueService(ownValue, getCountHandler, null, nowUnix);
 const res = await valueService.getCount(1);
-// res = 10
+// res = 20
 ```

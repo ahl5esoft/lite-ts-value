@@ -45,9 +45,7 @@ describe('src/time-handler-base.ts', () => {
             const mockEnumFactory = new Mock<IEnumFactory>();
             const self = new Self(
                 mockEnumFactory.actual,
-                Promise.resolve(
-                    moment().unix(),
-                ),
+                async () => moment().unix(),
             );
 
             const mockEnum = new Mock<IEnum<ValueTypeData>>({
@@ -92,9 +90,7 @@ describe('src/time-handler-base.ts', () => {
             const mockEnumFactory = new Mock<IEnumFactory>();
             const self = new Self(
                 mockEnumFactory.actual,
-                Promise.resolve(
-                    moment().unix(),
-                ),
+                async () => moment().unix(),
             );
 
             const mockEnum = new Mock<IEnum<ValueTypeData>>({

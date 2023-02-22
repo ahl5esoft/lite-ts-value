@@ -9,7 +9,7 @@ import { ValueTypeData } from './value-type-data';
 export abstract class TimeValueHandlerBase extends ValueHandlerBase {
     public constructor(
         protected enumFactory: IEnumFactory,
-        protected now: Promise<number>,
+        protected getNowFunc: () => Promise<number>,
     ) {
         super();
     }
@@ -18,7 +18,7 @@ export abstract class TimeValueHandlerBase extends ValueHandlerBase {
         const allItem = await this.enumFactory.build<ValueTypeData>('ValueTypeData').allItem;
         const time = allItem[value.valueType]?.time;
         if (time?.valueType) {
-            const now = await this.now;
+            const now = await this.getNowFunc();
             const oldNow = await valueService.getCount(time.valueType);
             const ok = moment.unix(now).isSame(
                 moment.unix(oldNow),

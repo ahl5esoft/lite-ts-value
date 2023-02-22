@@ -20,14 +20,14 @@ export class ValueService {
         public ownValue: Promise<{ [valueType: number]: number }>,
         protected getCountHandler: ValueHandlerBase,
         protected updateHandler: ValueHandlerBase,
-        protected now: Promise<number>,
+        protected getNowFunc: () => Promise<number>,
     ) { }
 
     public async checkConditions(conditions: ValueCondition[][]) {
         if (!conditions?.length)
             return true;
 
-        const now = await this.now;
+        const now = await this.getNowFunc();
         for (const r of conditions) {
             const tasks = r.map(async cr => {
                 let aCount = await this.getCount(cr.valueType);

@@ -6,6 +6,6 @@ export class UpdateTimeHandler extends TimeValueHandlerBase {
     protected async handleDiff(timeValueType: number, value: Value, valueService: ValueService) {
         const ownValue = await valueService.ownValue;
         ownValue[value.valueType] = 0;
-        ownValue[timeValueType] = await this.now;
+        ownValue[timeValueType] = await this.getNowFunc();
     }
 }

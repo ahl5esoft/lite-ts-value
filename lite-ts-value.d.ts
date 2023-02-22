@@ -35,10 +35,10 @@ declare class ValueService {
     }>;
     protected getCountHandler: ValueHandlerBase;
     protected updateHandler: ValueHandlerBase;
-    protected now: Promise<number>;
+    protected getNowFunc: () => Promise<number>;
     constructor(ownValue: Promise<{
         [valueType: number]: number;
-    }>, getCountHandler: ValueHandlerBase, updateHandler: ValueHandlerBase, now: Promise<number>);
+    }>, getCountHandler: ValueHandlerBase, updateHandler: ValueHandlerBase, getNowFunc: () => Promise<number>);
     checkConditions(conditions: ValueCondition[][]): Promise<boolean>;
     checkEnough(values: Value[]): Promise<boolean>;
     getCount(valueType: number): Promise<number>;
@@ -71,8 +71,8 @@ declare class FilterIsReplaceHandler extends ValueHandlerBase {
 
 declare abstract class TimeValueHandlerBase extends ValueHandlerBase {
     protected enumFactory: IEnumFactory;
-    protected now: Promise<number>;
-    constructor(enumFactory: IEnumFactory, now: Promise<number>);
+    protected getNowFunc: () => Promise<number>;
+    constructor(enumFactory: IEnumFactory, getNowFunc: () => Promise<number>);
     handle(value: Value, valueService: ValueService): Promise<void>;
     protected abstract handleDiff(timeValueType: number, value: Value, valueService: ValueService): Promise<void>;
 }
