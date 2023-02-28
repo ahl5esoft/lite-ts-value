@@ -1,7 +1,6 @@
 import { IEnumFactory } from './i-enum-factory';
-import { Value } from './value';
 import { ValueHandlerBase } from './value-handler-base';
-import { ValueService } from './value-service';
+import { ValueHandlerOption } from './value-handler-option';
 import { ValueTypeData } from './value-type-data';
 
 export class CustomError extends Error {
@@ -19,17 +18,17 @@ export class CheckNegativeHandler extends ValueHandlerBase {
         super();
     }
 
-    public async handle(value: Value, valueService: ValueService) {
-        const count = await valueService.getCount(value.valueType);
+    public async handle(options: ValueHandlerOption) {
+        const count = await options.valueService.getCount(options.uow, options.value.valueType);
         const allItem = await this.m_EnumFactory.build<ValueTypeData>('ValueTypeData').allItem;
-        if (count < 0 && !allItem[value.valueType]?.isNegative) {
+        if (count < 0 && !allItem[options.value.valueType]?.isNegative) {
             throw new CustomError(CheckNegativeHandler.notEnoughErrorCode, {
-                consume: Math.abs(value.count),
-                count: count - value.count,
-                valueType: value.valueType,
+                consume: Math.abs(options.value.count),
+                count: count - options.value.count,
+                valueType: options.value.valueType,
             });
         }
 
-        await this.next?.handle?.(value, valueService);
+        await this.next?.handle?.(options);
     }
 }

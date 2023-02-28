@@ -1,13 +1,12 @@
-import { Value } from './value';
 import { ValueHandlerBase } from './value-handler-base';
-import { ValueService } from './value-service';
+import { ValueHandlerOption } from './value-handler-option';
 
 export class UpdateCountHandler extends ValueHandlerBase {
-    public async handle(value: Value, valueService: ValueService) {
-        const ownValue = await valueService.ownValue;
-        ownValue[value.valueType] ??= 0;
-        ownValue[value.valueType] += value.count;
+    public async handle(options: ValueHandlerOption) {
+        const ownValue = await options.valueService.ownValue;
+        ownValue[options.value.valueType] ??= 0;
+        ownValue[options.value.valueType] += options.value.count;
 
-        this.next?.handle?.(value, valueService);
+        this.next?.handle?.(options);
     }
 }

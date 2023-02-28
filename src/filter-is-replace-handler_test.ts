@@ -24,22 +24,32 @@ describe('src/filter-is-replace-handler.ts', () => {
 
             const mockValueService = new Mock<ValueService>();
             mockValueService.expectReturn(
-                r => r.getCount(2),
+                r => r.getCount(null, 2),
                 11
             );
 
             const mockHandler = new Mock<ValueHandlerBase>();
             self.setNext(mockHandler.actual);
 
-            mockHandler.expected.handle({
-                count: 1,
-                valueType: 2
-            }, mockValueService.actual);
+            mockHandler.expected.handle(
+                {
+                    value: {
+                        count: 1,
+                        valueType: 2
+                    },
+                    valueService: mockValueService.actual
+                }
+            );
 
-            await self.handle({
-                count: 1,
-                valueType: 2
-            }, mockValueService.actual);
+            await self.handle(
+                {
+                    value: {
+                        count: 1,
+                        valueType: 2
+                    },
+                    valueService: mockValueService.actual
+                }
+            );
         });
 
         it('isReplace && count == oldCount', async () => {
@@ -50,7 +60,7 @@ describe('src/filter-is-replace-handler.ts', () => {
 
             const mockValueService = new Mock<ValueService>();
             mockValueService.expectReturn(
-                r => r.getCount(2),
+                r => r.getCount(null, 2),
                 1
             );
 
@@ -69,10 +79,16 @@ describe('src/filter-is-replace-handler.ts', () => {
             const mockHandler = new Mock<ValueHandlerBase>();
             self.setNext(mockHandler.actual);
 
-            await self.handle({
-                count: 1,
-                valueType: 2
-            }, mockValueService.actual);
+            await self.handle(
+                {
+                    uow: null,
+                    value: {
+                        count: 1,
+                        valueType: 2
+                    },
+                    valueService: mockValueService.actual
+                }
+            );
         });
 
         it('count == 0', async () => {
@@ -83,7 +99,7 @@ describe('src/filter-is-replace-handler.ts', () => {
 
             const mockValueService = new Mock<ValueService>();
             mockValueService.expectReturn(
-                r => r.getCount(2),
+                r => r.getCount(null, 2),
                 11
             );
 
@@ -98,10 +114,16 @@ describe('src/filter-is-replace-handler.ts', () => {
             const mockHandler = new Mock<ValueHandlerBase>();
             self.setNext(mockHandler.actual);
 
-            await self.handle({
-                count: 0,
-                valueType: 2
-            }, mockValueService.actual);
+            await self.handle(
+                {
+                    uow: null,
+                    value: {
+                        count: 0,
+                        valueType: 2
+                    },
+                    valueService: mockValueService.actual
+                }
+            );
         });
     });
 });

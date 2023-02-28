@@ -1,5 +1,6 @@
 import { strictEqual } from 'assert';
 import { Mock } from 'lite-ts-mock';
+import { IUnitOfWork } from './i-unit-of-work';
 
 import { ValueHandlerBase } from './value-handler-base';
 import { RelationOperator, ValueService } from './value-service';
@@ -10,7 +11,7 @@ class Self extends ValueService {
     public constructor(
         private m_GetCountFunc: (valueType: number) => Promise<number>,
         now: number,
-        ownValue: Promise<{ [valueType: number]: number }>,
+        ownValue: Promise<{ [valueType: number]: number; }>,
     ) {
         super(
             ownValue,
@@ -20,8 +21,8 @@ class Self extends ValueService {
         );
     }
 
-    public async getCount(valueType: number) {
-        return this.m_GetCountFunc ? this.m_GetCountFunc(valueType) : super.getCount(valueType);
+    public async getCount(uow: IUnitOfWork, valueType: number) {
+        return this.m_GetCountFunc ? this.m_GetCountFunc(valueType) : super.getCount(uow, valueType);
     }
 
     public async update() { }
@@ -34,7 +35,7 @@ describe('src/value-service.ts', () => {
                 return 11;
             }, 10, null);
 
-            const res = await self.checkConditions([
+            const res = await self.checkConditions(null, [
                 [{
                     count: 11,
                     op: RelationOperator.eq,
@@ -49,7 +50,7 @@ describe('src/value-service.ts', () => {
                 return 1;
             }, 10, null);
 
-            const res = await self.checkConditions([
+            const res = await self.checkConditions(null, [
                 [{
                     count: 11,
                     op: RelationOperator.eq,
@@ -64,7 +65,7 @@ describe('src/value-service.ts', () => {
                 return 9;
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 1,
                 op: (RelationOperator.eq + RelationOperator.nowDiff) as RelationOperator,
                 valueType: 1
@@ -77,7 +78,7 @@ describe('src/value-service.ts', () => {
                 return 10;
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 1,
                 op: (RelationOperator.eq + RelationOperator.nowDiff) as RelationOperator,
                 valueType: 1
@@ -90,7 +91,7 @@ describe('src/value-service.ts', () => {
                 return 11;
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 11,
                 op: RelationOperator.ge,
                 valueType: 1
@@ -103,7 +104,7 @@ describe('src/value-service.ts', () => {
                 return 10;
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 11,
                 op: RelationOperator.ge,
                 valueType: 1
@@ -116,7 +117,7 @@ describe('src/value-service.ts', () => {
                 return 9;
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 1,
                 op: (RelationOperator.nowDiff + RelationOperator.ge) as RelationOperator,
                 valueType: 1
@@ -129,7 +130,7 @@ describe('src/value-service.ts', () => {
                 return 10;
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 1,
                 op: (RelationOperator.nowDiff + RelationOperator.ge) as RelationOperator,
                 valueType: 1
@@ -142,7 +143,7 @@ describe('src/value-service.ts', () => {
                 return 12;
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 11,
                 op: RelationOperator.gt,
                 valueType: 1
@@ -155,7 +156,7 @@ describe('src/value-service.ts', () => {
                 return 11;
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 11,
                 op: RelationOperator.gt,
                 valueType: 1
@@ -168,7 +169,7 @@ describe('src/value-service.ts', () => {
                 return 8;
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 1,
                 op: (RelationOperator.nowDiff + RelationOperator.gt) as RelationOperator,
                 valueType: 1
@@ -181,7 +182,7 @@ describe('src/value-service.ts', () => {
                 return 11;
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 1,
                 op: (RelationOperator.nowDiff + RelationOperator.gt) as RelationOperator,
                 valueType: 1
@@ -194,7 +195,7 @@ describe('src/value-service.ts', () => {
                 return 11;
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 11,
                 op: RelationOperator.le,
                 valueType: 1
@@ -207,7 +208,7 @@ describe('src/value-service.ts', () => {
                 return 12;
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 11,
                 op: RelationOperator.le,
                 valueType: 1
@@ -220,7 +221,7 @@ describe('src/value-service.ts', () => {
                 return 9;
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 1,
                 op: (RelationOperator.nowDiff + RelationOperator.le) as RelationOperator,
                 valueType: 1
@@ -233,7 +234,7 @@ describe('src/value-service.ts', () => {
                 return 8;
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 1,
                 op: (RelationOperator.nowDiff + RelationOperator.le) as RelationOperator,
                 valueType: 1
@@ -246,7 +247,7 @@ describe('src/value-service.ts', () => {
                 return 10;
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 11,
                 op: RelationOperator.lt,
                 valueType: 1
@@ -259,7 +260,7 @@ describe('src/value-service.ts', () => {
                 return 11;
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 11,
                 op: RelationOperator.lt,
                 valueType: 1
@@ -272,7 +273,7 @@ describe('src/value-service.ts', () => {
                 return 10;
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 1,
                 op: (RelationOperator.nowDiff + RelationOperator.lt) as RelationOperator,
                 valueType: 1
@@ -285,7 +286,7 @@ describe('src/value-service.ts', () => {
                 return 8;
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 1,
                 op: (RelationOperator.nowDiff + RelationOperator.lt) as RelationOperator,
                 valueType: 1
@@ -298,7 +299,7 @@ describe('src/value-service.ts', () => {
                 return 11;
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 201,
                 op: (RelationOperator.mod + RelationOperator.eq) as RelationOperator,
                 valueType: 1
@@ -311,7 +312,7 @@ describe('src/value-service.ts', () => {
                 return 10;
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 201,
                 op: (RelationOperator.mod + RelationOperator.eq) as RelationOperator,
                 valueType: 1
@@ -324,7 +325,7 @@ describe('src/value-service.ts', () => {
                 return 11;
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 200,
                 op: (RelationOperator.mod + RelationOperator.ge) as RelationOperator,
                 valueType: 1
@@ -337,7 +338,7 @@ describe('src/value-service.ts', () => {
                 return 3;
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 301,
                 op: (RelationOperator.mod + RelationOperator.ge) as RelationOperator,
                 valueType: 1
@@ -350,7 +351,7 @@ describe('src/value-service.ts', () => {
                 return 11;
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 200,
                 op: (RelationOperator.mod + RelationOperator.gt) as RelationOperator,
                 valueType: 1
@@ -363,7 +364,7 @@ describe('src/value-service.ts', () => {
                 return 3;
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 301,
                 op: (RelationOperator.mod + RelationOperator.gt) as RelationOperator,
                 valueType: 1
@@ -376,7 +377,7 @@ describe('src/value-service.ts', () => {
                 return 11;
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 201,
                 op: (RelationOperator.mod + RelationOperator.le) as RelationOperator,
                 valueType: 1
@@ -389,7 +390,7 @@ describe('src/value-service.ts', () => {
                 return 2;
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 301,
                 op: (RelationOperator.mod + RelationOperator.le) as RelationOperator,
                 valueType: 1
@@ -402,7 +403,7 @@ describe('src/value-service.ts', () => {
                 return 10;
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 201,
                 op: (RelationOperator.mod + RelationOperator.lt) as RelationOperator,
                 valueType: 1
@@ -415,7 +416,7 @@ describe('src/value-service.ts', () => {
                 return 2;
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 301,
                 op: (RelationOperator.mod + RelationOperator.lt) as RelationOperator,
                 valueType: 1
@@ -432,7 +433,7 @@ describe('src/value-service.ts', () => {
                 }[valueType];
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 11,
                 op: RelationOperator.eq,
                 valueType: 1
@@ -457,7 +458,7 @@ describe('src/value-service.ts', () => {
                 }[valueType];
             }, 10, null);
 
-            const res = await self.checkConditions([[{
+            const res = await self.checkConditions(null, [[{
                 count: 9,
                 op: RelationOperator.eq,
                 valueType: 1
@@ -482,7 +483,7 @@ describe('src/value-service.ts', () => {
                 }[valueType];
             }, 10, null);
 
-            const res = await self.checkConditions([
+            const res = await self.checkConditions(null, [
                 [{
                     count: 11,
                     op: RelationOperator.eq,
@@ -521,7 +522,7 @@ describe('src/value-service.ts', () => {
                 return 99;
             }, 10, null);
 
-            const res = await self.checkEnough([{
+            const res = await self.checkEnough(null, [{
                 count: -1,
                 valueType: 2
             }]);
@@ -534,7 +535,7 @@ describe('src/value-service.ts', () => {
                 return 0;
             }, 10, null);
 
-            const res = await self.checkEnough([{
+            const res = await self.checkEnough(null, [{
                 count: -1,
                 valueType: 2
             }]);
@@ -556,11 +557,15 @@ describe('src/value-service.ts', () => {
             self.getCountHandler = mockValueHandler.actual;
 
             mockValueHandler.expected.handle({
-                count: 11,
-                valueType: 1
-            }, self);
+                uow: null,
+                value: {
+                    count: 11,
+                    valueType: 1
+                },
+                valueService: self
+            });
 
-            const res = await self.getCount(1);
+            const res = await self.getCount(null, 1);
             strictEqual(res, 11);
         });
     });

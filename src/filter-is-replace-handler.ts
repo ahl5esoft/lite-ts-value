@@ -1,7 +1,6 @@
 import { IEnumFactory } from './i-enum-factory';
-import { Value } from './value';
 import { ValueHandlerBase } from './value-handler-base';
-import { ValueService } from './value-service';
+import { ValueHandlerOption } from './value-handler-option';
 import { ValueTypeData } from './value-type-data';
 
 export class FilterIsReplaceHandler extends ValueHandlerBase {
@@ -11,16 +10,16 @@ export class FilterIsReplaceHandler extends ValueHandlerBase {
         super();
     }
 
-    public async handle(value: Value, valueService: ValueService) {
+    public async handle(options: ValueHandlerOption) {
         const allItem = await this.m_EnumFactory.build<ValueTypeData>('ValueTypeData').allItem;
-        if (allItem[value.valueType]?.isReplace) {
-            const count = await valueService.getCount(value.valueType);
-            if (count == value.count)
+        if (allItem[options.value.valueType]?.isReplace) {
+            const count = await options.valueService.getCount(options.uow, options.value.valueType);
+            if (count == options.value.count)
                 return;
-        } else if (value.count == 0) {
+        } else if (options.value.count == 0) {
             return;
         }
 
-        await this.next.handle(value, valueService);
+        await this.next.handle(options);
     }
 }

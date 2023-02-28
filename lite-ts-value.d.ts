@@ -12,6 +12,11 @@ interface IEnumFactory {
     build<T extends IEnumItem>(name: string): IEnum<T>;
 }
 
+interface IUnitOfWork {
+    commit(): Promise<void>;
+    registerAfter(action: () => Promise<void>, key?: string): void;
+}
+
 type Value = {
     count: number;
     valueType: number;
@@ -39,16 +44,22 @@ declare class ValueService {
     constructor(ownValue: Promise<{
         [valueType: number]: number;
     }>, getCountHandler: ValueHandlerBase, updateHandler: ValueHandlerBase, getNowFunc: () => Promise<number>);
-    checkConditions(conditions: ValueCondition[][]): Promise<boolean>;
-    checkEnough(values: Value[]): Promise<boolean>;
-    getCount(valueType: number): Promise<number>;
-    update(values: Value[]): Promise<void>;
+    checkConditions(uow: IUnitOfWork, conditions: ValueCondition[][]): Promise<boolean>;
+    checkEnough(uow: IUnitOfWork, values: Value[]): Promise<boolean>;
+    getCount(uow: IUnitOfWork, valueType: number): Promise<number>;
+    update(uow: IUnitOfWork, values: Value[]): Promise<void>;
+}
+
+interface ValueHandlerOption {
+    uow?: IUnitOfWork;
+    value: Value;
+    valueService: ValueService;
 }
 
 declare abstract class ValueHandlerBase {
     protected next: ValueHandlerBase;
     setNext(next: ValueHandlerBase): ValueHandlerBase;
-    abstract handle(value: Value, valueService: ValueService): Promise<void>;
+    abstract handle(options: ValueHandlerOption): Promise<void>;
 }
 
 declare class CustomError extends Error {
@@ -60,20 +71,20 @@ declare class CheckNegativeHandler extends ValueHandlerBase {
     private m_EnumFactory;
     static notEnoughErrorCode: number;
     constructor(m_EnumFactory: IEnumFactory);
-    handle(value: Value, valueService: ValueService): Promise<void>;
+    handle(options: ValueHandlerOption): Promise<void>;
 }
 
 declare class FilterIsReplaceHandler extends ValueHandlerBase {
     private m_EnumFactory;
     constructor(m_EnumFactory: IEnumFactory);
-    handle(value: Value, valueService: ValueService): Promise<void>;
+    handle(options: ValueHandlerOption): Promise<void>;
 }
 
 declare abstract class TimeValueHandlerBase extends ValueHandlerBase {
     protected enumFactory: IEnumFactory;
     protected getNowFunc: () => Promise<number>;
     constructor(enumFactory: IEnumFactory, getNowFunc: () => Promise<number>);
-    handle(value: Value, valueService: ValueService): Promise<void>;
+    handle(options: ValueHandlerOption): Promise<void>;
     protected abstract handleDiff(timeValueType: number, value: Value, valueService: ValueService): Promise<void>;
 }
 
@@ -82,25 +93,25 @@ declare class GetTimeValueHandler extends TimeValueHandlerBase {
 }
 
 declare class UpdateCountHandler extends ValueHandlerBase {
-    handle(value: Value, valueService: ValueService): Promise<void>;
+    handle(options: ValueHandlerOption): Promise<void>;
 }
 
 declare class UpdateIsReplaceHandler extends ValueHandlerBase {
     private m_EnumFactory;
     constructor(m_EnumFactory: IEnumFactory);
-    handle(value: Value, valueService: ValueService): Promise<void>;
+    handle(options: ValueHandlerOption): Promise<void>;
 }
 
 declare class UpdateRangeHandler extends ValueHandlerBase {
     private m_EnumFactory;
     constructor(m_EnumFactory: IEnumFactory);
-    handle(value: Value, valueService: ValueService): Promise<void>;
+    handle(options: ValueHandlerOption): Promise<void>;
 }
 
 declare class UpdateSyncHandler extends ValueHandlerBase {
     private m_EnumFactory;
     constructor(m_EnumFactory: IEnumFactory);
-    handle(value: Value, valueService: ValueService): Promise<void>;
+    handle(options: ValueHandlerOption): Promise<void>;
 }
 
 declare class UpdateTimeHandler extends TimeValueHandlerBase {

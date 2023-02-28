@@ -37,7 +37,11 @@ describe('src/time-handler-base.ts', () => {
                 count: 1,
                 valueType: 2,
             };
-            await self.handle(res, null);
+            await self.handle({
+                uow: null,
+                value: res,
+                valueService: null
+            });
             strictEqual(callCount, 0);
         });
 
@@ -69,7 +73,7 @@ describe('src/time-handler-base.ts', () => {
 
             const mockValueService = new Mock<ValueService>();
             mockValueService.expectReturn(
-                r => r.getCount(3),
+                r => r.getCount(null, 3),
                 0
             );
 
@@ -83,7 +87,11 @@ describe('src/time-handler-base.ts', () => {
                 strictEqual(arg2, mockValueService.actual);
             });
 
-            await self.handle(res, mockValueService.actual);
+            await self.handle({
+                uow: null,
+                value: res,
+                valueService: mockValueService.actual
+            });
         });
 
         it('same', async () => {
@@ -114,7 +122,7 @@ describe('src/time-handler-base.ts', () => {
 
             const mockValueService = new Mock<ValueService>();
             mockValueService.expectReturn(
-                r => r.getCount(3),
+                r => r.getCount(null, 3),
                 moment().unix()
             );
 
@@ -124,7 +132,11 @@ describe('src/time-handler-base.ts', () => {
             };
             Reflect.set(self, 'handleDiff', () => { });
 
-            await self.handle(res, mockValueService.actual);
+            await self.handle({
+                uow: null,
+                value: res,
+                valueService: mockValueService.actual
+            });
         });
     });
 });
