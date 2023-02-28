@@ -29,15 +29,25 @@ describe('src/update-is-replace-handler.ts', () => {
             const mockValueService = new Mock<ValueService>({
                 ownValue: null
             });
-            mockHandler.expected.handle({
-                count: 1,
-                valueType: 2
-            }, mockValueService.actual);
+            mockHandler.expected.handle(
+                {
+                    value: {
+                        count: 1,
+                        valueType: 2
+                    },
+                    valueService: mockValueService.actual
+                }
+            );
 
-            await self.handle({
-                count: 1,
-                valueType: 2
-            }, mockValueService.actual);
+            await self.handle(
+                {
+                    value: {
+                        count: 1,
+                        valueType: 2
+                    },
+                    valueService: mockValueService.actual
+                }
+            );
         });
 
         it('isReplace', async () => {
@@ -64,10 +74,15 @@ describe('src/update-is-replace-handler.ts', () => {
             const mockValueService = new Mock<ValueService>({
                 ownValue: res
             });
-            await self.handle({
-                count: 1,
-                valueType: 2
-            }, mockValueService.actual);
+            await self.handle(
+                {
+                    value: {
+                        count: 1,
+                        valueType: 2
+                    },
+                    valueService: mockValueService.actual
+                }
+            );
             deepStrictEqual(res, {
                 2: 0,
             });

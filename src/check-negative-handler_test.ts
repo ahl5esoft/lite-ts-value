@@ -17,7 +17,7 @@ describe('src/check-negative-handler.ts', () => {
 
             const mockValueService = new Mock<ValueService>();
             mockValueService.expectReturn(
-                r => r.getCount(3),
+                r => r.getCount(null, 3),
                 -1
             );
 
@@ -37,14 +37,22 @@ describe('src/check-negative-handler.ts', () => {
             self.setNext(mockNext.actual);
 
             mockNext.expected.handle({
-                count: -2,
-                valueType: 3
-            }, mockValueService.actual);
+                uow: null,
+                value: {
+                    count: -2,
+                    valueType: 3
+                },
+                valueService: mockValueService.actual
+            });
 
             await self.handle({
-                count: -2,
-                valueType: 3
-            }, mockValueService.actual);
+                uow: null,
+                value: {
+                    count: -2,
+                    valueType: 3
+                },
+                valueService: mockValueService.actual
+            });
         });
 
         it('error', async () => {
@@ -65,14 +73,20 @@ describe('src/check-negative-handler.ts', () => {
             try {
                 const mockValueService = new Mock<ValueService>();
                 mockValueService.expectReturn(
-                    r => r.getCount(3),
+                    r => r.getCount(null, 3),
                     -1
                 );
 
-                await self.handle({
-                    count: -2,
-                    valueType: 3
-                }, mockValueService.actual);
+                await self.handle(
+                    {
+                        uow: null,
+                        value: {
+                            count: -2,
+                            valueType: 3
+                        },
+                        valueService: mockValueService.actual
+                    }
+                );
             } catch (ex) {
                 err = ex;
             }

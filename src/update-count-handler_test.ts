@@ -13,10 +13,15 @@ describe('src/update-count-handler.ts', () => {
             const mockValueService = new Mock<ValueService>({
                 ownValue: res
             });
-            await self.handle({
-                count: 1,
-                valueType: 2
-            }, mockValueService.actual);
+            await self.handle(
+                {
+                    value: {
+                        count: 1,
+                        valueType: 2
+                    },
+                    valueService: mockValueService.actual
+                }
+            );
             deepStrictEqual(res, {
                 2: 1
             });

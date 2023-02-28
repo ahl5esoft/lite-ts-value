@@ -1,5 +1,4 @@
-import { Value } from './value';
-import { ValueService } from './value-service';
+import { ValueHandlerOption } from './value-handler-option';
 
 export abstract class ValueHandlerBase {
     protected next: ValueHandlerBase;
@@ -8,5 +7,5 @@ export abstract class ValueHandlerBase {
         return this.next = next;
     }
 
-    public abstract handle(value: Value, valueService: ValueService): Promise<void>;
+    public abstract handle(options: ValueHandlerOption): Promise<void>;
 }

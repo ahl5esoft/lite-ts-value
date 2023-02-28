@@ -28,18 +28,22 @@ describe('src/update-sync-handler.ts', () => {
             );
 
             const mockValueService = new Mock<ValueService>();
-            mockValueService.expected.update([{
+            mockValueService.expected.update(null, [{
                 count: 1,
                 valueType: 3,
             }, {
                 count: 1,
                 valueType: 4,
-            }])
+            }]);
 
             await self.handle({
-                count: 1,
-                valueType: 2
-            }, mockValueService.actual);
+                uow: null,
+                value: {
+                    count: 1,
+                    valueType: 2
+                },
+                valueService: mockValueService.actual
+            });
         });
     });
 });

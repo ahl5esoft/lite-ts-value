@@ -37,14 +37,18 @@ describe('src/update-range-handler.ts', () => {
             });
 
             mockValueService.expectReturn(
-                r => r.getCount(2),
+                r => r.getCount(null, 2),
                 15
             );
 
             await self.handle({
-                count: 1,
-                valueType: 2
-            }, mockValueService.actual);
+                uow: null,
+                value: {
+                    count: 1,
+                    valueType: 2
+                },
+                valueService: mockValueService.actual
+            });
             deepStrictEqual(ownValue, {
                 2: 10
             });
@@ -78,14 +82,20 @@ describe('src/update-range-handler.ts', () => {
                 ownValue
             });
             mockValueService.expectReturn(
-                r => r.getCount(2),
+                r => r.getCount(null, 2),
                 0
             );
 
-            await self.handle({
-                count: 1,
-                valueType: 2
-            }, mockValueService.actual);
+            await self.handle(
+                {
+                    uow: null,
+                    value: {
+                        count: 1,
+                        valueType: 2
+                    },
+                    valueService: mockValueService.actual
+                }
+            );
             deepStrictEqual(ownValue, {
                 2: 5
             });

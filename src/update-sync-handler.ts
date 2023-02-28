@@ -1,7 +1,6 @@
 import { IEnumFactory } from './i-enum-factory';
-import { Value } from './value';
+import { ValueHandlerOption } from './value-handler-option';
 import { ValueHandlerBase } from './value-handler-base';
-import { ValueService } from './value-service';
 import { ValueTypeData } from './value-type-data';
 
 export class UpdateSyncHandler extends ValueHandlerBase {
@@ -11,20 +10,21 @@ export class UpdateSyncHandler extends ValueHandlerBase {
         super();
     }
 
-    public async handle(value: Value, valueService: ValueService) {
+    public async handle(options: ValueHandlerOption) {
         const allItem = await this.m_EnumFactory.build<ValueTypeData>('ValueTypeData').allItem;
-        const sync = allItem[value.valueType]?.sync;
+        const sync = allItem[options.value.valueType]?.sync;
         if (sync?.valueTypes?.length) {
-            await valueService.update(
-                sync.valueTypes.filter(r => r != value.valueType).map(r => {
+            await options.valueService.update(
+                options.uow,
+                sync.valueTypes.filter(r => r != options.value.valueType).map(r => {
                     return {
-                        ...value,
+                        ...options.value,
                         valueType: r
                     };
                 })
             );
         }
 
-        await this.next?.handle?.(value, valueService);
+        await this.next?.handle?.(options);
     }
 }
