@@ -59,7 +59,7 @@ interface ValueHandlerOption {
 declare abstract class ValueHandlerBase {
     protected next: ValueHandlerBase;
     setNext(next: ValueHandlerBase): ValueHandlerBase;
-    abstract handle(options: ValueHandlerOption): Promise<void>;
+    abstract handle(option: ValueHandlerOption): Promise<void>;
 }
 
 declare class CustomError extends Error {
@@ -71,20 +71,20 @@ declare class CheckNegativeHandler extends ValueHandlerBase {
     private m_EnumFactory;
     static notEnoughErrorCode: number;
     constructor(m_EnumFactory: IEnumFactory);
-    handle(options: ValueHandlerOption): Promise<void>;
+    handle(option: ValueHandlerOption): Promise<void>;
 }
 
 declare class FilterIsReplaceHandler extends ValueHandlerBase {
     private m_EnumFactory;
     constructor(m_EnumFactory: IEnumFactory);
-    handle(options: ValueHandlerOption): Promise<void>;
+    handle(option: ValueHandlerOption): Promise<void>;
 }
 
 declare abstract class TimeValueHandlerBase extends ValueHandlerBase {
     protected enumFactory: IEnumFactory;
     protected getNowFunc: () => Promise<number>;
     constructor(enumFactory: IEnumFactory, getNowFunc: () => Promise<number>);
-    handle(options: ValueHandlerOption): Promise<void>;
+    handle(option: ValueHandlerOption): Promise<void>;
     protected abstract handleDiff(timeValueType: number, value: Value, valueService: ValueService): Promise<void>;
 }
 
@@ -93,25 +93,25 @@ declare class GetTimeValueHandler extends TimeValueHandlerBase {
 }
 
 declare class UpdateCountHandler extends ValueHandlerBase {
-    handle(options: ValueHandlerOption): Promise<void>;
+    handle(option: ValueHandlerOption): Promise<void>;
 }
 
 declare class UpdateIsReplaceHandler extends ValueHandlerBase {
     private m_EnumFactory;
     constructor(m_EnumFactory: IEnumFactory);
-    handle(options: ValueHandlerOption): Promise<void>;
+    handle(option: ValueHandlerOption): Promise<void>;
 }
 
 declare class UpdateRangeHandler extends ValueHandlerBase {
     private m_EnumFactory;
     constructor(m_EnumFactory: IEnumFactory);
-    handle(options: ValueHandlerOption): Promise<void>;
+    handle(option: ValueHandlerOption): Promise<void>;
 }
 
 declare class UpdateSyncHandler extends ValueHandlerBase {
     private m_EnumFactory;
     constructor(m_EnumFactory: IEnumFactory);
-    handle(options: ValueHandlerOption): Promise<void>;
+    handle(option: ValueHandlerOption): Promise<void>;
 }
 
 declare class UpdateTimeHandler extends TimeValueHandlerBase {

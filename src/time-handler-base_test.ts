@@ -12,7 +12,7 @@ class Self extends TimeValueHandlerBase {
 }
 
 describe('src/time-handler-base.ts', () => {
-    describe('.handle(value: IValue, valueService: ValueService)', () => {
+    describe('.handle(option: ValueHandlerOption)', () => {
         it('无valueTypeTime', async () => {
             const mockEnumFactory = new Mock<IEnumFactory>();
             const self = new Self(

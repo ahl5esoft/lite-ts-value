@@ -4,7 +4,7 @@ import { GetTimeValueHandler as Self } from './get-time-handler';
 import { Value } from './value';
 
 describe('src/get-time-handler.ts', () => {
-    describe('.handleDiff(value: Value)', () => {
+    describe('.handleDiff(_: number, value: Value)', () => {
         it('ok', async () => {
             const self = new Self(null, null);
 

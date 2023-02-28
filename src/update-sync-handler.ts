@@ -10,21 +10,21 @@ export class UpdateSyncHandler extends ValueHandlerBase {
         super();
     }
 
-    public async handle(options: ValueHandlerOption) {
+    public async handle(option: ValueHandlerOption) {
         const allItem = await this.m_EnumFactory.build<ValueTypeData>('ValueTypeData').allItem;
-        const sync = allItem[options.value.valueType]?.sync;
+        const sync = allItem[option.value.valueType]?.sync;
         if (sync?.valueTypes?.length) {
-            await options.valueService.update(
-                options.uow,
-                sync.valueTypes.filter(r => r != options.value.valueType).map(r => {
+            await option.valueService.update(
+                option.uow,
+                sync.valueTypes.filter(r => r != option.value.valueType).map(r => {
                     return {
-                        ...options.value,
+                        ...option.value,
                         valueType: r
                     };
                 })
             );
         }
 
-        await this.next?.handle?.(options);
+        await this.next?.handle?.(option);
     }
 }

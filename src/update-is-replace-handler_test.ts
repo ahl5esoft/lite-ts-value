@@ -8,7 +8,7 @@ import { ValueService } from './value-service';
 import { ValueTypeData } from './value-type-data';
 
 describe('src/update-is-replace-handler.ts', () => {
-    describe('.handle(value: Value, valueService: ValueService)', () => {
+    describe('.handle(option: ValueHandlerOption)', () => {
         it('ok', async () => {
             const mockEnumFactory = new Mock<IEnumFactory>();
             const self = new Self(

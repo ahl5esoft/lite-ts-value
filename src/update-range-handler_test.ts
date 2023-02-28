@@ -7,7 +7,7 @@ import { ValueService } from './value-service';
 import { ValueTypeData } from './value-type-data';
 
 describe('src/update-range-handler.ts', () => {
-    describe('.handle(value: IValue)', () => {
+    describe('.handle(option: ValueHandlerOption)', () => {
         it('max', async () => {
             const mockEnumFactory = new Mock<IEnumFactory>();
             const self = new Self(

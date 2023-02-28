@@ -10,16 +10,16 @@ export class FilterIsReplaceHandler extends ValueHandlerBase {
         super();
     }
 
-    public async handle(options: ValueHandlerOption) {
+    public async handle(option: ValueHandlerOption) {
         const allItem = await this.m_EnumFactory.build<ValueTypeData>('ValueTypeData').allItem;
-        if (allItem[options.value.valueType]?.isReplace) {
-            const count = await options.valueService.getCount(options.uow, options.value.valueType);
-            if (count == options.value.count)
+        if (allItem[option.value.valueType]?.isReplace) {
+            const count = await option.valueService.getCount(option.uow, option.value.valueType);
+            if (count == option.value.count)
                 return;
-        } else if (options.value.count == 0) {
+        } else if (option.value.count == 0) {
             return;
         }
 
-        await this.next.handle(options);
+        await this.next.handle(option);
     }
 }

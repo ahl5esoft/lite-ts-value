@@ -7,5 +7,5 @@ export abstract class ValueHandlerBase {
         return this.next = next;
     }
 
-    public abstract handle(options: ValueHandlerOption): Promise<void>;
+    public abstract handle(option: ValueHandlerOption): Promise<void>;
 }

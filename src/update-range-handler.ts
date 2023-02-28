@@ -10,19 +10,19 @@ export class UpdateRangeHandler extends ValueHandlerBase {
         super();
     }
 
-    public async handle(options: ValueHandlerOption) {
+    public async handle(option: ValueHandlerOption) {
         const allItem = await this.m_EnumFactory.build<ValueTypeData>('ValueTypeData').allItem;
-        const range = allItem[options.value.valueType]?.range;
+        const range = allItem[option.value.valueType]?.range;
         if (range) {
-            const count = await options.valueService.getCount(options.uow, options.value.valueType);
-            const ownValue = await options.valueService.ownValue;
+            const count = await option.valueService.getCount(option.uow, option.value.valueType);
+            const ownValue = await option.valueService.ownValue;
             if (count > range.max)
-                ownValue[options.value.valueType] = range.max;
+                ownValue[option.value.valueType] = range.max;
 
             if (count < range.min)
-                ownValue[options.value.valueType] = range.min;
+                ownValue[option.value.valueType] = range.min;
         }
 
-        this.next?.handle?.(options);
+        this.next?.handle?.(option);
     }
 }
