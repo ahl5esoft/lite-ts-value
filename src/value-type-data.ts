@@ -3,6 +3,19 @@ import moment from 'moment';
 import { IEnumItem } from './i-enum-factory';
 
 export class ValueTypeData implements IEnumItem {
+    /**
+     * 自动恢复类型
+     */
+    public autoRecovery: {
+        /**
+         * 倒计时数值
+         */
+        countdownOnValueType: number,
+        /**
+         * 最大限制数值
+         */
+        limitValueType: number,
+    }
     public isNegative: boolean;
     public isReplace: boolean;
     public value: number;
