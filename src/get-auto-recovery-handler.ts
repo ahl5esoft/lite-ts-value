@@ -28,6 +28,9 @@ export class GetAutoRecoveryHandler extends ValueHandlerBase {
                     await option.valueService.update(option.uow, [{
                         count: diff,
                         valueType: option.value.valueType
+                    }, {
+                        valueType: autoRecovery.countdownOnValueType,
+                        count: 0,
                     }]);
                 }
             }
