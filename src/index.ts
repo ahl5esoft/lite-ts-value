@@ -6,6 +6,7 @@ export * from './update-is-replace-handler';
 export * from './update-range-handler';
 export * from './update-sync-handler';
 export * from './update-time-handler';
+export * from './value-handler-option';
 export * from './value';
 export * from './value-handler-base';
 export { ValueService } from './value-service';
