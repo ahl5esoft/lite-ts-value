@@ -1,6 +1,6 @@
 import { Mock } from 'lite-ts-mock';
 
-import { getAutoRecoveryHandler as Self } from './get-auto-recovery-handler';
+import { GetAutoRecoveryHandler as Self } from './get-auto-recovery-handler';
 import { IEnum, IEnumFactory } from './i-enum-factory';
 import { ValueHandlerBase } from './value-handler-base';
 import { ValueService } from './value-service';
@@ -15,11 +15,6 @@ describe('src/get-spirit.ts', () => {
                 async () => {
                     return 1678101198;
                 },
-                async () => {
-                    return {
-                        internal: 300
-                    }
-                }
             );
 
             const mockEnum = new Mock<IEnum<ValueTypeData>>({
@@ -27,8 +22,9 @@ describe('src/get-spirit.ts', () => {
                     1: {
                         value: 1,
                         autoRecovery: {
+                            countdownOnValueType: 3,
+                            interval: 300,
                             limitValueType: 2,
-                            countdownOnValueType: 3
                         }
                     },
                     2: {
@@ -51,15 +47,11 @@ describe('src/get-spirit.ts', () => {
                 1678093998
             );
             mockValueService.expectReturn(
-                r => r.getCount(null, 1),
-                15
-            );
-            mockValueService.expectReturn(
                 r => r.getCount(null, 2),
                 30
             );
             mockValueService.expected.update(null, [{
-                count: 15,
+                count: 24,
                 valueType: 1
             }]);
             const mockHandler = new Mock<ValueHandlerBase>();
@@ -93,11 +85,6 @@ describe('src/get-spirit.ts', () => {
                 async () => {
                     return 1678097598;
                 },
-                async () => {
-                    return {
-                        internal: 300
-                    }
-                }
             );
 
             const mockEnum = new Mock<IEnum<ValueTypeData>>({

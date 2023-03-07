@@ -203,3 +203,16 @@ const valueService = new ValueService(ownValue, getCountHandler, null, nowUnix);
 const res = await valueService.getCount(1);
 // res = 20
 ```
+### autoRecovery
+```
+cosnt ownValue = Promise.resolve({
+    1: 15,
+    2: 30,
+    3: 1678093998
+});
+// nowUnix = 1678101198;
+const nowUnix = momnet().unix();
+const valueService = new ValueService(ownValue, getCountHandler, updateHandler, nowUnix);
+const res = await valueService.getCount(1);
+// res = 24
+```

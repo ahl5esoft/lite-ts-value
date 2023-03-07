@@ -23,6 +23,6 @@ export class UpdateRangeHandler extends ValueHandlerBase {
                 ownValue[option.value.valueType] = range.min;
         }
 
-        this.next?.handle?.(option);
+        await this.next?.handle?.(option);
     }
 }
