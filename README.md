@@ -1,4 +1,4 @@
-# ![Version](https://img.shields.io/badge/version-1.10.0-green.svg)
+# ![Version](https://img.shields.io/badge/version-1.11.0-green.svg)
 
 ## install
 
