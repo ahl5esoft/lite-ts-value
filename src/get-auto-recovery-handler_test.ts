@@ -47,15 +47,11 @@ describe('src/get-spirit.ts', () => {
                 1678093998
             );
             mockValueService.expectReturn(
-                r => r.getCount(null, 1),
-                15
-            );
-            mockValueService.expectReturn(
                 r => r.getCount(null, 2),
                 30
             );
             mockValueService.expected.update(null, [{
-                count: 15,
+                count: 24,
                 valueType: 1
             }]);
             const mockHandler = new Mock<ValueHandlerBase>();
