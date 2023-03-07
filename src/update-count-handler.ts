@@ -7,6 +7,6 @@ export class UpdateCountHandler extends ValueHandlerBase {
         ownValue[option.value.valueType] ??= 0;
         ownValue[option.value.valueType] += option.value.count;
 
-        this.next?.handle?.(option);
+        await this.next?.handle?.(option);
     }
 }

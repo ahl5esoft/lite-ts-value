@@ -13,16 +13,14 @@ export class UpdateAutoRecoveryHandler extends ValueHandlerBase {
     public async handle(option: ValueHandlerOption) {
         const allItem = await this.enumFactory.build<ValueTypeData>('ValueTypeData').allItem;
         const autoRecovery = allItem[option.value.valueType]?.autoRecovery;
-        if (autoRecovery) {
-            const ownValue = option.valueService.ownValue;
-            const count = ownValue[option.value.valueType];
+        if (autoRecovery && option.value.count > 0) {
+            const ownValue = await option.valueService.ownValue;
+            ownValue[option.value.valueType] += option.value.count;
             const max = ownValue[autoRecovery.limitValueType];
-            if (option.value.count > 0) {
-                ownValue[option.value.valueType] = count + option.value.count > max ? max : count + option.value.count;
-                ownValue[autoRecovery.countdownOnValueType] = 0;
-            }
+            if (ownValue[option.value.valueType] > max)
+                ownValue[option.value.valueType] = max;
         }
 
-        this.next?.handle?.(option);
+        await this.next?.handle?.(option);
     }
 }

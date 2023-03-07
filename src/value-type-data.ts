@@ -12,6 +12,10 @@ export class ValueTypeData implements IEnumItem {
          */
         countdownOnValueType: number,
         /**
+         * 恢复间隔
+         */
+        interval: number;
+        /**
          * 最大限制数值
          */
         limitValueType: number,
