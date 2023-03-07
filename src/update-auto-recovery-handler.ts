@@ -15,10 +15,9 @@ export class UpdateAutoRecoveryHandler extends ValueHandlerBase {
         const autoRecovery = allItem[option.value.valueType]?.autoRecovery;
         if (autoRecovery && option.value.count > 0) {
             const ownValue = await option.valueService.ownValue;
-            ownValue[option.value.valueType] += option.value.count;
             const max = ownValue[autoRecovery.limitValueType];
-            if (ownValue[option.value.valueType] > max)
-                ownValue[option.value.valueType] = max;
+            if (ownValue[option.value.valueType] + option.value.count > max)
+                option.value.count = max - ownValue[option.value.valueType];
         }
 
         await this.next?.handle?.(option);

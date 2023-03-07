@@ -20,14 +20,18 @@ export class GetAutoRecoveryHandler extends ValueHandlerBase {
                 const now = await this.getNowFunc();
                 const diff = Math.floor((now - countdownOn) / autoRecovery.interval);
                 if (diff) {
-                    await option.valueService.update(option.uow, [{
-                        count: diff,
-                        valueType: option.value.valueType
-                    }]);
                     option.value.count += diff;
                     const max = await option.valueService.getCount(option.uow, autoRecovery.limitValueType);
                     if (option.value.count > max)
                         option.value.count = max;
+
+                    await option.valueService.update(option.uow, [{
+                        count: diff,
+                        valueType: option.value.valueType
+                    }, {
+                        valueType: autoRecovery.countdownOnValueType,
+                        count: 0,
+                    }]);
                 }
             }
         }

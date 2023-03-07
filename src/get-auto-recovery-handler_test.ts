@@ -53,6 +53,9 @@ describe('src/get-spirit.ts', () => {
             mockValueService.expected.update(null, [{
                 count: 24,
                 valueType: 1
+            }, {
+                count: 0,
+                valueType: 3
             }]);
             const mockHandler = new Mock<ValueHandlerBase>();
             mockHandler.expected.handle(
