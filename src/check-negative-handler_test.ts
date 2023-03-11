@@ -1,8 +1,8 @@
 import { deepStrictEqual, strictEqual } from 'assert';
+import { Enum, EnumFactoryBase } from 'lite-ts-enum';
 import { Mock } from 'lite-ts-mock';
 
 import { CheckNegativeHandler as Self, CustomError } from './check-negative-handler';
-import { IEnum, IEnumFactory } from './i-enum-factory';
 import { ValueHandlerBase } from './value-handler-base';
 import { ValueService } from './value-service';
 import { ValueTypeData } from './value-type-data';
@@ -10,7 +10,7 @@ import { ValueTypeData } from './value-type-data';
 describe('src/check-negative-handler.ts', () => {
     describe('.handle(option: ValueHandlerOption)', () => {
         it('ok', async () => {
-            const mockEnumFactory = new Mock<IEnumFactory>();
+            const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new Self(
                 mockEnumFactory.actual,
             );
@@ -21,7 +21,7 @@ describe('src/check-negative-handler.ts', () => {
                 -1
             );
 
-            const mockEnum = new Mock<IEnum<ValueTypeData>>({
+            const mockEnum = new Mock<Enum<ValueTypeData>>({
                 allItem: {
                     3: {
                         isNegative: true
@@ -56,12 +56,12 @@ describe('src/check-negative-handler.ts', () => {
         });
 
         it('error', async () => {
-            const mockEnumFactory = new Mock<IEnumFactory>();
+            const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new Self(
                 mockEnumFactory.actual,
             );
 
-            const mockEnum = new Mock<IEnum<ValueTypeData>>({
+            const mockEnum = new Mock<Enum<ValueTypeData>>({
                 allItem: {}
             });
             mockEnumFactory.expectReturn(

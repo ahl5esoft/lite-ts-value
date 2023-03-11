@@ -1,4 +1,4 @@
-# ![Version](https://img.shields.io/badge/version-1.11.0-green.svg)
+# ![Version](https://img.shields.io/badge/version-1.12.0-green.svg)
 
 ## install
 
@@ -22,6 +22,24 @@ const nowPromise = Promise.resolve(
     momnet().unix(),
 );
 const valueService = new ValueService(ownValue, getCountHandler, updateHandler, nowPromise);
+```
+
+## RewardService
+
+```
+import { IRandSeedService, ValueService } from 'lite-ts-db';
+import { EnumFactoryBase } from 'lite-ts-enum';
+import { RewardService } from 'lite-ts-value';
+
+const randSeedService: IRandSeedService;
+const enumFactory: EnumFactoryBase;
+const valueService: ValueService;
+const rewardService = new RewardService(randSeedService, enumFactory, valueService);
+const res = await rewardService.findResults(IUnitOfWork, Reward[][], '');
+// res = Value[]
+
+const res = await rewardService.preview(IUnitOfWork, Reward[][], 0);
+// res = { offset: rand seed used length, values: Value[] }
 ```
 
 ## ValueService

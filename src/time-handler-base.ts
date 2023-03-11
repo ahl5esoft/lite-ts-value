@@ -1,6 +1,6 @@
+import { EnumFactoryBase } from 'lite-ts-enum';
 import moment from 'moment';
 
-import { IEnumFactory } from './i-enum-factory';
 import { Value } from './value';
 import { ValueHandlerBase } from './value-handler-base';
 import { ValueHandlerOption } from './value-handler-option';
@@ -9,7 +9,7 @@ import { ValueTypeData } from './value-type-data';
 
 export abstract class TimeValueHandlerBase extends ValueHandlerBase {
     public constructor(
-        protected enumFactory: IEnumFactory,
+        protected enumFactory: EnumFactoryBase,
         protected getNowFunc: () => Promise<number>,
     ) {
         super();

@@ -4,6 +4,8 @@
     "url": "https://github.com/ahl5esoft/lite-ts-value/issues"
   },
   "dependencies": {
+    "lite-ts-db": "^1.4.0",
+    "lite-ts-enum": "^1.1.0",
     "moment": "^2.29.4"
   },
   "description": "线程库",
@@ -38,5 +40,5 @@
     "test": "mocha -t 30s -r ./node_modules/ts-node/register/index.js --exit",
     "jspack": "webpack build && ts-node sh/jspack"
   },
-  "version": "1.11.0"
+  "version": "1.12.0"
 }

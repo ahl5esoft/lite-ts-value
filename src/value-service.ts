@@ -1,4 +1,5 @@
-import { IUnitOfWork } from './i-unit-of-work';
+import { IUnitOfWork } from 'lite-ts-db';
+
 import { Value } from './value';
 import { ValueHandlerBase } from './value-handler-base';
 

@@ -1,7 +1,7 @@
+import { Enum, EnumFactoryBase } from 'lite-ts-enum';
 import { Mock } from 'lite-ts-mock';
 
 import { GetAutoRecoveryHandler as Self } from './get-auto-recovery-handler';
-import { IEnum, IEnumFactory } from './i-enum-factory';
 import { ValueHandlerBase } from './value-handler-base';
 import { ValueService } from './value-service';
 import { ValueTypeData } from './value-type-data';
@@ -9,7 +9,7 @@ import { ValueTypeData } from './value-type-data';
 describe('src/get-spirit.ts', () => {
     describe('.handle(option: ValueHandlerOption)', () => {
         it('ok', async () => {
-            const mockEnumFactory = new Mock<IEnumFactory>();
+            const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new Self(
                 mockEnumFactory.actual,
                 async () => {
@@ -17,7 +17,7 @@ describe('src/get-spirit.ts', () => {
                 },
             );
 
-            const mockEnum = new Mock<IEnum<ValueTypeData>>({
+            const mockEnum = new Mock<Enum<ValueTypeData>>({
                 allItem: {
                     1: {
                         value: 1,
@@ -81,8 +81,8 @@ describe('src/get-spirit.ts', () => {
             );
 
         });
-        it('spirit enough', async () => {
-            const mockEnumFactory = new Mock<IEnumFactory>();
+        it('enough', async () => {
+            const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new Self(
                 mockEnumFactory.actual,
                 async () => {
@@ -90,7 +90,7 @@ describe('src/get-spirit.ts', () => {
                 },
             );
 
-            const mockEnum = new Mock<IEnum<ValueTypeData>>({
+            const mockEnum = new Mock<Enum<ValueTypeData>>({
                 allItem: {
                     1: {
                         value: 1,
@@ -149,80 +149,6 @@ describe('src/get-spirit.ts', () => {
                     valueService: mockValueService.actual
                 }
             );
-
         });
-        // it('isReplace && count == oldCount', async () => {
-        //     const mockEnumFactory = new Mock<IEnumFactory>();
-        //     const self = new Self(
-        //         mockEnumFactory.actual,
-        //     );
-
-        //     const mockValueService = new Mock<ValueService>();
-        //     mockValueService.expectReturn(
-        //         r => r.getCount(null, 2),
-        //         1
-        //     );
-
-        //     const mockEnum = new Mock<IEnum<ValueTypeData>>({
-        //         allItem: {
-        //             2: {
-        //                 isReplace: true
-        //             } as ValueTypeData
-        //         }
-        //     });
-        //     mockEnumFactory.expectReturn(
-        //         r => r.build('ValueTypeData'),
-        //         mockEnum.actual
-        //     );
-
-        //     const mockHandler = new Mock<ValueHandlerBase>();
-        //     self.setNext(mockHandler.actual);
-
-        //     await self.handle(
-        //         {
-        //             uow: null,
-        //             value: {
-        //                 count: 1,
-        //                 valueType: 2
-        //             },
-        //             valueService: mockValueService.actual
-        //         }
-        //     );
-        // });
-
-        // it('count == 0', async () => {
-        //     const mockEnumFactory = new Mock<IEnumFactory>();
-        //     const self = new Self(
-        //         mockEnumFactory.actual,
-        //     );
-
-        //     const mockValueService = new Mock<ValueService>();
-        //     mockValueService.expectReturn(
-        //         r => r.getCount(null, 2),
-        //         11
-        //     );
-
-        //     const mockEnum = new Mock<IEnum<ValueTypeData>>({
-        //         allItem: {}
-        //     });
-        //     mockEnumFactory.expectReturn(
-        //         r => r.build('ValueTypeData'),
-        //         mockEnum.actual
-        //     );
-
-        //     const mockHandler = new Mock<ValueHandlerBase>();
-        //     self.setNext(mockHandler.actual);
-
-        //     await self.handle(
-        //         {
-        //             uow: null,
-        //             value: {
-        //                 count: 0,
-        //                 valueType: 2
-        //             },
-        //             valueService: mockValueService.actual
-        //         }
-        //     );
-        // });
     });
 });

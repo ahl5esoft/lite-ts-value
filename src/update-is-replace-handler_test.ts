@@ -1,7 +1,7 @@
 import { deepStrictEqual } from 'assert';
+import { Enum, EnumFactoryBase } from 'lite-ts-enum';
 import { Mock } from 'lite-ts-mock';
 
-import { IEnum, IEnumFactory } from './i-enum-factory';
 import { UpdateIsReplaceHandler as Self } from './update-is-replace-handler';
 import { ValueHandlerBase } from './value-handler-base';
 import { ValueService } from './value-service';
@@ -10,12 +10,12 @@ import { ValueTypeData } from './value-type-data';
 describe('src/update-is-replace-handler.ts', () => {
     describe('.handle(option: ValueHandlerOption)', () => {
         it('ok', async () => {
-            const mockEnumFactory = new Mock<IEnumFactory>();
+            const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new Self(
                 mockEnumFactory.actual,
             );
 
-            const mockEnum = new Mock<IEnum<ValueTypeData>>({
+            const mockEnum = new Mock<Enum<ValueTypeData>>({
                 allItem: {}
             });
             mockEnumFactory.expectReturn(
@@ -51,12 +51,12 @@ describe('src/update-is-replace-handler.ts', () => {
         });
 
         it('isReplace', async () => {
-            const mockEnumFactory = new Mock<IEnumFactory>();
+            const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new Self(
                 mockEnumFactory.actual,
             );
 
-            const mockEnum = new Mock<IEnum<ValueTypeData>>({
+            const mockEnum = new Mock<Enum<ValueTypeData>>({
                 allItem: {
                     2: {
                         isReplace: true

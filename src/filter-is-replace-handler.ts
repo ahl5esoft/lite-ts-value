@@ -1,11 +1,12 @@
-import { IEnumFactory } from './i-enum-factory';
+import { EnumFactoryBase } from 'lite-ts-enum';
+
 import { ValueHandlerBase } from './value-handler-base';
 import { ValueHandlerOption } from './value-handler-option';
 import { ValueTypeData } from './value-type-data';
 
 export class FilterIsReplaceHandler extends ValueHandlerBase {
     public constructor(
-        private m_EnumFactory: IEnumFactory,
+        private m_EnumFactory: EnumFactoryBase,
     ) {
         super();
     }

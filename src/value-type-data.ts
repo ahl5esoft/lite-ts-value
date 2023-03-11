@@ -1,8 +1,8 @@
+import { EnumItem } from 'lite-ts-enum';
 import moment from 'moment';
+import { Reward } from './reward';
 
-import { IEnumItem } from './i-enum-factory';
-
-export class ValueTypeData implements IEnumItem {
+export class ValueTypeData extends EnumItem {
     /**
      * 自动恢复类型
      */
@@ -27,6 +27,13 @@ export class ValueTypeData implements IEnumItem {
     public range: {
         max: number;
         min: number;
+    };
+    public reward: {
+        addition: {
+            childValueType: number;
+            mainValueType: number;
+        };
+        open: Reward[][];
     };
     public sync: {
         valueTypes: number[];

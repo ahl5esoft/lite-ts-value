@@ -1,6 +1,6 @@
 import { strictEqual } from 'assert';
+import { IUnitOfWork } from 'lite-ts-db';
 import { Mock } from 'lite-ts-mock';
-import { IUnitOfWork } from './i-unit-of-work';
 
 import { ValueHandlerBase } from './value-handler-base';
 import { RelationOperator, ValueService } from './value-service';

@@ -1,6 +1,8 @@
 export { CheckNegativeHandler } from './check-negative-handler';
 export * from './filter-is-replace-handler';
 export * from './get-time-handler';
+export * from './reward';
+export * from './reward-service';
 export * from './update-count-handler';
 export * from './update-is-replace-handler';
 export * from './update-range-handler';
@@ -10,4 +12,8 @@ export * from './value';
 export * from './value-handler-base';
 export * from './value-handler-option';
 export { ValueService } from './value-service';
-export * from './value-type-data'; 
+export * from './value-type-data';
+export * from './value-type-reward-addition';
+export * from './value-type-reward-addition-reduce';
+export * from './value-type-reward-open';
+export * from './value-type-reward-open-reduce';

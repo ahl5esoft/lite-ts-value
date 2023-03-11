@@ -1,7 +1,7 @@
 import { deepStrictEqual } from 'assert';
+import { Enum, EnumFactoryBase } from 'lite-ts-enum';
 import { Mock } from 'lite-ts-mock';
 
-import { IEnum, IEnumFactory } from './i-enum-factory';
 import { UpdateRangeHandler as Self } from './update-range-handler';
 import { ValueService } from './value-service';
 import { ValueTypeData } from './value-type-data';
@@ -9,12 +9,12 @@ import { ValueTypeData } from './value-type-data';
 describe('src/update-range-handler.ts', () => {
     describe('.handle(option: ValueHandlerOption)', () => {
         it('max', async () => {
-            const mockEnumFactory = new Mock<IEnumFactory>();
+            const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new Self(
                 mockEnumFactory.actual,
             );
 
-            const mockEnum = new Mock<IEnum<ValueTypeData>>({
+            const mockEnum = new Mock<Enum<ValueTypeData>>({
                 allItem: {
                     2: {
                         range: {
@@ -55,12 +55,12 @@ describe('src/update-range-handler.ts', () => {
         });
 
         it('min', async () => {
-            const mockEnumFactory = new Mock<IEnumFactory>();
+            const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new Self(
                 mockEnumFactory.actual,
             );
 
-            const mockEnum = new Mock<IEnum<ValueTypeData>>({
+            const mockEnum = new Mock<Enum<ValueTypeData>>({
                 allItem: {
                     2: {
                         range: {

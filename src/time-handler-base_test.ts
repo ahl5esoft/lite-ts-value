@@ -1,8 +1,8 @@
 import { deepStrictEqual, strictEqual } from 'assert';
+import { Enum, EnumFactoryBase } from 'lite-ts-enum';
 import { Mock } from 'lite-ts-mock';
 import moment from 'moment';
 
-import { IEnum, IEnumFactory } from './i-enum-factory';
 import { TimeValueHandlerBase } from './time-handler-base';
 import { ValueService } from './value-service';
 import { ValueTypeData } from './value-type-data';
@@ -14,13 +14,13 @@ class Self extends TimeValueHandlerBase {
 describe('src/time-handler-base.ts', () => {
     describe('.handle(option: ValueHandlerOption)', () => {
         it('无valueTypeTime', async () => {
-            const mockEnumFactory = new Mock<IEnumFactory>();
+            const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new Self(
                 mockEnumFactory.actual,
                 null,
             );
 
-            const mockEnum = new Mock<IEnum<ValueTypeData>>({
+            const mockEnum = new Mock<Enum<ValueTypeData>>({
                 allItem: {}
             });
             mockEnumFactory.expectReturn(
@@ -46,13 +46,13 @@ describe('src/time-handler-base.ts', () => {
         });
 
         it('diff', async () => {
-            const mockEnumFactory = new Mock<IEnumFactory>();
+            const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new Self(
                 mockEnumFactory.actual,
                 async () => moment().unix(),
             );
 
-            const mockEnum = new Mock<IEnum<ValueTypeData>>({
+            const mockEnum = new Mock<Enum<ValueTypeData>>({
                 allItem: {
                     2: {
                         time: {
@@ -95,13 +95,13 @@ describe('src/time-handler-base.ts', () => {
         });
 
         it('same', async () => {
-            const mockEnumFactory = new Mock<IEnumFactory>();
+            const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new Self(
                 mockEnumFactory.actual,
                 async () => moment().unix(),
             );
 
-            const mockEnum = new Mock<IEnum<ValueTypeData>>({
+            const mockEnum = new Mock<Enum<ValueTypeData>>({
                 allItem: {
                     2: {
                         time: {
