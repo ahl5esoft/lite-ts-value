@@ -1,12 +1,12 @@
 import { Enum, EnumFactoryBase } from 'lite-ts-enum';
 import { Mock } from 'lite-ts-mock';
 
-import { GetAutoRecoveryHandler as Self } from './get-auto-recovery-handler';
+import { GetAutoRecoveryValueHandler as Self } from './get-auto-recovery-handler';
 import { ValueHandlerBase } from './value-handler-base';
 import { ValueService } from './value-service';
 import { ValueTypeData } from './value-type-data';
 
-describe('src/get-spirit.ts', () => {
+describe('src/get-auto-recovery-handler.ts', () => {
     describe('.handle(option: ValueHandlerOption)', () => {
         it('ok', async () => {
             const mockEnumFactory = new Mock<EnumFactoryBase>();

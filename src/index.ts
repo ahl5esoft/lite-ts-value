@@ -1,8 +1,10 @@
-export { CheckNegativeHandler } from './check-negative-handler';
+export { CheckNegativeValueHandler } from './check-negative-handler';
 export * from './filter-is-replace-handler';
+export * from './get-auto-recovery-handler';
 export * from './get-time-handler';
 export * from './reward';
 export * from './reward-service';
+export * from './update-auto-recovery-handler';
 export * from './update-count-handler';
 export * from './update-is-replace-handler';
 export * from './update-range-handler';

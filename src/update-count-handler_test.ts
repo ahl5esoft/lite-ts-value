@@ -1,7 +1,7 @@
 import { deepStrictEqual } from 'assert';
 import { Mock } from 'lite-ts-mock';
 
-import { UpdateCountHandler as Self } from './update-count-handler';
+import { UpdateCountValueHandler as Self } from './update-count-handler';
 import { ValueService } from './value-service';
 
 describe('src/update-count-handler.ts', () => {

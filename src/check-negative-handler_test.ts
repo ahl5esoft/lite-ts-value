@@ -2,7 +2,7 @@ import { deepStrictEqual, strictEqual } from 'assert';
 import { Enum, EnumFactoryBase } from 'lite-ts-enum';
 import { Mock } from 'lite-ts-mock';
 
-import { CheckNegativeHandler as Self, CustomError } from './check-negative-handler';
+import { CheckNegativeValueHandler as Self, CustomError } from './check-negative-handler';
 import { ValueHandlerBase } from './value-handler-base';
 import { ValueService } from './value-service';
 import { ValueTypeData } from './value-type-data';

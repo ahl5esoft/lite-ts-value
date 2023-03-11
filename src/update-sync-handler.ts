@@ -4,7 +4,7 @@ import { ValueHandlerOption } from './value-handler-option';
 import { ValueHandlerBase } from './value-handler-base';
 import { ValueTypeData } from './value-type-data';
 
-export class UpdateSyncHandler extends ValueHandlerBase {
+export class UpdateSyncValueHandler extends ValueHandlerBase {
     public constructor(
         private m_EnumFactory: EnumFactoryBase,
     ) {

@@ -1,7 +1,7 @@
 import { Enum, EnumFactoryBase } from 'lite-ts-enum';
 import { Mock } from 'lite-ts-mock';
 
-import { FilterIsReplaceHandler as Self } from './filter-is-replace-handler';
+import { FilterIsReplaceValueHandler as Self } from './filter-is-replace-handler';
 import { ValueHandlerBase } from './value-handler-base';
 import { ValueService } from './value-service';
 import { ValueTypeData } from './value-type-data';

@@ -2,7 +2,7 @@ import { deepStrictEqual } from 'assert';
 import { Enum, EnumFactoryBase } from 'lite-ts-enum';
 import { Mock } from 'lite-ts-mock';
 
-import { UpdateRangeHandler as Self } from './update-range-handler';
+import { UpdateRangeValueHandler as Self } from './update-range-handler';
 import { ValueService } from './value-service';
 import { ValueTypeData } from './value-type-data';
 

@@ -4,7 +4,7 @@ import { ValueHandlerBase } from './value-handler-base';
 import { ValueHandlerOption } from './value-handler-option';
 import { ValueTypeData } from './value-type-data';
 
-export class FilterIsReplaceHandler extends ValueHandlerBase {
+export class FilterIsReplaceValueHandler extends ValueHandlerBase {
     public constructor(
         private m_EnumFactory: EnumFactoryBase,
     ) {

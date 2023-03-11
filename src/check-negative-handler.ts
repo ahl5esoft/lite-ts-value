@@ -10,7 +10,7 @@ export class CustomError extends Error {
     }
 }
 
-export class CheckNegativeHandler extends ValueHandlerBase {
+export class CheckNegativeValueHandler extends ValueHandlerBase {
     public static notEnoughErrorCode = 505;
 
     public constructor(
@@ -23,7 +23,7 @@ export class CheckNegativeHandler extends ValueHandlerBase {
         const count = await option.valueService.getCount(option.uow, option.value.valueType);
         const allItem = await this.m_EnumFactory.build<ValueTypeData>('ValueTypeData').allItem;
         if (count < 0 && !allItem[option.value.valueType]?.isNegative) {
-            throw new CustomError(CheckNegativeHandler.notEnoughErrorCode, {
+            throw new CustomError(CheckNegativeValueHandler.notEnoughErrorCode, {
                 consume: Math.abs(option.value.count),
                 count: count - option.value.count,
                 valueType: option.value.valueType,

@@ -1,7 +1,7 @@
 import { deepStrictEqual } from 'assert';
 import { Mock } from 'lite-ts-mock';
 
-import { UpdateTimeHandler as Self } from './update-time-handler';
+import { UpdateTimeValueHandler as Self } from './update-time-handler';
 import { Value } from './value';
 import { ValueService } from './value-service';
 

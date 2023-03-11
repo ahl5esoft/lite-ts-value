@@ -4,7 +4,7 @@ import { ValueHandlerBase } from './value-handler-base';
 import { ValueHandlerOption } from './value-handler-option';
 import { ValueTypeData } from './value-type-data';
 
-export class UpdateAutoRecoveryHandler extends ValueHandlerBase {
+export class UpdateAutoRecoveryValueHandler extends ValueHandlerBase {
     public constructor(
         protected enumFactory: EnumFactoryBase,
     ) {

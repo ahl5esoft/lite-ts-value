@@ -1,7 +1,7 @@
 import { Enum, EnumFactoryBase } from 'lite-ts-enum';
 import { Mock } from 'lite-ts-mock';
 
-import { UpdateSyncHandler as Self } from './update-sync-handler';
+import { UpdateSyncValueHandler as Self } from './update-sync-handler';
 import { ValueService } from './value-service';
 import { ValueTypeData } from './value-type-data';
 
