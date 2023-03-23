@@ -29,7 +29,7 @@ describe('src/check-negative-handler.ts', () => {
                 }
             });
             mockEnumFactory.expectReturn(
-                r => r.build('ValueTypeData'),
+                r => r.build('ValueTypeData', undefined),
                 mockEnum.actual
             );
 
@@ -65,7 +65,7 @@ describe('src/check-negative-handler.ts', () => {
                 allItem: {}
             });
             mockEnumFactory.expectReturn(
-                r => r.build('ValueTypeData'),
+                r => r.build('ValueTypeData', undefined),
                 mockEnum.actual
             );
 

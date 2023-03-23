@@ -13,7 +13,7 @@ export class GetAutoRecoveryValueHandler extends ValueHandlerBase {
     }
 
     public async handle(option: ValueHandlerOption) {
-        const allItem = await this.enumFactory.build<ValueTypeData>('ValueTypeData').allItem;
+        const allItem = await this.enumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).allItem;
         const autoRecovery = allItem[option.value.valueType]?.autoRecovery;
         if (autoRecovery) {
             const countdownOn = await option.valueService.getCount(option.uow, autoRecovery.countdownOnValueType);

@@ -185,7 +185,7 @@ describe('src/reward-service.ts', () => {
 
             const mockEnum = new Mock<Enum<ValueTypeData>>();
             mockEnumFactory.expectReturn(
-                r => r.build(ValueTypeData),
+                r => r.build(ValueTypeData.ctor, undefined),
                 mockEnum.actual
             );
 

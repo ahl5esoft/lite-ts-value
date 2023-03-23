@@ -4,15 +4,15 @@
     "url": "https://github.com/ahl5esoft/lite-ts-value/issues"
   },
   "dependencies": {
-    "lite-ts-db": "^1.4.0",
-    "lite-ts-enum": "^1.1.0",
+    "lite-ts-db": "^1.8.1",
+    "lite-ts-enum": "^1.6.0",
     "moment": "^2.29.4"
   },
   "description": "线程库",
   "devDependencies": {
     "@types/mocha": "^10.0.1",
     "@types/node": "^18.11.18",
-    "lite-ts-fs": "^1.1.0",
+    "lite-ts-fs": "^1.8.1",
     "lite-ts-mock": "^1.1.0",
     "terser-webpack-plugin": "^5.3.6",
     "ts-loader": "^9.4.2",

@@ -23,7 +23,7 @@ describe('src/update-sync-handler.ts', () => {
                 }
             });
             mockEnumFactory.expectReturn(
-                r => r.build('ValueTypeData'),
+                r => r.build('ValueTypeData', undefined),
                 mockEnum.actual
             );
 

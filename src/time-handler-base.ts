@@ -16,7 +16,7 @@ export abstract class TimeValueHandlerBase extends ValueHandlerBase {
     }
 
     public async handle(option: ValueHandlerOption) {
-        const allItem = await this.enumFactory.build<ValueTypeData>('ValueTypeData').allItem;
+        const allItem = await this.enumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).allItem;
         const time = allItem[option.value.valueType]?.time;
         if (time?.valueType) {
             const now = await this.getNowFunc();

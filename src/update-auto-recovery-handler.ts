@@ -12,7 +12,7 @@ export class UpdateAutoRecoveryValueHandler extends ValueHandlerBase {
     }
 
     public async handle(option: ValueHandlerOption) {
-        const allItem = await this.enumFactory.build<ValueTypeData>('ValueTypeData').allItem;
+        const allItem = await this.enumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).allItem;
         const autoRecovery = allItem[option.value.valueType]?.autoRecovery;
         if (autoRecovery && option.value.count > 0) {
             const ownValue = await option.valueService.ownValue;
