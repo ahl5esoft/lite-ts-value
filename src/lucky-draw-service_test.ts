@@ -81,19 +81,34 @@ describe('src/lucky-draw-service.ts', () => {
                         scene: 's'
                     }
                 }),
-                [
-                    {
-                        count: 1,
-                        valueType: 1
+                {
+                    rewards: [
+                        {
+                            count: 1,
+                            valueType: 1
+                        }
+                    ],
+                    values: {
+                        1: 1,
+                        2: 1
                     }
-                ]
+                }
             );
+
+            const oldValues = await self.valueService.ownValue;
+            deepStrictEqual(oldValues, {});
 
             const res = await self.luckyDraw(null, 's');
             deepStrictEqual(res, [{
                 count: 1,
                 valueType: 1
             }]);
+
+            const newValues = await self.valueService.ownValue;
+            deepStrictEqual(newValues, {
+                1: 1,
+                2: 1
+            });
         });
     });
 });

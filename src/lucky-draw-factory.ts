@@ -1,3 +1,4 @@
+import { IUnitOfWork } from 'lite-ts-db';
 import { EnumFactoryBase } from 'lite-ts-enum';
 import { RpcBase } from 'lite-ts-rpc';
 
@@ -5,6 +6,7 @@ import { ILuckyDrawService } from './i-lucky-draw-service';
 import { LuckyDrawData } from './lucky-draw-data';
 import { LuckyDrawFactoryBase } from './lucky-draw-factory-base';
 import { LuckyDrawService } from './lucky-draw-service';
+import { ValueService } from './value-service';
 
 export class LuckyDrawFactory extends LuckyDrawFactoryBase {
     private m_LuckyDrawServices: { [no: number]: ILuckyDrawService; };
@@ -13,26 +15,24 @@ export class LuckyDrawFactory extends LuckyDrawFactoryBase {
         private m_App: string,
         private m_EnumFactory: EnumFactoryBase,
         private m_Rpc: RpcBase,
+        private m_UserValueService: ValueService,
     ) {
         super();
     }
 
-    public async findLuckyDrawServices() {
+    public async findLuckyDrawServices(uow: IUnitOfWork) {
         if (!this.m_LuckyDrawServices) {
             const res = await this.m_Rpc.call<{
-                userValues: { [valueType: number]: number; };
-                luckyDraws: {
-                    entry: LuckyDrawData;
-                    values: { [valueType: number]: number; };
-                }[];
-            }>({
+                entry: LuckyDrawData;
+                values: { [valueType: number]: number; };
+            }[]>({
                 route: `/${this.m_App}/mh/find`,
             });
             const getNowFunc = async () => {
-                return res.userValues[68] || Math.floor(Date.now() / 1000);
+                return await this.m_UserValueService.getCount(uow, 68);
             };
 
-            this.m_LuckyDrawServices = res.luckyDraws.reduce((memo, r) => {
+            this.m_LuckyDrawServices = res.reduce((memo, r) => {
                 memo[r.entry.value] = new LuckyDrawService(
                     this.m_App,
                     this.m_EnumFactory,

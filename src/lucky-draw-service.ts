@@ -20,16 +20,7 @@ import { ValueTypeRewardOpen } from './value-type-reward-open';
 export class LuckyDrawService implements ILuckyDrawService {
     private m_ValueService: ValueService;
     public get valueService() {
-        if (!this.m_ValueService) {
-            const getCountHandler = new GetTimeValueHandler(this.m_EnumFactory, this.m_GetNowFunc);
-            const updateHandler = new FilterIsReplaceValueHandler(this.m_EnumFactory);
-            updateHandler.setNext(new UpdateIsReplaceValueHandler(this.m_EnumFactory))
-                .setNext(new UpdateSyncValueHandler(this.m_EnumFactory))
-                .setNext(new UpdateCountValueHandler())
-                .setNext(new UpdateRangeValueHandler(this.m_EnumFactory))
-                .setNext(new CheckNegativeValueHandler(this.m_EnumFactory));
-            this.m_ValueService = new ValueService(Promise.resolve(this.m_Values), getCountHandler, updateHandler, this.m_GetNowFunc);
-        }
+        this.m_ValueService ??= this.buildValueService(this.m_Values);
         return this.m_ValueService;
     }
 
@@ -100,12 +91,28 @@ export class LuckyDrawService implements ILuckyDrawService {
     }
 
     public async luckyDraw(_: IUnitOfWork, scene: string) {
-        return await this.m_Rpc.call<Value[]>({
+        const res = await this.m_Rpc.call<{
+            rewards: Value[];
+            values: { [no: number]: number; };
+        }>({
             route: `/${this.m_App}/mh/lucky-draw`,
             body: {
                 value: this.m_Entry.value,
                 scene: scene
             },
         });
+        this.m_ValueService = this.buildValueService(res.values);
+        return res.rewards;
+    }
+
+    private buildValueService(values: { [no: number]: number; }) {
+        const getCountHandler = new GetTimeValueHandler(this.m_EnumFactory, this.m_GetNowFunc);
+        const updateHandler = new FilterIsReplaceValueHandler(this.m_EnumFactory);
+        updateHandler.setNext(new UpdateIsReplaceValueHandler(this.m_EnumFactory))
+            .setNext(new UpdateSyncValueHandler(this.m_EnumFactory))
+            .setNext(new UpdateCountValueHandler())
+            .setNext(new UpdateRangeValueHandler(this.m_EnumFactory))
+            .setNext(new CheckNegativeValueHandler(this.m_EnumFactory));
+        return new ValueService(Promise.resolve(values), getCountHandler, updateHandler, this.m_GetNowFunc);
     }
 }
