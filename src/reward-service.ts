@@ -11,8 +11,9 @@ import { ValueTypeRewardOpen } from './value-type-reward-open';
 export class RewardService {
     public constructor(
         private m_RandSeedService: IRandSeedService,
-        private m_EnummFactory: EnumFactoryBase,
+        private m_EnumFactory: EnumFactoryBase,
         private m_ValueService: ValueService,
+        private m_AreaNo?: number,
     ) { }
 
     public async findResults(uow: IUnitOfWork, rewards: Reward[][], source?: string) {
@@ -143,7 +144,7 @@ export class RewardService {
     }
 
     private async findOpenRewards(uow: IUnitOfWork, valueType: number) {
-        const valueTypeEnum = this.m_EnummFactory.build(ValueTypeData);
+        const valueTypeEnum = this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, this.m_AreaNo);
         const openReward = await valueTypeEnum.getReduce<ValueTypeRewardOpen>(ValueTypeRewardOpen.ctor);
         if (!openReward[valueType])
             return;

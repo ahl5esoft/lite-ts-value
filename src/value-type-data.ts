@@ -3,6 +3,8 @@ import moment from 'moment';
 import { Reward } from './reward';
 
 export class ValueTypeData extends EnumItem {
+    public static ctor = 'ValueTypeData';
+
     /**
      * 自动恢复类型
      */
@@ -19,7 +21,7 @@ export class ValueTypeData extends EnumItem {
          * 最大限制数值
          */
         limitValueType: number,
-    }
+    };
     public isNegative: boolean;
     public isReplace: boolean;
     public value: number;

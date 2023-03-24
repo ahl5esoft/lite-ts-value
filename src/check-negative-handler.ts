@@ -21,7 +21,7 @@ export class CheckNegativeValueHandler extends ValueHandlerBase {
 
     public async handle(option: ValueHandlerOption) {
         const count = await option.valueService.getCount(option.uow, option.value.valueType);
-        const allItem = await this.m_EnumFactory.build<ValueTypeData>('ValueTypeData').allItem;
+        const allItem = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).allItem;
         if (count < 0 && !allItem[option.value.valueType]?.isNegative) {
             throw new CustomError(CheckNegativeValueHandler.notEnoughErrorCode, {
                 consume: Math.abs(option.value.count),

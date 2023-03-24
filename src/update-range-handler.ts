@@ -12,7 +12,7 @@ export class UpdateRangeValueHandler extends ValueHandlerBase {
     }
 
     public async handle(option: ValueHandlerOption) {
-        const allItem = await this.m_EnumFactory.build<ValueTypeData>('ValueTypeData').allItem;
+        const allItem = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).allItem;
         const range = allItem[option.value.valueType]?.range;
         if (range) {
             const count = await option.valueService.getCount(option.uow, option.value.valueType);

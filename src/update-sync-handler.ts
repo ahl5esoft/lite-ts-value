@@ -12,7 +12,7 @@ export class UpdateSyncValueHandler extends ValueHandlerBase {
     }
 
     public async handle(option: ValueHandlerOption) {
-        const allItem = await this.m_EnumFactory.build<ValueTypeData>('ValueTypeData').allItem;
+        const allItem = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).allItem;
         const sync = allItem[option.value.valueType]?.sync;
         if (sync?.valueTypes?.length) {
             await option.valueService.update(

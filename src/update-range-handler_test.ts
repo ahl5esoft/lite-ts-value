@@ -25,7 +25,7 @@ describe('src/update-range-handler.ts', () => {
                 }
             });
             mockEnumFactory.expectReturn(
-                r => r.build('ValueTypeData'),
+                r => r.build('ValueTypeData', undefined),
                 mockEnum.actual
             );
 
@@ -71,7 +71,7 @@ describe('src/update-range-handler.ts', () => {
                 }
             });
             mockEnumFactory.expectReturn(
-                r => r.build('ValueTypeData'),
+                r => r.build('ValueTypeData', undefined),
                 mockEnum.actual
             );
 
