@@ -79,8 +79,8 @@ describe('src/get-auto-recovery-handler.ts', () => {
                     valueService: mockValueService.actual
                 }
             );
-
         });
+
         it('enough', async () => {
             const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new Self(

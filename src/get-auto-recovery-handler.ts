@@ -25,14 +25,6 @@ export class GetAutoRecoveryValueHandler extends ValueHandlerBase {
                     const max = await option.valueService.getCount(option.uow, autoRecovery.limitValueType);
                     if (option.value.count > max)
                         option.value.count = max;
-
-                    await option.valueService.update(option.uow, [{
-                        count: diff,
-                        valueType: option.value.valueType
-                    }, {
-                        valueType: autoRecovery.countdownOnValueType,
-                        count: 0,
-                    }]);
                 }
             }
         }
