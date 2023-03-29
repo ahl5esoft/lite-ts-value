@@ -22,6 +22,10 @@ export class ValueTypeData extends EnumItem {
          */
         limitValueType: number,
     };
+    public expiration: {
+        valueType: number;
+        expirationOn: number;
+    };
     public isNegative: boolean;
     public isReplace: boolean;
     public value: number;
