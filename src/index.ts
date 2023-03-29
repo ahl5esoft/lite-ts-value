@@ -2,9 +2,6 @@ import { CheckNegativeValueHandler } from './check-negative-handler';
 import { FilterIsReplaceValueHandler } from './filter-is-replace-handler';
 import { GetAutoRecoveryValueHandler } from './get-auto-recovery-handler';
 import { GetTimeValueHandler } from './get-time-handler';
-import { ILuckyDrawService } from './i-lucky-draw-service';
-import { LuckyDrawFactoryBase } from './lucky-draw-factory-base';
-import { LuckyDrawFactory } from './lucky-draw-factory';
 import { RewardService } from './reward-service';
 import { UpdateAutoRecoveryValueHandler } from './update-auto-recovery-handler';
 import { UpdateCountValueHandler } from './update-count-handler';
@@ -27,9 +24,6 @@ export {
     FilterIsReplaceValueHandler,
     GetAutoRecoveryValueHandler,
     GetTimeValueHandler,
-    ILuckyDrawService,
-    LuckyDrawFactoryBase,
-    LuckyDrawFactory,
     RewardService,
     UpdateAutoRecoveryValueHandler,
     UpdateCountValueHandler,
@@ -52,8 +46,6 @@ globalThis['lite-ts-value'] = {
     FilterIsReplaceValueHandler,
     GetAutoRecoveryValueHandler,
     GetTimeValueHandler,
-    LuckyDrawFactoryBase,
-    LuckyDrawFactory,
     RewardService,
     UpdateAutoRecoveryValueHandler,
     UpdateCountValueHandler,
