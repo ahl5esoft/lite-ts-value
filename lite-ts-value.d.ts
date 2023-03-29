@@ -159,9 +159,10 @@ declare class ValueService {
     protected getCountHandler: ValueHandlerBase;
     protected updateHandler: ValueHandlerBase;
     protected getNowFunc: () => Promise<number>;
+    private m_AreaNo?;
     constructor(ownValue: Promise<{
         [valueType: number]: number;
-    }>, getCountHandler: ValueHandlerBase, updateHandler: ValueHandlerBase, getNowFunc: () => Promise<number>);
+    }>, getCountHandler: ValueHandlerBase, updateHandler: ValueHandlerBase, getNowFunc: () => Promise<number>, m_AreaNo?: number);
     checkConditions(uow: IUnitOfWork, conditions: ValueCondition[][]): Promise<boolean>;
     checkEnough(uow: IUnitOfWork, values: Value[]): Promise<boolean>;
     getCount(uow: IUnitOfWork, valueType: number): Promise<number>;
@@ -210,6 +211,116 @@ declare abstract class TimeValueHandlerBase extends ValueHandlerBase {
 declare class GetTimeValueHandler extends TimeValueHandlerBase {
     protected handleDiff(_: number, value: Value): Promise<void>;
 }
+interface ILuckyDrawService {
+    readonly valueService: ValueService;
+    getData(uow: IUnitOfWork): Promise<{
+        text: string;
+        exp: number;
+        level: number;
+        totalExps: number;
+        scenes: {
+            scene: string;
+            count: number;
+            consume: Value[];
+            disable: boolean;
+        }[];
+        probabilities: {
+            level: number;
+            probability: {
+                text: string;
+                weight: number;
+            }[];
+        }[];
+    }>;
+    luckyDraw(uow: IUnitOfWork, scene: string): Promise<Value[]>;
+}
+declare abstract class LuckyDrawFactoryBase {
+    abstract findLuckyDrawServices(uow: IUnitOfWork): Promise<{
+        [no: number]: ILuckyDrawService;
+    }>;
+}
+type ApiResponse<T> = {
+    data: T;
+    err: number;
+};
+type RpcCallOption = {
+    route: string;
+    areaNo?: number;
+    body?: {
+        [key: string]: any;
+    };
+    header?: {
+        [key: string]: string;
+    };
+};
+declare enum Header {
+    authData = "H-A-D",
+    authToken = "H-A-T",
+    env = "H-E",
+    timeout = "H-T"
+}
+declare enum HttpMethod {
+    get = "GET",
+    post = "POST"
+}
+declare abstract class RpcBase {
+    static ctor: string;
+    static buildErrorFunc: (errorCode: number, data: any) => Error;
+    call<T>(v: RpcCallOption): Promise<T>;
+    abstract callWithoutThrow<T>(v: RpcCallOption): Promise<ApiResponse<T>>;
+}
+declare class LoadRpcClientEnumHandler extends LoadEnumHandlerBase {
+    private m_Rpc;
+    private m_DefaultApp;
+    private m_EnumNameApp;
+    constructor(m_Rpc: RpcBase, m_DefaultApp: string, appEnumNames: {
+        [app: string]: string[];
+    });
+    handle(opt: LoadEnumHandleOption): Promise<void>;
+}
+declare class AreaData extends EnumItem {
+    loadBalance: {
+        [app: string]: string;
+    };
+}
+declare class LoadRpcServerEnumHandler extends LoadEnumHandlerBase {
+    private m_Rpc;
+    private m_BuildRpcFunc;
+    static defaultApp: string;
+    private m_EnumNameApp;
+    private m_LoadBalanceRpc;
+    private m_AllArea;
+    protected get allArea(): Promise<{
+        [no: number]: AreaData;
+    }>;
+    constructor(m_Rpc: RpcBase, m_BuildRpcFunc: (url: string) => RpcBase, appEnumNames: {
+        [app: string]: string[];
+    });
+    handle(opt: LoadEnumHandleOption): Promise<void>;
+    private getAllEnumItem;
+}
+declare class MockRpc extends RpcBase {
+    private m_Rpc;
+    static stub: {
+        [route: string]: {
+            data: ApiResponse<any>;
+            predicate: (v: RpcCallOption) => boolean;
+        }[];
+    };
+    constructor(m_Rpc: RpcBase);
+    callWithoutThrow(v: RpcCallOption): Promise<ApiResponse<any>>;
+}
+declare class LuckyDrawFactory extends LuckyDrawFactoryBase {
+    private m_App;
+    private m_EnumFactory;
+    private m_Rpc;
+    private m_UserValueService;
+    private m_LuckyDrawServices;
+    constructor(m_App: string, m_EnumFactory: EnumFactoryBase, m_Rpc: RpcBase, m_UserValueService: ValueService);
+    findLuckyDrawServices(uow: IUnitOfWork): Promise<{
+        [no: number]: ILuckyDrawService;
+    }>;
+}
 declare class RewardService {
     private m_RandSeedService;
     private m_EnumFactory;
@@ -224,8 +335,9 @@ declare class RewardService {
     private findOpenRewards;
 }
 declare class UpdateAutoRecoveryValueHandler extends ValueHandlerBase {
-    protected enumFactory: EnumFactoryBase;
-    constructor(enumFactory: EnumFactoryBase);
+    private m_EnumFactory;
+    private m_GetNowFunc;
+    constructor(m_EnumFactory: EnumFactoryBase, m_GetNowFunc: () => Promise<number>);
     handle(option: ValueHandlerOption): Promise<void>;
 }
 declare class UpdateCountValueHandler extends ValueHandlerBase {

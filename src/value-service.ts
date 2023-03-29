@@ -23,6 +23,7 @@ export class ValueService {
         protected getCountHandler: ValueHandlerBase,
         protected updateHandler: ValueHandlerBase,
         protected getNowFunc: () => Promise<number>,
+        private m_AreaNo?: number
     ) { }
 
     public async checkConditions(uow: IUnitOfWork, conditions: ValueCondition[][]) {
@@ -108,6 +109,7 @@ export class ValueService {
 
             await this.updateHandler?.handle?.({
                 uow: uow,
+                areaNo: this.m_AreaNo,
                 value: { ...r },
                 valueService: this
             });
