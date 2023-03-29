@@ -58,6 +58,38 @@ type Reward = Value & {
 type ValueCondition = Value & {
     op: string;
 };
+declare class ValueTypeData extends EnumItem {
+    autoRecovery: {
+        countdownOnValueType: number;
+        interval: number;
+        limitValueType: number;
+    };
+    isNegative: boolean;
+    isReplace: boolean;
+    parser?: {
+        exp: string;
+    };
+    range: {
+        max: number;
+        min: number;
+    };
+    reward: {
+        addition: {
+            childValueType: number;
+            mainValueType: number;
+        };
+        open: Reward[][];
+    };
+    sync: {
+        valueTypes: number[];
+    };
+    text: string;
+    time: {
+        valueType: number;
+        momentType: string;
+    };
+    value: number;
+}
 type DbQueryOption<T> = Partial<{
     skip: number;
     take: number;
@@ -143,6 +175,14 @@ interface IRandSeedService {
     get(uow: IUnitOfWork, len: number, offset?: number): Promise<number>;
     use(uow: IUnitOfWork, len: number): Promise<number>;
 }
+type Value = {
+    count: number;
+    valueType: number;
+} & Partial<{
+    targetNo: number;
+    targetType: number;
+    source: string;
+}>;
 declare enum RelationOperator {
     eq = "=",
     ge = ">=",
@@ -152,6 +192,9 @@ declare enum RelationOperator {
     nowDiff = "now-diff",
     mod = "%"
 }
+type ValueCondition = Value & {
+    op: string;
+};
 declare class ValueService {
     ownValue: Promise<{
         [valueType: number]: number;
@@ -211,6 +254,9 @@ declare abstract class TimeValueHandlerBase extends ValueHandlerBase {
 declare class GetTimeValueHandler extends TimeValueHandlerBase {
     protected handleDiff(_: number, value: Value): Promise<void>;
 }
+type Reward = Value & {
+    weight?: number;
+};
 declare class RewardService {
     private m_RandSeedService;
     private m_EnumFactory;
@@ -293,3 +339,4 @@ declare class ValueTypeRewardOpen {
     [valueType: number]: Reward[][];
 }
 declare function valueTypeRewardOpenReduce(memo: ValueTypeRewardOpen, r: ValueTypeData): ValueTypeRewardOpen;
+{ CheckNegativeValueHandler, FilterIsReplaceValueHandler, GetAutoRecoveryValueHandler, GetTimeValueHandler, RewardService, UpdateAutoRecoveryValueHandler, UpdateCountValueHandler, UpdateIsReplaceValueHandler, UpdateRangeValueHandler, UpdateSyncValueHandler, UpdateTimeValueHandler, Value, ValueHandlerBase, ValueHandlerOption, ValueService, ValueTypeData, ValueTypeRewardAddition, valueTypeRewardAdditionReduce, ValueTypeRewardOpen, valueTypeRewardOpenReduce, };
