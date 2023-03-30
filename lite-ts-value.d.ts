@@ -1,180 +1,3 @@
-declare class EnumItem {
-    value: number;
-    key?: string;
-    text?: string;
-}
-type LoadEnumHandleOption = {
-    enum: Enum<any>;
-    res: {
-        [no: number]: any;
-    };
-    areaNo?: number;
-};
-declare abstract class LoadEnumHandlerBase {
-    protected next: LoadEnumHandlerBase;
-    setNext(v: LoadEnumHandlerBase): LoadEnumHandlerBase;
-    abstract handle(opt: LoadEnumHandleOption): Promise<void>;
-}
-declare class Enum<T extends EnumItem> {
-    name: string;
-    private m_AreaNo;
-    private m_LoadHandler;
-    private m_ReduceFunc;
-    private m_Reduce;
-    private m_AllItem;
-    get allItem(): Promise<{
-        [no: number]: T;
-    }>;
-    get items(): Promise<T[]>;
-    constructor(name: string, m_AreaNo: number, m_LoadHandler: LoadEnumHandlerBase, m_ReduceFunc: {
-        [key: string]: (memo: any, item: T) => any;
-    });
-    get(predicate: (entry: T) => boolean): Promise<T>;
-    getReduce<TReduce>(typer: string): Promise<TReduce>;
-}
-declare abstract class EnumFactoryBase {
-    static ctor: string;
-    abstract build<T extends EnumItem>(nameOrCtor: string | (new () => T), areaNo?: number): Enum<T>;
-}
-declare class EnumFactory extends EnumFactoryBase {
-    private m_LoadHandler;
-    private m_ReduceFunc;
-    constructor(m_LoadHandler: LoadEnumHandlerBase, m_ReduceFunc: {
-        [key: string]: (memo: any, item: any) => any;
-    });
-    build<T extends EnumItem>(nameOrCtor: string | (new () => T), areaNo?: number): Enum<any>;
-}
-type Value = {
-    count: number;
-    valueType: number;
-} & Partial<{
-    targetNo: number;
-    targetType: number;
-    source: string;
-}>;
-type Reward = Value & {
-    weight?: number;
-};
-type ValueCondition = Value & {
-    op: string;
-};
-declare class ValueTypeData extends EnumItem {
-    autoRecovery: {
-        countdownOnValueType: number;
-        interval: number;
-        limitValueType: number;
-    };
-    isNegative: boolean;
-    isReplace: boolean;
-    parser?: {
-        exp: string;
-    };
-    range: {
-        max: number;
-        min: number;
-    };
-    reward: {
-        addition: {
-            childValueType: number;
-            mainValueType: number;
-        };
-        open: Reward[][];
-    };
-    sync: {
-        valueTypes: number[];
-    };
-    text: string;
-    time: {
-        valueType: number;
-        momentType: string;
-    };
-    value: number;
-}
-type DbQueryOption<T> = Partial<{
-    skip: number;
-    take: number;
-    where: T;
-    order: string[];
-    orderByDesc: string[];
-}>;
-interface IDbQuery<T> {
-    count(where?: any): Promise<number>;
-    toArray(v?: DbQueryOption<any>): Promise<T[]>;
-}
-interface IDbRepository<T> {
-    add(entry: T): Promise<void>;
-    remove(entry: T): Promise<void>;
-    save(entry: T): Promise<void>;
-    query(): IDbQuery<T>;
-}
-interface IUnitOfWork {
-    commit(): Promise<void>;
-    registerAfter(action: () => Promise<void>, key?: string): void;
-}
-declare class DbModel {
-    readonly id: string;
-}
-type DbOption = (dbFactory: DbFactoryBase, dbRepo: IDbRepository<DbModel>) => void;
-declare abstract class DbFactoryBase {
-    abstract db<T extends DbModel>(...opts: DbOption[]): IDbRepository<T>;
-    abstract uow(): IUnitOfWork;
-}
-declare abstract class AreaDbFactoryBase extends DbFactoryBase {
-    abstract getAreaDbFactory(areaNo: number): Promise<DbFactoryBase>;
-}
-declare class AreaDbQuery<T extends DbModel> implements IDbQuery<T> {
-    private m_AreaNo;
-    private m_DbFactory;
-    private m_DbOptions;
-    constructor(m_AreaNo: number, m_DbFactory: AreaDbFactoryBase, m_DbOptions: DbOption[]);
-    count(where?: any): Promise<number>;
-    toArray(v?: DbQueryOption<any>): Promise<T[]>;
-}
-interface IUnitOfWorkRepository extends IUnitOfWork {
-    registerAdd(model: string, entry: any): void;
-    registerRemove(model: string, entry: any): void;
-    registerSave(model: string, entry: any): void;
-}
-declare class AreaDbModel {
-    areaNo: number;
-    entry: DbModel;
-    get id(): string;
-    constructor(areaNo: number, entry: DbModel);
-}
-declare function uowDbOption(uow: IUnitOfWork): DbOption;
-declare function areaDbOption(areaNo: number): DbOption;
-declare class DbRepository<T extends DbModel> implements IDbRepository<T> {
-    uow: IUnitOfWorkRepository;
-    isTx: boolean;
-    areaNo: number;
-    model: string;
-    dbOptions: DbOption[];
-    private m_CreateQueryFunc;
-    createQueryFunc(v: () => IDbQuery<T>): void;
-    constructor(uow: IUnitOfWorkRepository);
-    add(entry: T): Promise<void>;
-    query(): IDbQuery<T>;
-    remove(entry: T): Promise<void>;
-    save(entry: T): Promise<void>;
-    private exec;
-}
-declare class AreaUnitOfWork implements IUnitOfWorkRepository {
-    private m_DbFactory;
-    private m_GlobalDbFactory;
-    private m_AfterAction;
-    private m_Bulk;
-    constructor(m_DbFactory: AreaDbFactoryBase, m_GlobalDbFactory: DbFactoryBase);
-    commit(): Promise<void>;
-    registerAdd(model: string, entry: AreaDbModel): void;
-    registerAfter(action: () => Promise<void>, key?: string): void;
-    registerRemove(model: string, entry: AreaDbModel): void;
-    registerSave(model: string, entry: AreaDbModel): void;
-    private register;
-}
-interface IRandSeedService {
-    get(uow: IUnitOfWork, len: number, offset?: number): Promise<number>;
-    use(uow: IUnitOfWork, len: number): Promise<number>;
-}
 type Value = {
     count: number;
     valueType: number;
@@ -304,6 +127,10 @@ declare class ValueTypeData extends EnumItem {
         interval: number;
         limitValueType: number;
     };
+    expiration: {
+        valueType: number;
+        expirationOn: number;
+    };
     isNegative: boolean;
     isReplace: boolean;
     value: number;
@@ -338,5 +165,4 @@ declare class ValueTypeRewardOpen {
     static ctor: string;
     [valueType: number]: Reward[][];
 }
-declare function valueTypeRewardOpenReduce(memo: ValueTypeRewardOpen, r: ValueTypeData): ValueTypeRewardOpen;
-{ CheckNegativeValueHandler, FilterIsReplaceValueHandler, GetAutoRecoveryValueHandler, GetTimeValueHandler, RewardService, UpdateAutoRecoveryValueHandler, UpdateCountValueHandler, UpdateIsReplaceValueHandler, UpdateRangeValueHandler, UpdateSyncValueHandler, UpdateTimeValueHandler, Value, ValueHandlerBase, ValueHandlerOption, ValueService, ValueTypeData, ValueTypeRewardAddition, valueTypeRewardAdditionReduce, ValueTypeRewardOpen, valueTypeRewardOpenReduce, };
+declare function valueTypeRewardOpenReduce(memo: ValueTypeRewardOpen, r: ValueTypeData): ValueTypeRewardOpen;
