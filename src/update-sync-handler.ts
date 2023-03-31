@@ -26,7 +26,7 @@ export class UpdateSyncValueHandler extends ValueHandlerBase {
             );
         }
 
-        if (option.value.count < 0 && sync.absValeuTypes?.length) {
+        if (option.value.count < 0 && sync?.absValeuTypes?.length) {
             const count = Math.abs(option.value.count);
             await option.valueService.update(
                 option.uow,

@@ -49,8 +49,11 @@ export class ValueTypeData extends EnumItem {
         valueType: number;
         momentType: moment.unitOfTime.StartOf;
     };
+
     /**
      * 升级数值
      */
-    public upgradeValueType: number;
+    public upgrade: {
+        valueType: number;
+    };
 }

@@ -6,7 +6,6 @@ import { RewardService } from './reward-service';
 import { ValueTypeData } from './value-type-data';
 import { ValueTypeUpgrade } from './value-type-upgrade';
 import { UpgradeData } from './upgrade-data';
-import { UpgradeValueList } from './upgrade-value-list';
 import { ValueService } from './value-service';
 
 describe('src/service/value/update-upgrade-handler.ts', () => {
@@ -28,27 +27,28 @@ describe('src/service/value/update-upgrade-handler.ts', () => {
                 }
             );
 
-            const upgradeEnumMock = new Mock<Enum<UpgradeData>>();
+            const upgradeEnumMock = new Mock<Enum<UpgradeData>>({
+                allItem: {
+                    2: {
+                        list: [
+                            null,
+                            {
+                                condition: [],
+                                rewards: [],
+                                consumeValues: [
+                                    {
+                                        count: 1,
+                                        valueType: 10
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            });
             enumFactoryMock.expectReturn(
                 r => r.build(UpgradeData, 0),
                 upgradeEnumMock.actual
-            );
-            upgradeEnumMock.expectReturn(
-                r => r.getReduce(UpgradeValueList.name),
-                {
-                    2: {
-                        2: {
-                            condition: [],
-                            rewards: [],
-                            values: [
-                                {
-                                    count: 1,
-                                    valueType: 10
-                                }
-                            ]
-                        }
-                    }
-                }
             );
 
             const valueServiceMock = new Mock<ValueService>();

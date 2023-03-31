@@ -2,7 +2,6 @@ import { EnumFactoryBase } from 'lite-ts-enum';
 
 import { RewardService } from './reward-service';
 import { UpgradeData } from './upgrade-data';
-import { UpgradeValueList } from './upgrade-value-list';
 import { ValueHandlerBase } from './value-handler-base';
 import { ValueHandlerOption } from './value-handler-option';
 import { ValueTypeData } from './value-type-data';
@@ -24,20 +23,20 @@ export class UpdateUpgradeValueHandler extends ValueHandlerBase {
         const levelValueType = valueTypeUpgrade[option.value.valueType];
         if (levelValueType && option.value.count > 0) {
             const level = await option.valueService.getCount(option.uow, levelValueType);
-            const upgradeValueList = await this.m_EnumFactory.build(UpgradeData, option.areaNo).getReduce<UpgradeValueList>(UpgradeValueList.name);
-            if (upgradeValueList[levelValueType]?.[level - 1]) {
-                const ok = await option.valueService.checkConditions(option.uow, upgradeValueList[levelValueType][level - 1].condition);
+            const upgradeDataAllItem = await this.m_EnumFactory.build(UpgradeData, option.areaNo).allItem;
+            if (upgradeDataAllItem[levelValueType]?.list?.[level - 1]) {
+                const ok = await option.valueService.checkConditions(option.uow, upgradeDataAllItem[levelValueType].list[level - 1].condition);
                 if (ok) {
                     const values = await this.m_RewardService.findResults(
                         option.uow,
-                        upgradeValueList[levelValueType][level - 1].rewards,
+                        upgradeDataAllItem[levelValueType].list[level - 1].rewards,
                         option.value.source
                     );
                     await option.valueService.update(
                         option.uow,
                         [
                             ...values,
-                            ...upgradeValueList[levelValueType][level - 1].consumeValues
+                            ...upgradeDataAllItem[levelValueType].list[level - 1].consumeValues
                         ].map(r => {
                             return {
                                 ...r,

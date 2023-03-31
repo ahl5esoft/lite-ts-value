@@ -12,8 +12,6 @@ import { UpdateSyncValueHandler } from './update-sync-handler';
 import { UpdateTimeValueHandler } from './update-time-handler';
 import { UpdateUpgradeValueHandler } from './update-upgrade-handler';
 import { UpgradeData } from './upgrade-data';
-import { upgradeValueReduce } from './upgrade-value-list-reduce';
-import { UpgradeValueList } from './upgrade-value-list';
 import { Value } from './value';
 import { ValueHandlerBase } from './value-handler-base';
 import { ValueHandlerOption } from './value-handler-option';
@@ -40,8 +38,6 @@ export {
     UpdateSyncValueHandler,
     UpdateTimeValueHandler,
     UpdateUpgradeValueHandler,
-    upgradeValueReduce,
-    UpgradeValueList,
     UpgradeData,
     Value,
     ValueHandlerBase,
@@ -69,8 +65,6 @@ globalThis['lite-ts-value'] = {
     UpdateSyncValueHandler,
     UpdateTimeValueHandler,
     UpdateUpgradeValueHandler,
-    upgradeValueReduce,
-    UpgradeValueList,
     UpgradeData,
     ValueHandlerBase,
     ValueService,
