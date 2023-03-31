@@ -43,6 +43,7 @@ export class ValueTypeData extends EnumItem {
     };
     public sync: {
         valueTypes: number[];
+        isConsume: boolean;
     };
     public time: {
         valueType: number;
