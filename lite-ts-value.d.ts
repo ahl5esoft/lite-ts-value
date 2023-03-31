@@ -1,3 +1,5 @@
+import { EnumFactoryBase } from 'lite-ts-enum';
+import { IUnitOfWork } from 'lite-ts-db';
 type Value = {
     count: number;
     valueType: number;
@@ -6,6 +8,7 @@ type Value = {
     targetType: number;
     source: string;
 }>;
+import { IUnitOfWork } from 'lite-ts-db';
 declare enum RelationOperator {
     eq = "=",
     ge = ">=",
@@ -56,17 +59,20 @@ declare class CheckNegativeValueHandler extends ValueHandlerBase {
     constructor(m_EnumFactory: EnumFactoryBase);
     handle(option: ValueHandlerOption): Promise<void>;
 }
+import { EnumFactoryBase } from 'lite-ts-enum';
 declare class FilterIsReplaceValueHandler extends ValueHandlerBase {
     private m_EnumFactory;
     constructor(m_EnumFactory: EnumFactoryBase);
     handle(option: ValueHandlerOption): Promise<void>;
 }
+import { EnumFactoryBase } from 'lite-ts-enum';
 declare class GetAutoRecoveryValueHandler extends ValueHandlerBase {
     private enumFactory;
     private getNowFunc;
     constructor(enumFactory: EnumFactoryBase, getNowFunc: () => Promise<number>);
     handle(option: ValueHandlerOption): Promise<void>;
 }
+import { EnumFactoryBase } from 'lite-ts-enum';
 declare abstract class TimeValueHandlerBase extends ValueHandlerBase {
     protected enumFactory: EnumFactoryBase;
     protected getNowFunc: () => Promise<number>;
@@ -80,6 +86,8 @@ declare class GetTimeValueHandler extends TimeValueHandlerBase {
 type Reward = Value & {
     weight?: number;
 };
+import { EnumFactoryBase } from 'lite-ts-enum';
+import { IRandSeedService, IUnitOfWork } from 'lite-ts-db';
 declare class RewardService {
     private m_RandSeedService;
     private m_EnumFactory;
@@ -93,6 +101,7 @@ declare class RewardService {
     }>;
     private findOpenRewards;
 }
+import { EnumFactoryBase } from 'lite-ts-enum';
 declare class UpdateAutoRecoveryValueHandler extends ValueHandlerBase {
     private m_EnumFactory;
     private m_GetNowFunc;
@@ -102,16 +111,19 @@ declare class UpdateAutoRecoveryValueHandler extends ValueHandlerBase {
 declare class UpdateCountValueHandler extends ValueHandlerBase {
     handle(option: ValueHandlerOption): Promise<void>;
 }
+import { EnumFactoryBase } from 'lite-ts-enum';
 declare class UpdateIsReplaceValueHandler extends ValueHandlerBase {
     private m_EnumFactory;
     constructor(m_EnumFactory: EnumFactoryBase);
     handle(option: ValueHandlerOption): Promise<void>;
 }
+import { EnumFactoryBase } from 'lite-ts-enum';
 declare class UpdateRangeValueHandler extends ValueHandlerBase {
     private m_EnumFactory;
     constructor(m_EnumFactory: EnumFactoryBase);
     handle(option: ValueHandlerOption): Promise<void>;
 }
+import { EnumFactoryBase } from 'lite-ts-enum';
 declare class UpdateSyncValueHandler extends ValueHandlerBase {
     private m_EnumFactory;
     constructor(m_EnumFactory: EnumFactoryBase);
@@ -120,6 +132,24 @@ declare class UpdateSyncValueHandler extends ValueHandlerBase {
 declare class UpdateTimeValueHandler extends TimeValueHandlerBase {
     protected handleDiff(timeValueType: number, value: Value, valueService: ValueService): Promise<void>;
 }
+import { EnumFactoryBase } from 'lite-ts-enum';
+declare class UpdateUpgradeValueHandler extends ValueHandlerBase {
+    private m_EnumFactory;
+    private m_RewardService;
+    constructor(m_EnumFactory: EnumFactoryBase, m_RewardService: RewardService);
+    handle(option: ValueHandlerOption): Promise<void>;
+}
+import { EnumItem } from 'lite-ts-enum';
+declare class UpgradeData extends EnumItem {
+    list: {
+        condition: ValueCondition[][];
+        consumeValues: Value[];
+        rewards: Reward[][];
+    }[];
+    value: number;
+}
+import moment from 'moment';
+import { EnumItem } from 'lite-ts-enum';
 declare class ValueTypeData extends EnumItem {
     static ctor: string;
     autoRecovery: {
@@ -147,11 +177,15 @@ declare class ValueTypeData extends EnumItem {
         open: Reward[][];
     };
     sync: {
+        absValeuTypes: number[];
         valueTypes: number[];
     };
     time: {
         valueType: number;
         momentType: string;
+    };
+    upgrade: {
+        valueType: number;
     };
 }
 declare class ValueTypeRewardAddition {
@@ -165,4 +199,8 @@ declare class ValueTypeRewardOpen {
     static ctor: string;
     [valueType: number]: Reward[][];
 }
-declare function valueTypeRewardOpenReduce(memo: ValueTypeRewardOpen, r: ValueTypeData): ValueTypeRewardOpen;
+declare function valueTypeRewardOpenReduce(memo: ValueTypeRewardOpen, r: ValueTypeData): ValueTypeRewardOpen;
+declare class ValueTypeUpgrade {
+    [valueType: number]: number;
+}
+declare function valueTypeUpgradeReduce(memo: ValueTypeUpgrade, r: ValueTypeData): ValueTypeUpgrade;
