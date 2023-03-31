@@ -42,8 +42,8 @@ export class ValueTypeData extends EnumItem {
         open: Reward[][];
     };
     public sync: {
+        absValeuTypes: number[];
         valueTypes: number[];
-        isConsume: boolean;
     };
     public time: {
         valueType: number;

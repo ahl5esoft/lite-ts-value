@@ -7,7 +7,7 @@ import { ValueTypeData } from './value-type-data';
 
 describe('src/update-sync-handler.ts', () => {
     describe('.handle(option: ValueHandlerOption)', () => {
-        it('ok', async () => {
+        it('sync.valueTypes', async () => {
             const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new Self(
                 mockEnumFactory.actual,
@@ -46,7 +46,7 @@ describe('src/update-sync-handler.ts', () => {
             });
         });
 
-        it('isConsume 消耗类型同步', async () => {
+        it('sync.absValueTypes', async () => {
             const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new Self(
                 mockEnumFactory.actual,
@@ -56,8 +56,7 @@ describe('src/update-sync-handler.ts', () => {
                 allItem: {
                     2: {
                         sync: {
-                            valueTypes: [3],
-                            isConsume: true
+                            absValeuTypes: [4]
                         }
                     } as ValueTypeData
                 }
@@ -70,7 +69,7 @@ describe('src/update-sync-handler.ts', () => {
             const mockValueService = new Mock<ValueService>();
             mockValueService.expected.update(null, [{
                 count: 1,
-                valueType: 3,
+                valueType: 4,
             }]);
 
             await self.handle({
