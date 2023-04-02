@@ -22,10 +22,6 @@ export class ValueTypeData extends EnumItem {
          */
         limitValueType: number,
     };
-    public expiration: {
-        valueType: number;
-        expirationOn: number;
-    };
     public isNegative: boolean;
     public isReplace: boolean;
     public value: number;
@@ -46,8 +42,16 @@ export class ValueTypeData extends EnumItem {
         valueTypes: number[];
     };
     public time: {
-        valueType: number;
+        durationValueType: number;
+        durationOn: number;
+        expireOn: number;
         momentType: moment.unitOfTime.StartOf;
+        targetType: {
+            app: string;
+            ext: any;
+            valueType: number;
+        };
+        valueType: number;
     };
 
     /**

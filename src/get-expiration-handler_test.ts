@@ -8,12 +8,12 @@ describe('src/get-expiration-handler.ts', () => {
         it('ok', async () => {
             const self = new Self(null, null);
 
-            const fn = Reflect.get(self, 'handleDiff').bind(self) as (_: number, __: Value) => Promise<void>;
+            const fn = Reflect.get(self, 'handleDiff').bind(self) as (_: Value) => Promise<void>;
             const res: Value = {
                 count: 1,
                 valueType: 2
             };
-            await fn(null, res);
+            await fn(res);
             strictEqual(res.count, 0);
         });
     });
