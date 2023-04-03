@@ -42,14 +42,13 @@ export class ValueTypeData extends EnumItem {
         valueTypes: number[];
     };
     public time: {
-        durationValueType: number;
-        durationOn: number;
+        duration: number;
+        expiredOnValueType: number;
         expireOn: number;
         momentType: moment.unitOfTime.StartOf;
         targetType: {
             app: string;
             ext: any;
-            valueType: number;
         };
         valueType: number;
     };

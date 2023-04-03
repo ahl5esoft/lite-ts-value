@@ -1,14 +1,14 @@
+import { deepStrictEqual } from 'assert';
 import { Mock, mockAny } from 'lite-ts-mock';
 import { RpcBase } from 'lite-ts-rpc';
 
-import { TargetType } from './target-handler-base';
-import { UpdateTargetValueHandler as Self } from './update-target-handler';
+import { Time } from './expire-time-handler-base';
+import { UpdateTargetTimeValueHandler as Self } from './update-target-time-handler';
 import { Value } from './value';
 import { ValueService } from './value-service';
-import { deepStrictEqual } from 'assert';
 
-describe('src/update-target-handler.ts', () => {
-    describe('.handleDiff(value: Value, valueService: ValueService, areaNo: number, targetType: TargetType)', () => {
+describe('src/update-target-time-handler.ts', () => {
+    describe('.handleDiff(value: Value, valueService: ValueService, time: Time, areaNo: number)', () => {
         it('ok', async () => {
             const mockRpc = new Mock<RpcBase>();
             mockRpc.expectReturn(
@@ -23,7 +23,7 @@ describe('src/update-target-handler.ts', () => {
                 mockRpc.actual,
                 ''
             );
-            const fn = Reflect.get(self, 'handleDiff').bind(self) as (value: Value, valueService: ValueService, areaNo: number, targetType: TargetType) => Promise<void>;
+            const fn = Reflect.get(self, 'handleDiff').bind(self) as (value: Value, valueService: ValueService, time: Time, areaNo: number) => Promise<void>;
             const ownValue = {
                 1: 1,
                 2: 1
@@ -37,18 +37,20 @@ describe('src/update-target-handler.ts', () => {
                     valueType: 1
                 },
                 mockValueService.actual,
-                0,
                 {
-                    app: '',
-                    ext: '',
-                    valueType: 2
-                }
+                    expiredOnValueType: 2,
+                    targetType: {
+                        app: '',
+                        ext: ''
+                    }
+                } as any,
+                0,
             );
 
             deepStrictEqual(ownValue, {
                 1: 0,
                 2: 100
-            })
+            });
         });
     });
 });
