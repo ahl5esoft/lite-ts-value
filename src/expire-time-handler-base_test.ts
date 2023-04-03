@@ -1,18 +1,19 @@
 import { deepStrictEqual, strictEqual } from 'assert';
 import { Enum, EnumFactoryBase } from 'lite-ts-enum';
-import { Mock, mockAny } from 'lite-ts-mock';
+import { Mock } from 'lite-ts-mock';
+import moment from 'moment';
 
-import { DurationHandlerBase } from './duration-handler-base';
+import { ExpireTimeHandlerBase } from './expire-time-handler-base';
 import { ValueService } from './value-service';
 import { ValueTypeData } from './value-type-data';
 
-class Self extends DurationHandlerBase {
+class Self extends ExpireTimeHandlerBase {
     protected async handleDiff() { }
 }
 
-describe('src/duration-handler-base.ts', () => {
+describe('src/expire-time-handler-base.ts', () => {
     describe('.handle(option: ValueHandlerOption)', () => {
-        it('无 durationValueType', async () => {
+        it('无valueTypeTime', async () => {
             const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new Self(
                 mockEnumFactory.actual,
@@ -48,20 +49,15 @@ describe('src/duration-handler-base.ts', () => {
             const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new Self(
                 mockEnumFactory.actual,
-                async () => 100,
+                async () => moment().unix(),
             );
 
             const allItem = {
                 2: {
                     time: {
-                        durationValueType: 1
+                        expireOn: 1
                     }
-                } as ValueTypeData,
-                1: {
-                    time: {
-                        durationOn: 2
-                    }
-                }
+                } as ValueTypeData
             };
             const mockEnum = new Mock<Enum<ValueTypeData>>({
                 allItem
@@ -71,28 +67,26 @@ describe('src/duration-handler-base.ts', () => {
                 mockEnum.actual
             );
 
-            const res = {
-                count: 0,
-                valueType: 1,
-            };
             const mockValueService = new Mock<ValueService>();
             mockValueService.expectReturn(
-                r => r.getCount(mockAny, mockAny),
-                8
+                r => r.getCount(null, 3),
+                0
             );
-            const option = {
+
+            const res = {
+                count: 1,
+                valueType: 3,
+            };
+            Reflect.set(self, 'handleDiff', (arg: any, arg1: any) => {
+                strictEqual(arg, 3);
+                deepStrictEqual(arg1, mockValueService.actual);
+            });
+
+            await self.handle({
                 uow: null,
                 value: res,
                 valueService: mockValueService.actual
-            };
-            Reflect.set(self, 'handleDiff', (arg: any, arg1: any, arg2: any, arg3: any) => {
-                deepStrictEqual(arg, res);
-                deepStrictEqual(arg1, mockValueService.actual);
-                strictEqual(arg2, 1);
-                strictEqual(arg3, 2);
             });
-
-            await self.handle(option);
         });
     });
 });

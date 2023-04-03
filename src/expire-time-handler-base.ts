@@ -7,19 +7,25 @@ import { ValueHandlerOption } from './value-handler-option';
 import { ValueService } from './value-service';
 import { ValueTypeData } from './value-type-data';
 
-export class TargetType {
-    public app: string;
-    public ext: any;
-    public valueType: number;
+export class Time {
+    duration: number;
+    expireOn: number;
+    expiredOnValueType: number;
+    momentType: moment.unitOfTime.StartOf;
+    targetType: {
+        app: string;
+        ext: any;
+    };
+    valueType: number;
 }
 
-export abstract class TargetHandlerBase extends ValueHandlerBase {
+export abstract class ExpireTimeHandlerBase extends ValueHandlerBase {
 
     public constructor(
         protected enumFactory: EnumFactoryBase,
         protected getNowFunc: () => Promise<number>,
-        protected rpc: RpcBase,
-        protected userID: string
+        protected rpc?: RpcBase,
+        protected userID?: string
     ) {
         super();
     }
@@ -27,15 +33,14 @@ export abstract class TargetHandlerBase extends ValueHandlerBase {
     public async handle(option: ValueHandlerOption) {
         const allItem = await this.enumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).allItem;
         const time = allItem[option.value.valueType]?.time;
-        if (time?.targetType?.app) {
+        if (time?.expiredOnValueType) {
             const now = await this.getNowFunc();
-            const oldNow = await option.valueService.getCount(option.uow, time.targetType.valueType);
+            const oldNow = await option.valueService.getCount(option.uow, time.expiredOnValueType);
             if (now > oldNow)
-                await this.handleDiff(option.value, option.valueService, option.areaNo, time.targetType);
+                await this.handleDiff(option.value, option.valueService, time, option.areaNo);
         }
-
         await this.next?.handle?.(option);
     }
 
-    protected abstract handleDiff(value: Value, valueService: ValueService, areaNo: number, targetType: TargetType): Promise<void>;
+    protected abstract handleDiff(value: Value, valueService: ValueService, time: Time, areaNo: number): Promise<void>;
 }

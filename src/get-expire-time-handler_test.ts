@@ -1,6 +1,6 @@
 import { strictEqual } from 'assert';
 
-import { GetExpirationValueHandler as Self } from './get-expiration-handler';
+import { GetExpirationValueHandler as Self } from './get-expire-time-handler';
 import { Value } from './value';
 
 describe('src/get-expiration-handler.ts', () => {
