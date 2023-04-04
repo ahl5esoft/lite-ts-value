@@ -5,24 +5,59 @@ import { UpdateDurationTimeValueHandler as Self } from './update-duration-time-h
 import { ValueService } from './value-service';
 
 describe('src/update-duration-time-handler.ts', () => {
-    describe('.handleDiff(value: Value, valueService: ValueService, time: Time)', () => {
-        it('exist duration', async () => {
+    describe('.handleDiff(option: ValueHandlerOption, time: Time)', () => {
+        it('greater than', async () => {
             const self = new Self(
+                async () => 1,
                 null,
+            );
+
+            const ownValue = {
+                2: 1,
+                3: 100
+            };
+            const mockValueService = new Mock<ValueService>({
+                ownValue
+            });
+            const fn = Reflect.get(self, 'handleDiff').bind(self) as (option: any, time: any) => Promise<void>;
+            await fn(
+                {
+                    value: {
+                        count: 1,
+                        valueType: 2
+                    },
+                    valueService: mockValueService.actual,
+                },
+                {
+                    duration: 1,
+                    expiredOnValueType: 3
+                }
+            );
+            deepStrictEqual(ownValue, {
+                2: 1,
+                3: 101
+            });
+        });
+
+        it('less than', async () => {
+            const self = new Self(
                 async () => 100,
+                null,
             );
 
             const ownValue = {};
             const mockValueService = new Mock<ValueService>({
                 ownValue
             });
-            const fn = Reflect.get(self, 'handleDiff').bind(self) as (value: any, valueService: any, time: any) => Promise<void>;
+            const fn = Reflect.get(self, 'handleDiff').bind(self) as (option: any, time: any) => Promise<void>;
             await fn(
                 {
-                    count: 1,
-                    valueType: 2
+                    value: {
+                        count: 1,
+                        valueType: 2
+                    },
+                    valueService: mockValueService.actual,
                 },
-                mockValueService.actual,
                 {
                     duration: 1,
                     expiredOnValueType: 3
@@ -41,18 +76,8 @@ describe('src/update-duration-time-handler.ts', () => {
             );
 
             const ownValue = {};
-            const mockValueService = new Mock<ValueService>({
-                ownValue
-            });
-            const fn = Reflect.get(self, 'handleDiff').bind(self) as (value: any, valueService: any, time: any) => Promise<void>;
-            await fn(
-                {
-                    count: 1,
-                    valueType: 2
-                },
-                mockValueService.actual,
-                {}
-            );
+            const fn = Reflect.get(self, 'handleDiff').bind(self) as (option: any, time: any) => Promise<void>;
+            await fn({}, {});
             deepStrictEqual(ownValue, {});
         });
     });

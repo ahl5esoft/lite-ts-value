@@ -1,6 +1,4 @@
 import { CheckNegativeValueHandler } from './check-negative-handler';
-import { ExpireTimeChange } from './expire-time-change';
-import { ExpireTimeHandlerBase } from './expire-time-handler-base';
 import { FilterIsReplaceValueHandler } from './filter-is-replace-handler';
 import { GetAutoRecoveryValueHandler } from './get-auto-recovery-handler';
 import { GetExpireTimeValueHandler } from './get-expire-time-handler';
@@ -32,8 +30,6 @@ import { ValueTypeUpgrade } from './value-type-upgrade';
 
 export {
     CheckNegativeValueHandler,
-    ExpireTimeChange,
-    ExpireTimeHandlerBase,
     FilterIsReplaceValueHandler,
     GetAutoRecoveryValueHandler,
     GetExpireTimeValueHandler,
@@ -66,8 +62,6 @@ export {
 };
 globalThis['lite-ts-value'] = {
     CheckNegativeValueHandler,
-    ExpireTimeChange,
-    ExpireTimeHandlerBase,
     FilterIsReplaceValueHandler,
     GetAutoRecoveryValueHandler,
     GetExpireTimeValueHandler,

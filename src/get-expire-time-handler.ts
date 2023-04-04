@@ -1,22 +1,12 @@
-import { ExpireTimeChange } from './expire-time-change';
-import { ValueHandlerBase } from './value-handler-base';
+import { ExpireTimeHanglerBase } from './expire-time-handler-base';
 import { ValueHandlerOption } from './value-handler-option';
+import { Time } from './value-type-data';
 
-export class GetExpireTimeValueHandler extends ValueHandlerBase {
-
-    constructor(
-        private getExpireChangeFunc: (valueType: number) => Promise<ExpireTimeChange>,
-        private getNowFunc: () => Promise<number>
-    ) {
-        super();
-    }
-
-    public async handle(option: ValueHandlerOption) {
-        const change = await this.getExpireChangeFunc(option.value.valueType);
+export class GetExpireTimeValueHandler extends ExpireTimeHanglerBase {
+    protected async handleDiff(option: ValueHandlerOption, time: Time) {
         const now = await this.getNowFunc();
-        if (now > change.expireTime)
+        const oldNow = await option.valueService.getCount(option.uow, time.expiredOnValueType);
+        if (now > oldNow)
             option.value.count = 0;
-
-        await this.next?.handle?.(option);
     }
 }
