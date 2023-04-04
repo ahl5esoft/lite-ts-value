@@ -1,20 +1,55 @@
 import { strictEqual } from 'assert';
 
-import { GetExpirationValueHandler as Self } from './get-expire-time-handler';
-import { Value } from './value';
+import { GetExpireTimeValueHandler as Self } from './get-expire-time-handler';
 
-describe('src/get-expiration-handler.ts', () => {
-    describe('.handleDiff(_: number, value: Value)', () => {
-        it('ok', async () => {
-            const self = new Self(null, null);
+describe('src/get-expire-time-handler.ts', () => {
+    describe('.handle(option: ValueHandlerOption)', () => {
+        it('greater than', async () => {
+            const self = new Self(
+                async (_: number) => {
+                    return {
+                        count: 50,
+                        expireTime: 1,
+                        id: 'string',
+                        userID: 'string',
+                        valueType: 1
+                    };
+                },
+                async () => 100
+            );
 
-            const fn = Reflect.get(self, 'handleDiff').bind(self) as (_: Value) => Promise<void>;
-            const res: Value = {
-                count: 1,
-                valueType: 2
-            };
-            await fn(res);
-            strictEqual(res.count, 0);
+            const option = {
+                value: {
+                    count: 1,
+                    valueType: 1
+                }
+            } as any;
+            await self.handle(option);
+            strictEqual(option.value.count, 0);
+        });
+
+        it('less than', async () => {
+            const self = new Self(
+                async (_: number) => {
+                    return {
+                        count: 50,
+                        expireTime: 100,
+                        id: 'string',
+                        userID: 'string',
+                        valueType: 1
+                    };
+                },
+                async () => 1
+            );
+
+            const option = {
+                value: {
+                    count: 1,
+                    valueType: 1
+                }
+            } as any;
+            await self.handle(option);
+            strictEqual(option.value.count, 1);
         });
     });
 });
