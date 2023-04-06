@@ -5,7 +5,7 @@ import { GetExpireTimeValueHandler as Self } from './get-expire-time-handler';
 import { ValueService } from './value-service';
 
 describe('src/get-expire-time-handler.ts', () => {
-    describe('.handleDiff(option: ValueHandlerOption, time: Time)', () => {
+    describe('.handling(option: ValueHandlerOption, time: Time)', () => {
         it('greater than', async () => {
             const self = new Self(
                 async () => 100,
@@ -25,7 +25,7 @@ describe('src/get-expire-time-handler.ts', () => {
                 },
                 valueService: mockValueService.actual
             } as any;
-            const fn = Reflect.get(self, 'handleDiff').bind(self) as (option: any, time: any) => Promise<void>;
+            const fn = Reflect.get(self, 'handling').bind(self) as (option: any, time: any) => Promise<void>;
             await fn(
                 option,
                 {
@@ -54,7 +54,7 @@ describe('src/get-expire-time-handler.ts', () => {
                 },
                 valueService: mockValueService.actual
             } as any;
-            const fn = Reflect.get(self, 'handleDiff').bind(self) as (option: any, time: any) => Promise<void>;
+            const fn = Reflect.get(self, 'handling').bind(self) as (option: any, time: any) => Promise<void>;
             await fn(
                 option,
                 {

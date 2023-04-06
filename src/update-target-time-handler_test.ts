@@ -7,11 +7,11 @@ import { UpdateTargetTimeValueHandler as Self } from './update-target-time-handl
 import { ValueService } from './value-service';
 
 describe('src/update-target-time-handler.ts', () => {
-    describe('.handleDiff(option: ValueHandlerOption, time: Time)', () => {
+    describe('.handling(option: ValueHandlerOption, time: Time)', () => {
         it('ok', async () => {
             const mockRpc = new Mock<RpcBase>();
             mockRpc.expectReturn(
-                r => r.callWithoutThrow(mockAny),
+                r => r.call(mockAny),
                 {
                     data: 1
                 }
@@ -39,7 +39,7 @@ describe('src/update-target-time-handler.ts', () => {
                 },
                 valueService: mockValueService.actual
             } as any;
-            const fn = Reflect.get(self, 'handleDiff').bind(self) as (option: any, time: any) => Promise<void>;
+            const fn = Reflect.get(self, 'handling').bind(self) as (option: any, time: any) => Promise<void>;
             await fn(
                 option,
                 {
@@ -59,7 +59,7 @@ describe('src/update-target-time-handler.ts', () => {
         it('false', async () => {
             const mockRpc = new Mock<RpcBase>();
             mockRpc.expectReturn(
-                r => r.callWithoutThrow(mockAny),
+                r => r.call(mockAny),
                 {
                     data: 100
                 }
@@ -73,7 +73,8 @@ describe('src/update-target-time-handler.ts', () => {
             );
 
             const ownValue = {
-                2: 1
+                2: 1,
+                3: 20
             };
             const mockValueService = new Mock<ValueService>({
                 ownValue
@@ -87,7 +88,7 @@ describe('src/update-target-time-handler.ts', () => {
                 },
                 valueService: mockValueService.actual
             } as any;
-            const fn = Reflect.get(self, 'handleDiff').bind(self) as (option: any, time: any) => Promise<void>;
+            const fn = Reflect.get(self, 'handling').bind(self) as (option: any, time: any) => Promise<void>;
             await fn(
                 option,
                 {

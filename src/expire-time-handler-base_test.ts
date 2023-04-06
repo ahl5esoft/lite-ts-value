@@ -3,11 +3,11 @@ import { Enum, EnumFactoryBase } from 'lite-ts-enum';
 import { Mock } from 'lite-ts-mock';
 import moment from 'moment';
 
-import { ExpireTimeHanglerBase } from './expire-time-handler-base';
+import { ExpireTimeHandlerBase } from './expire-time-handler-base';
 import { ValueTypeData } from './value-type-data';
 
-class Self extends ExpireTimeHanglerBase {
-    protected async handleDiff() { }
+class Self extends ExpireTimeHandlerBase {
+    protected async handling() { }
 }
 
 describe('src/expire-time-handler-base.ts', () => {
@@ -28,7 +28,7 @@ describe('src/expire-time-handler-base.ts', () => {
             );
 
             let callCount = 0;
-            Reflect.set(self, 'handleDiff', () => {
+            Reflect.set(self, 'handling', () => {
                 callCount++;
             });
 
@@ -70,7 +70,7 @@ describe('src/expire-time-handler-base.ts', () => {
                 count: 1,
                 valueType: 2,
             };
-            Reflect.set(self, 'handleDiff', (arg: any, arg1: any) => {
+            Reflect.set(self, 'handling', (arg: any, arg1: any) => {
                 deepStrictEqual(arg, {
                     areaNo: 0,
                     uow: null,

@@ -7,7 +7,11 @@ export class UpdateExpireTimeValueHandler extends ExpireTimeHandlerBase {
         if (!time.expireOn)
             return;
 
+        const now = await this.getNowFunc();
         const ownValue = await option.valueService.ownValue;
+        if (now > (ownValue[time.expiredOnValueType] || 0))
+            ownValue[option.value.valueType] = 0;
+
         ownValue[time.expiredOnValueType] = time.expireOn;
     }
 }
