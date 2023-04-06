@@ -3,11 +3,10 @@ import { Enum, EnumFactoryBase } from 'lite-ts-enum';
 import { Mock } from 'lite-ts-mock';
 import moment from 'moment';
 
-import { ExpireTimeHandlerBase } from './expire-time-handler-base';
-import { ValueService } from './value-service';
+import { ExpireTimeHanglerBase } from './expire-time-handler-base';
 import { ValueTypeData } from './value-type-data';
 
-class Self extends ExpireTimeHandlerBase {
+class Self extends ExpireTimeHanglerBase {
     protected async handleDiff() { }
 }
 
@@ -16,8 +15,8 @@ describe('src/expire-time-handler-base.ts', () => {
         it('无valueTypeTime', async () => {
             const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new Self(
-                mockEnumFactory.actual,
                 null,
+                mockEnumFactory.actual,
             );
 
             const mockEnum = new Mock<Enum<ValueTypeData>>({
@@ -48,14 +47,14 @@ describe('src/expire-time-handler-base.ts', () => {
         it('diff', async () => {
             const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new Self(
-                mockEnumFactory.actual,
                 async () => moment().unix(),
+                mockEnumFactory.actual,
             );
 
             const allItem = {
                 2: {
                     time: {
-                        expireOn: 1
+                        expiredOnValueType: 3
                     }
                 } as ValueTypeData
             };
@@ -63,30 +62,30 @@ describe('src/expire-time-handler-base.ts', () => {
                 allItem
             });
             mockEnumFactory.expectReturn(
-                r => r.build('ValueTypeData', undefined),
+                r => r.build('ValueTypeData', 0),
                 mockEnum.actual
-            );
-
-            const mockValueService = new Mock<ValueService>();
-            mockValueService.expectReturn(
-                r => r.getCount(null, 3),
-                0
             );
 
             const res = {
                 count: 1,
-                valueType: 3,
+                valueType: 2,
             };
             Reflect.set(self, 'handleDiff', (arg: any, arg1: any) => {
-                strictEqual(arg, 3);
-                deepStrictEqual(arg1, mockValueService.actual);
+                deepStrictEqual(arg, {
+                    areaNo: 0,
+                    uow: null,
+                    value: res
+                });
+                deepStrictEqual(arg1, {
+                    expiredOnValueType: 3
+                });
             });
 
             await self.handle({
+                areaNo: 0,
                 uow: null,
-                value: res,
-                valueService: mockValueService.actual
-            });
+                value: res
+            } as any);
         });
     });
 });

@@ -1,15 +1,62 @@
 import { deepStrictEqual } from 'assert';
+import { EnumFactoryBase } from 'lite-ts-enum';
 import { Mock, mockAny } from 'lite-ts-mock';
 import { RpcBase } from 'lite-ts-rpc';
 
-import { Time } from './expire-time-handler-base';
 import { UpdateTargetTimeValueHandler as Self } from './update-target-time-handler';
-import { Value } from './value';
 import { ValueService } from './value-service';
 
 describe('src/update-target-time-handler.ts', () => {
-    describe('.handleDiff(value: Value, valueService: ValueService, time: Time, areaNo: number)', () => {
+    describe('.handleDiff(option: ValueHandlerOption, time: Time)', () => {
         it('ok', async () => {
+            const mockRpc = new Mock<RpcBase>();
+            mockRpc.expectReturn(
+                r => r.callWithoutThrow(mockAny),
+                {
+                    data: 1
+                }
+            );
+            const mockEnumFactory = new Mock<EnumFactoryBase>();
+            const self = new Self(
+                async () => 100,
+                mockRpc.actual,
+                '',
+                mockEnumFactory.actual,
+            );
+
+            const ownValue = {
+                2: 1
+            };
+            const mockValueService = new Mock<ValueService>({
+                ownValue
+            });
+
+            const option = {
+                areaNo: 0,
+                value: {
+                    count: 1,
+                    valueType: 2
+                },
+                valueService: mockValueService.actual
+            } as any;
+            const fn = Reflect.get(self, 'handleDiff').bind(self) as (option: any, time: any) => Promise<void>;
+            await fn(
+                option,
+                {
+                    expiredOnValueType: 3,
+                    targetType: {
+                        app: '',
+                        ext: ''
+                    }
+                }
+            );
+            deepStrictEqual(ownValue, {
+                2: 0,
+                3: 1
+            });
+        });
+
+        it('false', async () => {
             const mockRpc = new Mock<RpcBase>();
             mockRpc.expectReturn(
                 r => r.callWithoutThrow(mockAny),
@@ -17,39 +64,43 @@ describe('src/update-target-time-handler.ts', () => {
                     data: 100
                 }
             );
+            const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new Self(
-                null,
-                null,
+                async () => 1,
                 mockRpc.actual,
-                ''
+                '',
+                mockEnumFactory.actual,
             );
-            const fn = Reflect.get(self, 'handleDiff').bind(self) as (value: Value, valueService: ValueService, time: Time, areaNo: number) => Promise<void>;
+
             const ownValue = {
-                1: 1,
                 2: 1
             };
             const mockValueService = new Mock<ValueService>({
                 ownValue
             });
-            await fn(
-                {
+
+            const option = {
+                areaNo: 0,
+                value: {
                     count: 1,
-                    valueType: 1
+                    valueType: 2
                 },
-                mockValueService.actual,
+                valueService: mockValueService.actual
+            } as any;
+            const fn = Reflect.get(self, 'handleDiff').bind(self) as (option: any, time: any) => Promise<void>;
+            await fn(
+                option,
                 {
-                    expiredOnValueType: 2,
+                    expiredOnValueType: 3,
                     targetType: {
                         app: '',
                         ext: ''
                     }
-                } as any,
-                0,
+                }
             );
-
             deepStrictEqual(ownValue, {
-                1: 0,
-                2: 100
+                2: 1,
+                3: 100
             });
         });
     });

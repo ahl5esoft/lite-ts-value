@@ -1,15 +1,19 @@
-import { ExpireTimeHandlerBase, Time } from './expire-time-handler-base';
-import { Value } from './value';
-import { ValueService } from './value-service';
+import { ExpireTimeHanglerBase } from './expire-time-handler-base';
+import { ValueHandlerOption } from './value-handler-option';
+import { Time } from './value-type-data';
 
-export class UpdateDurationTimeValueHandler extends ExpireTimeHandlerBase {
-    protected async handleDiff(value: Value, valueService: ValueService, time: Time) {
+export class UpdateDurationTimeValueHandler extends ExpireTimeHanglerBase {
+    protected async handleDiff(option: ValueHandlerOption, time: Time) {
         if (!time.duration)
             return;
 
         const now = await this.getNowFunc();
-        const ownValue = await valueService.ownValue;
-        ownValue[time.expiredOnValueType] = now + time.duration;
-        ownValue[value.valueType] = 0;
-    };
+        const ownValue = await option.valueService.ownValue;
+        if (ownValue[time.expiredOnValueType] > now) {
+            ownValue[time.expiredOnValueType] += time.duration;
+        } else {
+            ownValue[time.expiredOnValueType] = now + time.duration;
+            ownValue[option.value.valueType] = 0;
+        }
+    }
 }

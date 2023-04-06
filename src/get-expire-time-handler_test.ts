@@ -1,20 +1,67 @@
 import { strictEqual } from 'assert';
+import { Mock, mockAny } from 'lite-ts-mock';
 
-import { GetExpirationValueHandler as Self } from './get-expire-time-handler';
-import { Value } from './value';
+import { GetExpireTimeValueHandler as Self } from './get-expire-time-handler';
+import { ValueService } from './value-service';
 
-describe('src/get-expiration-handler.ts', () => {
-    describe('.handleDiff(_: number, value: Value)', () => {
-        it('ok', async () => {
-            const self = new Self(null, null);
+describe('src/get-expire-time-handler.ts', () => {
+    describe('.handleDiff(option: ValueHandlerOption, time: Time)', () => {
+        it('greater than', async () => {
+            const self = new Self(
+                async () => 100,
+                null
+            );
+            const mockValueService = new Mock<ValueService>();
+            mockValueService.expectReturn(
+                r => r.getCount(null, mockAny),
+                1
+            );
 
-            const fn = Reflect.get(self, 'handleDiff').bind(self) as (_: Value) => Promise<void>;
-            const res: Value = {
-                count: 1,
-                valueType: 2
-            };
-            await fn(res);
-            strictEqual(res.count, 0);
+            const option = {
+                uow: null,
+                value: {
+                    count: 1,
+                    valueType: 1
+                },
+                valueService: mockValueService.actual
+            } as any;
+            const fn = Reflect.get(self, 'handleDiff').bind(self) as (option: any, time: any) => Promise<void>;
+            await fn(
+                option,
+                {
+                    expiredOnValueType: 1
+                }
+            );
+            strictEqual(option.value.count, 0);
+        });
+
+        it('less than', async () => {
+            const self = new Self(
+                async () => 1,
+                null
+            );
+            const mockValueService = new Mock<ValueService>();
+            mockValueService.expectReturn(
+                r => r.getCount(null, mockAny),
+                100
+            );
+
+            const option = {
+                uow: null,
+                value: {
+                    count: 1,
+                    valueType: 1
+                },
+                valueService: mockValueService.actual
+            } as any;
+            const fn = Reflect.get(self, 'handleDiff').bind(self) as (option: any, time: any) => Promise<void>;
+            await fn(
+                option,
+                {
+                    expiredOnValueType: 1
+                }
+            );
+            strictEqual(option.value.count, 1);
         });
     });
 });

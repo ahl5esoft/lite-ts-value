@@ -1,22 +1,39 @@
-import { ExpireTimeHandlerBase, Time } from './expire-time-handler-base';
-import { Value } from './value';
-import { ValueService } from './value-service';
+import { EnumFactoryBase } from 'lite-ts-enum';
+import { RpcBase } from 'lite-ts-rpc';
 
-export class UpdateTargetTimeValueHandler extends ExpireTimeHandlerBase {
-    protected async handleDiff(value: Value, valueService: ValueService, time: Time, areaNo: number) {
+import { ExpireTimeHanglerBase } from './expire-time-handler-base';
+import { ValueHandlerOption } from './value-handler-option';
+import { Time } from './value-type-data';
+
+export class UpdateTargetTimeValueHandler extends ExpireTimeHanglerBase {
+    constructor(
+        protected getNowFunc: () => Promise<number>,
+        private rpc: RpcBase,
+        private userID: string,
+        m_EnumFactory: EnumFactoryBase
+    ) {
+        super(
+            getNowFunc,
+            m_EnumFactory
+        );
+    }
+
+    protected async handleDiff(option: ValueHandlerOption, time: Time) {
         if (!time.targetType)
             return;
 
-        const ownValue = await valueService.ownValue;
+        const now = await this.getNowFunc();
+        const ownValue = await option.valueService.ownValue;
         const res = await this.rpc.callWithoutThrow<number>({
             route: `/${time.targetType.app}/get-expire-time`,
             body: {
-                areaNo: areaNo ?? 0,
+                areaNo: option.areaNo ?? 0,
                 userID: this.userID,
                 ext: time.targetType.ext
             }
         });
         ownValue[time.expiredOnValueType] = res.data;
-        ownValue[value.valueType] = 0;
+        if (now > ownValue[time.expiredOnValueType])
+            ownValue[option.value.valueType] = 0;
     }
 }

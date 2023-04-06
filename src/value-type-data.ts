@@ -2,6 +2,18 @@ import { EnumItem } from 'lite-ts-enum';
 import moment from 'moment';
 import { Reward } from './reward';
 
+export class Time {
+    public duration: number;
+    public expiredOnValueType: number;
+    public expireOn: number;
+    public momentType: moment.unitOfTime.StartOf;
+    public targetType: {
+        app: string;
+        ext: any;
+    };
+    public valueType: number;
+}
+
 export class ValueTypeData extends EnumItem {
     public static ctor = 'ValueTypeData';
 
@@ -41,17 +53,7 @@ export class ValueTypeData extends EnumItem {
         absValeuTypes: number[];
         valueTypes: number[];
     };
-    public time: {
-        duration: number;
-        expiredOnValueType: number;
-        expireOn: number;
-        momentType: moment.unitOfTime.StartOf;
-        targetType: {
-            app: string;
-            ext: any;
-        };
-        valueType: number;
-    };
+    public time: Time;
 
     /**
      * 升级数值
