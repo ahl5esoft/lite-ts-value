@@ -41,5 +41,5 @@
     "test": "mocha -t 30s -r ./node_modules/ts-node/register/index.js --exit",
     "jspack": "webpack build && ts-node sh/jspack"
   },
-  "version": "1.17.0"
+  "version": "1.18.0"
 }
