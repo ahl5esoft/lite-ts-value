@@ -4,9 +4,9 @@
     "url": "https://github.com/ahl5esoft/lite-ts-value/issues"
   },
   "dependencies": {
-    "lite-ts-db": "^1.8.1",
-    "lite-ts-enum": "^1.6.0",
-    "lite-ts-rpc": "^1.5.0",
+    "lite-ts-db": "^1.8.2",
+    "lite-ts-enum": "^1.6.1",
+    "lite-ts-rpc": "^1.8.0",
     "moment": "^2.29.4"
   },
   "description": "线程库",

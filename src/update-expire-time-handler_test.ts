@@ -6,7 +6,7 @@ import { UpdateExpireTimeValueHandler as Self } from './update-expire-time-handl
 import { ValueService } from './value-service';
 
 describe('src/update-expire-time-handler.ts', () => {
-    describe('.handleDiff(option: ValueHandlerOption, time: Time)', () => {
+    describe('.handling(option: ValueHandlerOption, time: Time)', () => {
         it('ok', async () => {
             const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new Self(
@@ -29,7 +29,7 @@ describe('src/update-expire-time-handler.ts', () => {
                 },
                 valueService: mockValueService.actual
             } as any;
-            const fn = Reflect.get(self, 'handleDiff').bind(self) as (option: any, time: any) => Promise<void>;
+            const fn = Reflect.get(self, 'handling').bind(self) as (option: any, time: any) => Promise<void>;
             await fn(
                 option,
                 {
@@ -51,7 +51,8 @@ describe('src/update-expire-time-handler.ts', () => {
             );
 
             const ownValue = {
-                2: 1
+                2: 1,
+                3: 50
             };
             const mockValueService = new Mock<ValueService>({
                 ownValue
@@ -65,7 +66,7 @@ describe('src/update-expire-time-handler.ts', () => {
                 },
                 valueService: mockValueService.actual
             } as any;
-            const fn = Reflect.get(self, 'handleDiff').bind(self) as (option: any, time: any) => Promise<void>;
+            const fn = Reflect.get(self, 'handling').bind(self) as (option: any, time: any) => Promise<void>;
             await fn(
                 option,
                 {
