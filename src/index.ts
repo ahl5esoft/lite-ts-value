@@ -19,6 +19,8 @@ import { UpgradeData } from './upgrade-data';
 import { Value } from './value';
 import { ValueHandlerBase } from './value-handler-base';
 import { ValueHandlerOption } from './value-handler-option';
+import { ValueIntercept } from './value-interceptor-decorator';
+import { ValueInterceptorHandler } from './value-interceptor-handler';
 import { ValueService, ValueCondition } from './value-service';
 import { ValueTypeData } from './value-type-data';
 import { ValueTypeRewardAddition } from './value-type-reward-addition';
@@ -50,6 +52,8 @@ export {
     Value,
     ValueHandlerBase,
     ValueHandlerOption,
+    ValueIntercept,
+    ValueInterceptorHandler,
     ValueService,
     ValueCondition,
     ValueTypeData,
@@ -79,6 +83,8 @@ globalThis['lite-ts-value'] = {
     UpdateUpgradeValueHandler,
     UpgradeData,
     ValueHandlerBase,
+    ValueIntercept,
+    ValueInterceptorHandler,
     ValueService,
     ValueTypeData,
     ValueTypeRewardAddition,
