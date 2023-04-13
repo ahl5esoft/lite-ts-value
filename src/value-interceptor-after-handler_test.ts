@@ -36,7 +36,7 @@ describe('src/service/value/value-interceptor-handler.ts', () => {
                 }
             });
             mockEnumFactory.expectReturn(
-                r => r.build(mockAny),
+                r => r.build(mockAny, undefined),
                 mockEnum.actual
             );
 
@@ -61,7 +61,7 @@ describe('src/service/value/value-interceptor-handler.ts', () => {
                 }
             });
             mockEnumFactory.expectReturn(
-                r => r.build(mockAny),
+                r => r.build(mockAny, undefined),
                 mockEnum.actual
             );
 
@@ -86,7 +86,7 @@ describe('src/service/value/value-interceptor-handler.ts', () => {
                 }
             });
             mockEnumFactory.expectReturn(
-                r => r.build(mockAny),
+                r => r.build(mockAny, undefined),
                 mockEnum.actual
             );
 
