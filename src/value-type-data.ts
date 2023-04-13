@@ -1,18 +1,19 @@
 import { EnumItem } from 'lite-ts-enum';
 import moment from 'moment';
+
 import { Reward } from './reward';
 
 export type Time = {
     duration: number;
     expiredOnValueType: number;
-    expireOn: number;
+    expiredOn: number;
     momentType: moment.unitOfTime.StartOf;
     targetType: {
         app: string;
         ext: any;
     };
     valueType: number;
-}
+};
 
 export class ValueTypeData extends EnumItem {
     public static ctor = 'ValueTypeData';

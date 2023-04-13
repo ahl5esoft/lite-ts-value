@@ -4,10 +4,13 @@
     "url": "https://github.com/ahl5esoft/lite-ts-value/issues"
   },
   "dependencies": {
-    "lite-ts-db": "^1.8.2",
-    "lite-ts-enum": "^1.6.1",
+    "@types/jaeger-client": "^3.18.4",
+    "lite-ts-db": "^1.10.4",
+    "lite-ts-enum": "^1.8.1",
+    "lite-ts-jaeger-client": "^1.4.0",
     "lite-ts-rpc": "^1.8.0",
-    "moment": "^2.29.4"
+    "moment": "^2.29.4",
+    "typedi": "^0.8.0"
   },
   "description": "线程库",
   "devDependencies": {

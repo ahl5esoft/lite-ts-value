@@ -4,7 +4,7 @@ import { Time } from './value-type-data';
 
 export class UpdateExpireTimeValueHandler extends ExpireTimeHandlerBase {
     protected async handling(option: ValueHandlerOption, time: Time) {
-        if (!time.expireOn)
+        if (!time.expiredOn)
             return;
 
         const now = await this.getNowFunc();
@@ -12,6 +12,6 @@ export class UpdateExpireTimeValueHandler extends ExpireTimeHandlerBase {
         if (now > (ownValue[time.expiredOnValueType] || 0))
             ownValue[option.value.valueType] = 0;
 
-        ownValue[time.expiredOnValueType] = time.expireOn;
+        ownValue[time.expiredOnValueType] = time.expiredOn;
     }
 }

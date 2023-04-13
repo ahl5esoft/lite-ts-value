@@ -34,7 +34,7 @@ describe('src/update-expire-time-handler.ts', () => {
                 option,
                 {
                     expiredOnValueType: 3,
-                    expireOn: 1
+                    expiredOn: 1
                 }
             );
             deepStrictEqual(ownValue, {
@@ -71,7 +71,7 @@ describe('src/update-expire-time-handler.ts', () => {
                 option,
                 {
                     expiredOnValueType: 3,
-                    expireOn: 100
+                    expiredOn: 100
                 }
             );
             deepStrictEqual(ownValue, {
