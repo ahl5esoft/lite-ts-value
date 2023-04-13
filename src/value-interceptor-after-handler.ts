@@ -1,52 +1,49 @@
-import { TracerStrategy } from 'lite-ts-jaeger-client';
-import Container from 'typedi';
-
-import { ValueHandlerOption } from './value-handler-option';
-import { IValueInterceptor } from './value-interceptor-decorator';
-import { ValueInterceptorHandlerBase } from './value-interceptor-handler-base';
+import { IValueInterceptor, ValueInterceptorHandlerBase } from './value-interceptor-handler-base';
 import { ValueTypeData } from './value-type-data';
 
 /**
- * 更新前数值拦截元数据
+ * 数值拦截器
+ * 
+ * @param valueType 数值类型
  */
-export const valueInterceptorAfterMetadata = {
-    /**
-     * 断言
-     */
-    predicates: [] as {
-        /**
-         * 构造函数
-         */
-        ctor: new () => IValueInterceptor<any>;
-        /**
-         * 断言
-         */
-        predicate: (valueType: ValueTypeData) => boolean;
-    }[],
-    /**
-     * 数值类型
-     */
-    afterValueType: {} as { [valueType: number]: new () => IValueInterceptor<any>; }
-};
+export function ValueAfterIntercept(valueType: number): (ctor: new () => IValueInterceptor<any>) => void;
+
+/**
+ * 数值拦截器
+ * 
+ * @param predicate 断言
+ */
+export function ValueAfterIntercept(predicate: (valueType: ValueTypeData) => boolean): (ctor: new () => IValueInterceptor<any>) => void;
+
+/**
+ * 数值拦截装饰器
+ * 
+ * @param any 数值类型或断言
+ */
+export function ValueAfterIntercept(any: number | ((valueType: ValueTypeData) => boolean)) {
+    return (ctor: new () => IValueInterceptor<any>) => {
+        if (typeof any == 'number') {
+            ValueInterceptorAfterHandler.metadata.valueType[any] = ctor;
+        } else {
+            ValueInterceptorAfterHandler.metadata.predicates.push({
+                ctor,
+                predicate: any,
+            });
+        }
+    };
+}
 
 export class ValueInterceptorAfterHandler extends ValueInterceptorHandlerBase {
-    protected async intercept(option: ValueHandlerOption) {
-        if (!valueInterceptorAfterMetadata.afterValueType[option.value.valueType]) {
-            const allValueTypeItem = await this.enumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).allItem;
-            if (allValueTypeItem[option.value.valueType]) {
-                for (const r of valueInterceptorAfterMetadata.predicates) {
-                    const ok = r.predicate(allValueTypeItem[option.value.valueType]);
-                    if (ok)
-                        valueInterceptorAfterMetadata.afterValueType[option.value.valueType] = r.ctor;
-                }
-            }
-        }
 
-        if (valueInterceptorAfterMetadata.afterValueType[option.value.valueType]) {
-            const interceptor = Container.get(valueInterceptorAfterMetadata.afterValueType[option.value.valueType]);
-            Container.remove(valueInterceptorAfterMetadata.afterValueType[option.value.valueType]);
-            const traceInterceptor = new TracerStrategy(interceptor).withTrace(this.parentSpan);
-            await traceInterceptor.intercept(option);
-        }
+    /**
+     * 更新数值拦截元数据
+     */
+    public static metadata = {
+        predicates: [],
+        valueType: {}
+    };
+
+    protected getMetadata() {
+        return ValueInterceptorAfterHandler.metadata;
     }
 }
