@@ -24,7 +24,7 @@ export class UpdateTargetTimeValueHandler extends ExpireTimeHandlerBase {
 
         const now = await this.getNowFunc();
         const ownValue = await option.valueService.ownValue;
-        if (now > (ownValue[time.expiredOnValueType] || 0))
+        if (now > (ownValue[time.expireOnValueType] || 0))
             ownValue[option.value.valueType] = 0;
 
         const res = await this.m_Rpc.call<number>({
@@ -35,6 +35,6 @@ export class UpdateTargetTimeValueHandler extends ExpireTimeHandlerBase {
                 ext: time.targetType.ext
             }
         });
-        ownValue[time.expiredOnValueType] = res.data;
+        ownValue[time.expireOnValueType] = res.data;
     }
 }

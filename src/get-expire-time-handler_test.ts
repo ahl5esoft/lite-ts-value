@@ -29,7 +29,7 @@ describe('src/get-expire-time-handler.ts', () => {
             await fn(
                 option,
                 {
-                    expiredOnValueType: 1
+                    expireOnValueType: 1
                 }
             );
             strictEqual(option.value.count, 0);
@@ -58,7 +58,7 @@ describe('src/get-expire-time-handler.ts', () => {
             await fn(
                 option,
                 {
-                    expiredOnValueType: 1
+                    expireOnValueType: 1
                 }
             );
             strictEqual(option.value.count, 1);

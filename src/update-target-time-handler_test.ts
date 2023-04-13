@@ -43,7 +43,7 @@ describe('src/update-target-time-handler.ts', () => {
             await fn(
                 option,
                 {
-                    expiredOnValueType: 3,
+                    expireOnValueType: 3,
                     targetType: {
                         app: '',
                         ext: ''
@@ -92,7 +92,7 @@ describe('src/update-target-time-handler.ts', () => {
             await fn(
                 option,
                 {
-                    expiredOnValueType: 3,
+                    expireOnValueType: 3,
                     targetType: {
                         app: '',
                         ext: ''

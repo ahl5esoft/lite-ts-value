@@ -30,7 +30,7 @@ describe('src/update-duration-time-handler.ts', () => {
                 },
                 {
                     duration: 1,
-                    expiredOnValueType: 3
+                    expireOnValueType: 3
                 }
             );
             deepStrictEqual(ownValue, {
@@ -60,7 +60,7 @@ describe('src/update-duration-time-handler.ts', () => {
                 },
                 {
                     duration: 1,
-                    expiredOnValueType: 3
+                    expireOnValueType: 3
                 }
             );
             deepStrictEqual(ownValue, {

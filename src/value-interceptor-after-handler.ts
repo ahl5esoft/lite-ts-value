@@ -32,7 +32,7 @@ export const valueInterceptorAfterMetadata = {
 export class ValueInterceptorAfterHandler extends ValueInterceptorHandlerBase {
     protected async intercept(option: ValueHandlerOption) {
         if (!valueInterceptorAfterMetadata.afterValueType[option.value.valueType]) {
-            const allValueTypeItem = await this.enumFactory.build<ValueTypeData>(ValueTypeData.name, option.areaNo).allItem;
+            const allValueTypeItem = await this.enumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).allItem;
             if (allValueTypeItem[option.value.valueType]) {
                 for (const r of valueInterceptorAfterMetadata.predicates) {
                     const ok = r.predicate(allValueTypeItem[option.value.valueType]);

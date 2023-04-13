@@ -5,6 +5,7 @@ import { Value } from './value';
 import { ValueCondition } from './value-service';
 
 export class UpgradeData extends EnumItem {
+    public static ctor = 'UpgradeData';
     /**
      * 升级配置
      */

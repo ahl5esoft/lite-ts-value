@@ -54,7 +54,7 @@ describe('src/expire-time-handler-base.ts', () => {
             const allItem = {
                 2: {
                     time: {
-                        expiredOnValueType: 3
+                        expireOnValueType: 3
                     }
                 } as ValueTypeData
             };
@@ -77,7 +77,7 @@ describe('src/expire-time-handler-base.ts', () => {
                     value: res
                 });
                 deepStrictEqual(arg1, {
-                    expiredOnValueType: 3
+                    expireOnValueType: 3
                 });
             });
 
