@@ -19,8 +19,10 @@ import { UpgradeData } from './upgrade-data';
 import { Value } from './value';
 import { ValueHandlerBase } from './value-handler-base';
 import { ValueHandlerOption } from './value-handler-option';
-import { ValueIntercept } from './value-interceptor-decorator';
-import { ValueInterceptorHandler } from './value-interceptor-handler';
+import { ValueInterceptorAfterHandler } from './value-interceptor-after-handler';
+import { ValueInterceptorBeforeHandler } from './value-interceptor-before-handler';
+import { ValueAfterIntercept, ValueBeforeIntercept } from './value-interceptor-decorator';
+import { ValueInterceptorHandlerBase } from './value-interceptor-handler-base';
 import { ValueService, ValueCondition } from './value-service';
 import { ValueTypeData } from './value-type-data';
 import { ValueTypeRewardAddition } from './value-type-reward-addition';
@@ -36,8 +38,8 @@ export {
     GetAutoRecoveryValueHandler,
     GetExpireTimeValueHandler,
     GetTimeValueHandler,
-    RewardService,
     Reward,
+    RewardService,
     UpdateAutoRecoveryValueHandler,
     UpdateCountValueHandler,
     UpdateDurationTimeValueHandler,
@@ -50,19 +52,22 @@ export {
     UpdateUpgradeValueHandler,
     UpgradeData,
     Value,
+    ValueAfterIntercept,
+    ValueBeforeIntercept,
+    ValueCondition,
     ValueHandlerBase,
     ValueHandlerOption,
-    ValueIntercept,
-    ValueInterceptorHandler,
+    ValueInterceptorAfterHandler,
+    ValueInterceptorBeforeHandler,
+    ValueInterceptorHandlerBase,
     ValueService,
-    ValueCondition,
     ValueTypeData,
     ValueTypeRewardAddition,
     valueTypeRewardAdditionReduce,
     ValueTypeRewardOpen,
     valueTypeRewardOpenReduce,
-    valueTypeUpgradeReduce,
-    ValueTypeUpgrade
+    ValueTypeUpgrade,
+    valueTypeUpgradeReduce
 };
 globalThis['lite-ts-value'] = {
     CheckNegativeValueHandler,
@@ -82,15 +87,18 @@ globalThis['lite-ts-value'] = {
     UpdateTimeValueHandler,
     UpdateUpgradeValueHandler,
     UpgradeData,
+    ValueAfterIntercept,
+    ValueBeforeIntercept,
     ValueHandlerBase,
-    ValueIntercept,
-    ValueInterceptorHandler,
+    ValueInterceptorAfterHandler,
+    ValueInterceptorBeforeHandler,
+    ValueInterceptorHandlerBase,
     ValueService,
     ValueTypeData,
     ValueTypeRewardAddition,
     valueTypeRewardAdditionReduce,
     ValueTypeRewardOpen,
     valueTypeRewardOpenReduce,
-    valueTypeUpgradeReduce,
-    ValueTypeUpgrade
+    ValueTypeUpgrade,
+    valueTypeUpgradeReduce
 };
