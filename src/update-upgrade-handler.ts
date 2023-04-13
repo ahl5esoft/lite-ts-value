@@ -19,11 +19,11 @@ export class UpdateUpgradeValueHandler extends ValueHandlerBase {
     }
 
     public async handle(option: ValueHandlerOption) {
-        const valueTypeUpgrade = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.name, option.areaNo).getReduce<ValueTypeUpgrade>(ValueTypeUpgrade.name);
+        const valueTypeUpgrade = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).getReduce<ValueTypeUpgrade>(ValueTypeUpgrade.name);
         const levelValueType = valueTypeUpgrade[option.value.valueType];
         if (levelValueType && option.value.count > 0) {
             const level = await option.valueService.getCount(option.uow, levelValueType);
-            const upgradeDataAllItem = await this.m_EnumFactory.build<UpgradeData>(UpgradeData.name, option.areaNo).allItem;
+            const upgradeDataAllItem = await this.m_EnumFactory.build<UpgradeData>(UpgradeData.ctor, option.areaNo).allItem;
             if (upgradeDataAllItem[levelValueType]?.list?.[level - 1]) {
                 const ok = await option.valueService.checkConditions(option.uow, upgradeDataAllItem[levelValueType].list[level - 1].condition);
                 if (ok) {
