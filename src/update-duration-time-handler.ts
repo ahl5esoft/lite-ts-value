@@ -9,10 +9,10 @@ export class UpdateDurationTimeValueHandler extends ExpireTimeHandlerBase {
 
         const now = await this.getNowFunc();
         const ownValue = await option.valueService.ownValue;
-        if (ownValue[time.expiredOnValueType] > now) {
-            ownValue[time.expiredOnValueType] += time.duration;
+        if (ownValue[time.expireOnValueType] > now) {
+            ownValue[time.expireOnValueType] += time.duration;
         } else {
-            ownValue[time.expiredOnValueType] = now + time.duration;
+            ownValue[time.expireOnValueType] = now + time.duration;
             ownValue[option.value.valueType] = 0;
         }
     }

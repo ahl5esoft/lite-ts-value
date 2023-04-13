@@ -5,8 +5,8 @@ import { Reward } from './reward';
 
 export type Time = {
     duration: number;
-    expiredOnValueType: number;
-    expiredOn: number;
+    expireOnValueType: number;
+    expireOn: number;
     momentType: moment.unitOfTime.StartOf;
     targetType: {
         app: string;

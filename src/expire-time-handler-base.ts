@@ -16,7 +16,7 @@ export abstract class ExpireTimeHandlerBase extends ValueHandlerBase {
     public async handle(option: ValueHandlerOption) {
         const allItem = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).allItem;
         const time = allItem[option.value.valueType]?.time;
-        if (time?.expiredOnValueType)
+        if (time?.expireOnValueType)
             await this.handling(option, time);
 
         await this.next?.handle?.(option);
