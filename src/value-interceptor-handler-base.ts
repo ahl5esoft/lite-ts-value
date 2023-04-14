@@ -1,10 +1,10 @@
 import { EnumFactoryBase } from 'lite-ts-enum';
 import Container from 'typedi';
 
+import { InterceptorMetadata } from './interceptor-metadata';
 import { ValueHandlerBase } from './value-handler-base';
 import { ValueHandlerOption } from './value-handler-option';
 import { ValueTypeData } from './value-type-data';
-import { InterceptorMetadata } from './interceptor-metadata';
 
 export interface IValueInterceptor<T> {
     intercept(option: ValueHandlerOption): Promise<T>;
@@ -43,8 +43,19 @@ export abstract class ValueInterceptorHandlerBase extends ValueHandlerBase {
         await this.next?.handle(option);
     }
 
+    public addObserver(predicate: ((valueType: ValueTypeData) => boolean), ctor: new () => IValueInterceptor<any>) {
+        this.metadata.predicates.push({
+            ctor,
+            predicate
+        });
+    };
+
+    public removeObserver(valueType: number) {
+        delete this.metadata.valueType[valueType];
+    };
+
     public static register(typer: {
-        metadata: InterceptorMetadata
+        metadata: InterceptorMetadata;
     }, valueTypeOrPredicate: number | ((valueType: ValueTypeData) => boolean)) {
         return (ctor: new () => IValueInterceptor<any>) => {
             if (typeof valueTypeOrPredicate == 'number') {
