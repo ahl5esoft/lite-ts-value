@@ -8,7 +8,7 @@ import { IValueInterceptor, ValueInterceptorHandlerBase } from './value-intercep
 import { ValueTypeData } from './value-type-data';
 
 class AfterHandler extends ValueInterceptorHandlerBase {
-    protected getMetadata() {
+    protected get metadata() {
         return ValueInterceptorAfterHandler.metadata;
     }
 }
@@ -30,7 +30,7 @@ class ValueAfterValueType implements IValueInterceptor<void> {
 }
 
 class BeforeHandler extends ValueInterceptorHandlerBase {
-    protected getMetadata() {
+    protected get metadata() {
         return ValueInterceptorBeforeHandler.metadata;
     }
 }

@@ -73,6 +73,64 @@ declare class GetAutoRecoveryValueHandler extends ValueHandlerBase {
     handle(option: ValueHandlerOption): Promise<void>;
 }
 import { EnumFactoryBase } from 'lite-ts-enum';
+import moment from 'moment';
+import { EnumItem } from 'lite-ts-enum';
+type Reward = Value & {
+    weight?: number;
+};
+type Time = {
+    duration: number;
+    expireOnValueType: number;
+    expireOn: number;
+    momentType: string;
+    targetType: {
+        app: string;
+        ext: any;
+    };
+    valueType: number;
+};
+declare class ValueTypeData extends EnumItem {
+    static ctor: string;
+    autoRecovery: {
+        countdownOnValueType: number;
+        interval: number;
+        limitValueType: number;
+    };
+    isNegative: boolean;
+    isReplace: boolean;
+    value: number;
+    text: string;
+    range: {
+        max: number;
+        min: number;
+    };
+    reward: {
+        addition: {
+            childValueType: number;
+            mainValueType: number;
+        };
+        open: Reward[][];
+    };
+    sync: {
+        absValeuTypes: number[];
+        valueTypes: number[];
+    };
+    time: Time;
+    upgrade: {
+        valueType: number;
+    };
+}
+declare abstract class ExpireTimeHandlerBase extends ValueHandlerBase {
+    protected getNowFunc: () => Promise<number>;
+    private m_EnumFactory;
+    constructor(getNowFunc: () => Promise<number>, m_EnumFactory: EnumFactoryBase);
+    handle(option: ValueHandlerOption): Promise<void>;
+    protected abstract handling(option: ValueHandlerOption, time: Time): Promise<void>;
+}
+declare class GetExpireTimeValueHandler extends ExpireTimeHandlerBase {
+    protected handling(option: ValueHandlerOption, time: Time): Promise<void>;
+}
+import { EnumFactoryBase } from 'lite-ts-enum';
 declare abstract class TimeValueHandlerBase extends ValueHandlerBase {
     protected enumFactory: EnumFactoryBase;
     protected getNowFunc: () => Promise<number>;
@@ -83,9 +141,6 @@ declare abstract class TimeValueHandlerBase extends ValueHandlerBase {
 declare class GetTimeValueHandler extends TimeValueHandlerBase {
     protected handleDiff(_: number, value: Value): Promise<void>;
 }
-type Reward = Value & {
-    weight?: number;
-};
 import { EnumFactoryBase } from 'lite-ts-enum';
 import { IRandSeedService, IUnitOfWork } from 'lite-ts-db';
 declare class RewardService {
@@ -111,6 +166,12 @@ declare class UpdateAutoRecoveryValueHandler extends ValueHandlerBase {
 declare class UpdateCountValueHandler extends ValueHandlerBase {
     handle(option: ValueHandlerOption): Promise<void>;
 }
+declare class UpdateDurationTimeValueHandler extends ExpireTimeHandlerBase {
+    protected handling(option: ValueHandlerOption, time: Time): Promise<void>;
+}
+declare class UpdateExpireTimeValueHandler extends ExpireTimeHandlerBase {
+    protected handling(option: ValueHandlerOption, time: Time): Promise<void>;
+}
 import { EnumFactoryBase } from 'lite-ts-enum';
 declare class UpdateIsReplaceValueHandler extends ValueHandlerBase {
     private m_EnumFactory;
@@ -129,6 +190,15 @@ declare class UpdateSyncValueHandler extends ValueHandlerBase {
     constructor(m_EnumFactory: EnumFactoryBase);
     handle(option: ValueHandlerOption): Promise<void>;
 }
+import { RpcBase } from 'lite-ts-rpc';
+import { EnumFactoryBase } from 'lite-ts-enum';
+declare class UpdateTargetTimeValueHandler extends ExpireTimeHandlerBase {
+    protected getNowFunc: () => Promise<number>;
+    private m_Rpc;
+    private m_UserID;
+    constructor(getNowFunc: () => Promise<number>, m_Rpc: RpcBase, m_UserID: string, enumFactory: EnumFactoryBase);
+    protected handling(option: ValueHandlerOption, time: Time): Promise<void>;
+}
 declare class UpdateTimeValueHandler extends TimeValueHandlerBase {
     protected handleDiff(timeValueType: number, value: Value, valueService: ValueService): Promise<void>;
 }
@@ -141,6 +211,7 @@ declare class UpdateUpgradeValueHandler extends ValueHandlerBase {
 }
 import { EnumItem } from 'lite-ts-enum';
 declare class UpgradeData extends EnumItem {
+    static ctor: string;
     list: {
         condition: ValueCondition[][];
         consumeValues: Value[];
@@ -148,45 +219,40 @@ declare class UpgradeData extends EnumItem {
     }[];
     value: number;
 }
-import moment from 'moment';
-import { EnumItem } from 'lite-ts-enum';
-declare class ValueTypeData extends EnumItem {
-    static ctor: string;
-    autoRecovery: {
-        countdownOnValueType: number;
-        interval: number;
-        limitValueType: number;
+import { EnumFactoryBase } from 'lite-ts-enum';
+interface IValueInterceptor<T> {
+    intercept(option: ValueHandlerOption): Promise<T>;
+}
+declare abstract class ValueInterceptorHandlerBase extends ValueHandlerBase {
+    protected enumFactory: EnumFactoryBase;
+    static wrapperFunc: (interceptor: IValueInterceptor<any>) => IValueInterceptor<any>;
+    protected abstract get metadata(): InterceptorMetadata;
+    constructor(enumFactory: EnumFactoryBase);
+    handle(option: ValueHandlerOption): Promise<void>;
+    static register(typer: {
+        metadata: InterceptorMetadata;
+    }, valueTypeOrPredicate: number | ((valueType: ValueTypeData) => boolean)): (ctor: new () => IValueInterceptor<any>) => void;
+}
+type InterceptorMetadata = {
+    predicates: {
+        ctor: new () => IValueInterceptor<any>;
+        predicate: (valueType: ValueTypeData) => boolean;
+    }[];
+    valueType: {
+        [valueType: number]: new () => IValueInterceptor<any>;
     };
-    expiration: {
-        valueType: number;
-        expirationOn: number;
-    };
-    isNegative: boolean;
-    isReplace: boolean;
-    value: number;
-    text: string;
-    range: {
-        max: number;
-        min: number;
-    };
-    reward: {
-        addition: {
-            childValueType: number;
-            mainValueType: number;
-        };
-        open: Reward[][];
-    };
-    sync: {
-        absValeuTypes: number[];
-        valueTypes: number[];
-    };
-    time: {
-        valueType: number;
-        momentType: string;
-    };
-    upgrade: {
-        valueType: number;
-    };
+};
+declare function ValueAfterIntercept(valueType: number): (ctor: new () => IValueInterceptor<any>) => void;
+declare function ValueAfterIntercept(predicate: (valueType: ValueTypeData) => boolean): (ctor: new () => IValueInterceptor<any>) => void;
+declare class ValueInterceptorAfterHandler extends ValueInterceptorHandlerBase {
+    static metadata: InterceptorMetadata;
+    protected get metadata(): InterceptorMetadata;
+}
+declare function ValueBeforeIntercept(valueType: number): (ctor: new () => IValueInterceptor<boolean>) => void;
+declare function ValueBeforeIntercept(predicate: (valueType: ValueTypeData) => boolean): (ctor: new () => IValueInterceptor<boolean>) => void;
+declare class ValueInterceptorBeforeHandler extends ValueInterceptorHandlerBase {
+    static metadata: InterceptorMetadata;
+    protected get metadata(): InterceptorMetadata;
 }
 declare class ValueTypeRewardAddition {
     static ctor: string;

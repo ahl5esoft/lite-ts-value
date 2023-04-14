@@ -1,73 +1,60 @@
-import { opentracing } from 'jaeger-client';
-import { TracerStrategy } from 'lite-ts-jaeger-client';
 import { EnumFactoryBase } from 'lite-ts-enum';
 import Container from 'typedi';
 
 import { ValueHandlerBase } from './value-handler-base';
 import { ValueHandlerOption } from './value-handler-option';
 import { ValueTypeData } from './value-type-data';
-
-type Metadata = {
-    predicates: {
-        ctor: new () => IValueInterceptor<any>;
-        predicate: (valueType: ValueTypeData) => boolean;
-    }[];
-    valueType: {
-        [valueType: number]: new () => IValueInterceptor<any>;
-    };
-};
+import { InterceptorMetadata } from './interceptor-metadata';
 
 export interface IValueInterceptor<T> {
     intercept(option: ValueHandlerOption): Promise<T>;
 }
 
 export abstract class ValueInterceptorHandlerBase extends ValueHandlerBase {
-
-    /**
-     * 更新数值拦截元数据
-     */
-    public static metadata = {
-        /**
-         * 断言
-         */
-        predicates: [],
-        /**
-         * 数值类型
-         */
-        valueType: {}
-    } as Metadata;
+    public static wrapperFunc = (interceptor: IValueInterceptor<any>) => interceptor;
+    protected abstract get metadata(): InterceptorMetadata;
 
     public constructor(
         protected enumFactory: EnumFactoryBase,
-        protected parentSpan?: opentracing.Span
     ) {
         super();
     };
 
     public async handle(option: ValueHandlerOption) {
-        const metadata = this.getMetadata();
-        if (!metadata.valueType[option.value.valueType]) {
+        if (!this.metadata.valueType[option.value.valueType]) {
             const allValueTypeItem = await this.enumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).allItem;
             if (allValueTypeItem[option.value.valueType]) {
-                for (const r of metadata.predicates) {
+                for (const r of this.metadata.predicates) {
                     const ok = r.predicate(allValueTypeItem[option.value.valueType]);
                     if (ok)
-                        metadata.valueType[option.value.valueType] = r.ctor;
+                        this.metadata.valueType[option.value.valueType] = r.ctor;
                 }
             }
         }
 
-        if (metadata.valueType[option.value.valueType]) {
-            const interceptor = Container.get(metadata.valueType[option.value.valueType]);
-            Container.remove(metadata.valueType[option.value.valueType]);
-            const traceInterceptor = new TracerStrategy(interceptor).withTrace(this.parentSpan);
-            const ok = await traceInterceptor.intercept(option);
+        if (this.metadata.valueType[option.value.valueType]) {
+            let interceptor = Container.get(this.metadata.valueType[option.value.valueType]);
+            Container.remove(this.metadata.valueType[option.value.valueType]);
+            const ok = ValueInterceptorHandlerBase.wrapperFunc(interceptor).intercept(option);
             if (ok)
                 return;
         }
 
-        await this.next?.handle?.(option);
+        await this.next?.handle(option);
     }
 
-    protected abstract getMetadata(): Metadata;
+    public static register(typer: {
+        metadata: InterceptorMetadata
+    }, valueTypeOrPredicate: number | ((valueType: ValueTypeData) => boolean)) {
+        return (ctor: new () => IValueInterceptor<any>) => {
+            if (typeof valueTypeOrPredicate == 'number') {
+                typer.metadata.valueType[valueTypeOrPredicate] = ctor;
+            } else {
+                typer.metadata.predicates.push({
+                    ctor,
+                    predicate: valueTypeOrPredicate,
+                });
+            }
+        };
+    }
 }

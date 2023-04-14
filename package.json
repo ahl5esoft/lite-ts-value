@@ -4,10 +4,8 @@
     "url": "https://github.com/ahl5esoft/lite-ts-value/issues"
   },
   "dependencies": {
-    "@types/jaeger-client": "^3.18.4",
     "lite-ts-db": "^1.10.4",
     "lite-ts-enum": "^1.8.1",
-    "lite-ts-jaeger-client": "^1.4.0",
     "lite-ts-rpc": "^1.9.0",
     "moment": "^2.29.4",
     "typedi": "^0.8.0"
@@ -38,7 +36,6 @@
   },
   "scripts": {
     "build": "tsc -p build.tsconfig.json",
-    "doc": "typedoc src/index.ts",
     "login": "npm config delete registry && npm config set https-proxy http://127.0.0.1:4780 && npm login",
     "release": "npm run build && npm publish && npm config delete https-proxy && npm config set registry=https://registry.npm.taobao.org",
     "test": "mocha -t 30s -r ./node_modules/ts-node/register/index.js --exit",
