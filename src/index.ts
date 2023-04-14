@@ -19,10 +19,9 @@ import { UpgradeData } from './upgrade-data';
 import { Value } from './value';
 import { ValueHandlerBase } from './value-handler-base';
 import { ValueHandlerOption } from './value-handler-option';
-import { ValueInterceptorAfterHandler } from './value-interceptor-after-handler';
-import { ValueInterceptorBeforeHandler } from './value-interceptor-before-handler';
-import { ValueAfterIntercept, ValueBeforeIntercept } from './value-interceptor-decorator';
-import { ValueInterceptorHandlerBase } from './value-interceptor-handler-base';
+import { ValueAfterIntercept, ValueInterceptorAfterHandler } from './value-interceptor-after-handler';
+import { ValueBeforeIntercept, ValueInterceptorBeforeHandler } from './value-interceptor-before-handler';
+import { IValueInterceptor, ValueInterceptorHandlerBase } from './value-interceptor-handler-base';
 import { ValueService, ValueCondition } from './value-service';
 import { ValueTypeData } from './value-type-data';
 import { ValueTypeRewardAddition } from './value-type-reward-addition';
@@ -38,6 +37,7 @@ export {
     GetAutoRecoveryValueHandler,
     GetExpireTimeValueHandler,
     GetTimeValueHandler,
+    IValueInterceptor,
     Reward,
     RewardService,
     UpdateAutoRecoveryValueHandler,

@@ -6,6 +6,7 @@
   "dependencies": {
     "@types/jaeger-client": "^3.18.4",
     "lite-ts-db": "^1.10.4",
+    "lite-ts-enum": "^1.8.1",
     "lite-ts-jaeger-client": "^1.4.0",
     "lite-ts-rpc": "^1.9.0",
     "moment": "^2.29.4",
