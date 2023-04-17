@@ -51,66 +51,8 @@ class ValueBeforeValueType implements IValueInterceptor<boolean> {
     }
 }
 
-describe('src/service/value/value-interceptor-handler.ts', () => {
+describe('src/value-interceptor-handler.ts', () => {
     describe('.handle(option: ValueHandlerOption)', () => {
-        it('add-or-remove-after-client', async () => {
-            const mockEnumFactory = new Mock<EnumFactoryBase>();
-            const self = new AfterHandler(mockEnumFactory.actual);
-
-            const mockEnum = new Mock<Enum<ValueTypeData>>({
-                allItem: {
-                    2: {
-                        value: 2
-                    }
-                }
-            });
-            mockEnumFactory.expectReturn(
-                r => r.build(mockAny, undefined),
-                mockEnum.actual
-            );
-            self.addObserver((data: ValueTypeData) => {
-                return data.value == 2;
-            }, ValueAfterPredicate);
-
-            const option = {
-                value: {
-                    valueType: 2
-                }
-            } as any;
-            await self.handle(option);
-            self.removeObserver(2);
-            strictEqual(ValueInterceptorAfterHandler.metadata.valueType[2], undefined);
-        });
-
-        it('add-or-remove-before-client', async () => {
-            const mockEnumFactory = new Mock<EnumFactoryBase>();
-            const self = new BeforeHandler(mockEnumFactory.actual);
-
-            const mockEnum = new Mock<Enum<ValueTypeData>>({
-                allItem: {
-                    2: {
-                        value: 2
-                    }
-                }
-            });
-            mockEnumFactory.expectReturn(
-                r => r.build(mockAny, undefined),
-                mockEnum.actual
-            );
-            self.addObserver((data: ValueTypeData) => {
-                return data.value == 2;
-            }, ValueBeforePredicate);
-
-            const option = {
-                value: {
-                    valueType: 2
-                }
-            } as any;
-            await self.handle(option);
-            self.removeObserver(2);
-            strictEqual(ValueInterceptorBeforeHandler.metadata.valueType[2], undefined);
-        });
-
         it('after-predicate', async () => {
             const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new AfterHandler(mockEnumFactory.actual);

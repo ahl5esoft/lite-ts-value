@@ -43,17 +43,6 @@ export abstract class ValueInterceptorHandlerBase extends ValueHandlerBase {
         await this.next?.handle(option);
     }
 
-    public addObserver(predicate: ((valueType: ValueTypeData) => boolean), ctor: new () => IValueInterceptor<any>) {
-        this.metadata.predicates.push({
-            ctor,
-            predicate
-        });
-    };
-
-    public removeObserver(valueType: number) {
-        delete this.metadata.valueType[valueType];
-    };
-
     public static register(typer: {
         metadata: InterceptorMetadata;
     }, valueTypeOrPredicate: number | ((valueType: ValueTypeData) => boolean)) {
