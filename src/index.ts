@@ -21,6 +21,8 @@ import { ValueHandlerBase } from './value-handler-base';
 import { ValueHandlerOption } from './value-handler-option';
 import { ValueAfterIntercept, ValueInterceptorAfterHandler } from './value-interceptor-after-handler';
 import { ValueBeforeIntercept, ValueInterceptorBeforeHandler } from './value-interceptor-before-handler';
+import { ValueInterceptorClientHandler } from './value-interceptor-client-handler';
+import { ValueInterceptorClientPredicateHandler } from './value-interceptor-client-predicate-handler';
 import { IValueInterceptor } from './value-interceptor-handler-base';
 import { ValueService, ValueCondition } from './value-service';
 import { ValueTypeData } from './value-type-data';
@@ -59,6 +61,8 @@ export {
     ValueHandlerOption,
     ValueInterceptorAfterHandler,
     ValueInterceptorBeforeHandler,
+    ValueInterceptorClientHandler,
+    ValueInterceptorClientPredicateHandler,
     ValueService,
     ValueTypeData,
     ValueTypeRewardAddition,
@@ -91,6 +95,8 @@ globalThis['lite-ts-value'] = {
     ValueHandlerBase,
     ValueInterceptorAfterHandler,
     ValueInterceptorBeforeHandler,
+    ValueInterceptorClientHandler,
+    ValueInterceptorClientPredicateHandler,
     ValueService,
     ValueTypeData,
     ValueTypeRewardAddition,
