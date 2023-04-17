@@ -1,7 +1,7 @@
 import { EnumFactoryBase } from 'lite-ts-enum';
 
 import { ValueHandlerBase } from './value-handler-base';
-import { ValueHandlerOption } from './value-handler-option';
+import { ValueHandlerContext } from './value-handler-context';
 import { ValueTypeData } from './value-type-data';
 
 export class CustomError extends Error {
@@ -19,7 +19,7 @@ export class CheckNegativeValueHandler extends ValueHandlerBase {
         super();
     }
 
-    public async handle(option: ValueHandlerOption) {
+    public async handle(option: ValueHandlerContext) {
         const count = await option.valueService.getCount(option.uow, option.value.valueType);
         const allItem = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).allItem;
         if (count < 0 && !allItem[option.value.valueType]?.isNegative) {

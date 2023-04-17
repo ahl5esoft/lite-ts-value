@@ -3,18 +3,18 @@ import { Enum, EnumFactoryBase } from 'lite-ts-enum';
 import { Mock, mockAny } from 'lite-ts-mock';
 
 import { IValueObserver } from './i-value-observer';
-import { ValueHandlerOption } from './value-handler-option';
+import { ValueHandlerContext } from './value-handler-context';
 import { ValueInterceptorClientPredicateHandler } from './value-interceptor-client-predicate-handler';
 import { ValueTypeData } from './value-type-data';
 
 class ValueInterceptorClientPredicate implements IValueObserver {
-    public async notify(_: ValueHandlerOption) {
+    public async notify(_: ValueHandlerContext) {
         return;
     }
 }
 
 describe('src/value-interceptor-client-predicate-handler.ts', () => {
-    describe('.handle(option: ValueHandlerOption)', () => {
+    describe('.handle(option: ValueHandlerContext)', () => {
         it('interceptor-client-predicate', async () => {
             const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new ValueInterceptorClientPredicateHandler((value: true) => { return value; }, mockEnumFactory.actual);

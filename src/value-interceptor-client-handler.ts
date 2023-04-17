@@ -1,5 +1,5 @@
 import { IValueObserver } from './i-value-observer';
-import { ValueHandlerOption } from './value-handler-option';
+import { ValueHandlerContext } from './value-handler-context';
 import { ValueInterceptorClientHandlerBase } from './value-interceptor-client-handler-base';
 
 export class ValueInterceptorClientHandler extends ValueInterceptorClientHandlerBase {
@@ -16,7 +16,7 @@ export class ValueInterceptorClientHandler extends ValueInterceptorClientHandler
             this.m_Observer[valueType].push(observer);
     }
 
-    public async handle(option: ValueHandlerOption) {
+    public async handle(option: ValueHandlerContext) {
         if (this.m_Observer[option.value.valueType]?.length) {
             const task = this.m_Observer[option.value.valueType].map(async r => {
                 if (this.m_IsValidFunc(r))

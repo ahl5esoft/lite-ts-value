@@ -53,7 +53,7 @@ class ValueBeforeValueType implements IValueInterceptor<boolean> {
 }
 
 describe('src/value-interceptor-handler.ts', () => {
-    describe('.handle(option: ValueHandlerOption)', () => {
+    describe('.handle(option: ValueHandlerContext)', () => {
         it('after-predicate', async () => {
             const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new AfterHandler(mockEnumFactory.actual);

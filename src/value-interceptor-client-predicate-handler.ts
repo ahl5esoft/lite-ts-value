@@ -1,7 +1,7 @@
 import { EnumFactoryBase } from 'lite-ts-enum';
 
 import { IValueObserver } from './i-value-observer';
-import { ValueHandlerOption } from './value-handler-option';
+import { ValueHandlerContext } from './value-handler-context';
 import { ValueInterceptorClientHandlerBase } from './value-interceptor-client-handler-base';
 import { ValueTypeData } from './value-type-data';
 
@@ -28,7 +28,7 @@ export class ValueInterceptorClientPredicateHandler extends ValueInterceptorClie
         });
     }
 
-    public async handle(option: ValueHandlerOption) {
+    public async handle(option: ValueHandlerContext) {
         if (this.m_Observer.length) {
             const allItem = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).allItem;
             if (allItem[option.value.valueType]) {

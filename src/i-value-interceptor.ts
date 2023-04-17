@@ -1,5 +1,5 @@
-import { ValueHandlerOption } from './value-handler-option';
+import { ValueHandlerContext } from './value-handler-context';
 
 export interface IValueInterceptor<T> {
-    intercept(option: ValueHandlerOption): Promise<T>;
+    intercept(option: ValueHandlerContext): Promise<T>;
 }

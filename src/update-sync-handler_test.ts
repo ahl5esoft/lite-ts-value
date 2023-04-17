@@ -6,7 +6,7 @@ import { ValueService } from './value-service';
 import { ValueTypeData } from './value-type-data';
 
 describe('src/update-sync-handler.ts', () => {
-    describe('.handle(option: ValueHandlerOption)', () => {
+    describe('.handle(option: ValueHandlerContext)', () => {
         it('sync.valueTypes', async () => {
             const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new Self(

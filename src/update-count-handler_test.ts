@@ -5,7 +5,7 @@ import { UpdateCountValueHandler as Self } from './update-count-handler';
 import { ValueService } from './value-service';
 
 describe('src/update-count-handler.ts', () => {
-    describe('.handle(option: ValueHandlerOption)', () => {
+    describe('.handle(option: ValueHandlerContext)', () => {
         it('ok', async () => {
             const res = {};
             const self = new Self();

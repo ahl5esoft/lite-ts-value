@@ -20,7 +20,7 @@ import { UpdateUpgradeValueHandler } from './update-upgrade-handler';
 import { UpgradeData } from './upgrade-data';
 import { Value } from './value';
 import { ValueHandlerBase } from './value-handler-base';
-import { ValueHandlerOption } from './value-handler-option';
+import { ValueHandlerContext } from './value-handler-context';
 import { ValueAfterIntercept, ValueInterceptorAfterHandler } from './value-interceptor-after-handler';
 import { ValueBeforeIntercept, ValueInterceptorBeforeHandler } from './value-interceptor-before-handler';
 import { ValueInterceptorClientHandler } from './value-interceptor-client-handler';
@@ -60,7 +60,7 @@ export {
     ValueBeforeIntercept,
     ValueCondition,
     ValueHandlerBase,
-    ValueHandlerOption,
+    ValueHandlerContext,
     ValueInterceptorAfterHandler,
     ValueInterceptorBeforeHandler,
     ValueInterceptorClientHandler,
