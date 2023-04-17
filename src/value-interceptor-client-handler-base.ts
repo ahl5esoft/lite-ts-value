@@ -1,11 +1,16 @@
+import { IValueObserver } from './i-value-observer';
 import { ValueHandlerBase } from './value-handler-base';
-import { IValueInterceptor } from './value-interceptor-handler-base';
 import { ValueTypeData } from './value-type-data';
 
 export abstract class ValueInterceptorClientHandlerBase extends ValueHandlerBase {
-    public ctor: string;
 
-    public abstract addObserver(valueTypeOrPredicates: number | ((valueTypeData: ValueTypeData) => boolean), observer: IValueInterceptor<any>): void;
+    public constructor(
+        protected m_IsValidFunc: (observer: any) => boolean
+    ) {
+        super();
+    }
 
-    public abstract removeObserver(observer: IValueInterceptor<any>, valueType?: number): void;
+    public abstract addObserver(valueTypeOrPredicates: number | ((valueTypeData: ValueTypeData) => boolean), observer: IValueObserver): void;
+
+    public abstract removeObserver(observer: IValueObserver, valueType?: number): void;
 }

@@ -1,18 +1,18 @@
 import { deepStrictEqual } from 'assert';
 
+import { IValueObserver } from './i-value-observer';
 import { ValueInterceptorClientHandler } from './value-interceptor-client-handler';
-import { IValueInterceptor } from './value-interceptor-handler-base';
 import { ValueHandlerOption } from './value-handler-option';
 
-class ValueInterceptorClient implements IValueInterceptor<any> {
-    public async intercept(_: ValueHandlerOption) {
+class ValueInterceptorClient implements IValueObserver {
+    public async notify(_: ValueHandlerOption) {
         return;
     }
 }
 
 describe('src/value-interceptor-client-handler.ts', () => {
     describe('.handle(option: ValueHandlerOption)', () => {
-        it('after-predicate', async () => {
+        it('interceptor-client', async () => {
             const self = new ValueInterceptorClientHandler((value: true) => { return value; });
             const interceptClient = new ValueInterceptorClient();
             self.addObserver(1, interceptClient);
@@ -21,7 +21,7 @@ describe('src/value-interceptor-client-handler.ts', () => {
                     valueType: 1
                 }
             } as any);
-            const metadata = Reflect.get(self, 'm_Metadata');
+            const metadata = Reflect.get(self, 'm_Observer');
             deepStrictEqual(metadata, {
                 '1': [interceptClient]
             });

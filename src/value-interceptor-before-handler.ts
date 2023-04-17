@@ -1,5 +1,6 @@
+import { IValueInterceptor } from './i-value-interceptor';
 import { InterceptorMetadata } from './interceptor-metadata';
-import { IValueInterceptor, ValueInterceptorHandlerBase } from './value-interceptor-handler-base';
+import { ValueInterceptorHandlerBase } from './value-interceptor-handler-base';
 import { ValueTypeData } from './value-type-data';
 
 export function ValueBeforeIntercept(valueType: number): (ctor: new () => IValueInterceptor<boolean>) => void;

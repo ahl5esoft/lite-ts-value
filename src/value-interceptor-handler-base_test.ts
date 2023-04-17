@@ -2,9 +2,10 @@ import { strictEqual } from 'assert';
 import { Enum, EnumFactoryBase } from 'lite-ts-enum';
 import { Mock, mockAny } from 'lite-ts-mock';
 
+import { IValueInterceptor } from './i-value-interceptor';
 import { ValueAfterIntercept, ValueInterceptorAfterHandler } from './value-interceptor-after-handler';
 import { ValueBeforeIntercept, ValueInterceptorBeforeHandler } from './value-interceptor-before-handler';
-import { IValueInterceptor, ValueInterceptorHandlerBase } from './value-interceptor-handler-base';
+import { ValueInterceptorHandlerBase } from './value-interceptor-handler-base';
 import { ValueTypeData } from './value-type-data';
 
 class AfterHandler extends ValueInterceptorHandlerBase {
