@@ -21,8 +21,6 @@ export * from './value';
 export * from './value-condition';
 export * from './value-handler-base';
 export * from './value-handler-context';
-export * from './value-interceptor-after-handler';
-export * from './value-interceptor-before-handler';
 export * from './value-observer-handler';
 export * from './value-observer-predicate-handler';
 export * from './value-service';

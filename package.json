@@ -7,8 +7,7 @@
     "lite-ts-db": "^1.10.4",
     "lite-ts-enum": "^1.8.1",
     "lite-ts-rpc": "^1.9.0",
-    "moment": "^2.29.4",
-    "typedi": "^0.8.0"
+    "moment": "^2.29.4"
   },
   "description": "线程库",
   "devDependencies": {
