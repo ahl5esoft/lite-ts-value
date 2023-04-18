@@ -2,10 +2,11 @@ import { EnumItem } from 'lite-ts-enum';
 
 import { Reward } from './reward';
 import { Value } from './value';
-import { ValueCondition } from './value-service';
+import { ValueCondition } from './value-condition';
 
 export class UpgradeData extends EnumItem {
     public static ctor = 'UpgradeData';
+
     /**
      * 升级配置
      */
@@ -25,9 +26,4 @@ export class UpgradeData extends EnumItem {
             rewards: Reward[][];
         };
     };
-
-    /**
-     * 编号(数值类型)
-     */
-    public value: number;
 }

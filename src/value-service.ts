@@ -2,6 +2,7 @@ import { IUnitOfWork } from 'lite-ts-db';
 
 import { Value } from './value';
 import { ValueHandlerBase } from './value-handler-base';
+import { ValueCondition } from './value-condition';
 
 export enum RelationOperator {
     eq = '=',
@@ -12,10 +13,6 @@ export enum RelationOperator {
     nowDiff = 'now-diff',
     mod = '%'
 }
-
-export type ValueCondition = Value & {
-    op: string;
-};
 
 export class ValueService {
     public constructor(
