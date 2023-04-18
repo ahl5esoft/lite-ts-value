@@ -24,19 +24,19 @@ export class UpdateUpgradeValueHandler extends ValueHandlerBase {
         if (levelValueType && option.value.count > 0) {
             const level = await option.valueService.getCount(option.uow, levelValueType);
             const upgradeDataAllItem = await this.m_EnumFactory.build<UpgradeData>(UpgradeData.ctor, option.areaNo).allItem;
-            if (upgradeDataAllItem[levelValueType]?.list?.[level - 1]) {
-                const ok = await option.valueService.checkConditions(option.uow, upgradeDataAllItem[levelValueType].list[level - 1].condition);
+            if (upgradeDataAllItem[levelValueType]?.list?.[level]) {
+                const ok = await option.valueService.checkConditions(option.uow, upgradeDataAllItem[levelValueType].list[level].condition);
                 if (ok) {
                     const values = await this.m_RewardService.findResults(
                         option.uow,
-                        upgradeDataAllItem[levelValueType].list[level - 1].rewards,
+                        upgradeDataAllItem[levelValueType].list[level].rewards,
                         option.value.source
                     );
                     await option.valueService.update(
                         option.uow,
                         [
                             ...values,
-                            ...upgradeDataAllItem[levelValueType].list[level - 1].consumeValues
+                            ...upgradeDataAllItem[levelValueType].list[level].consumeValues
                         ].map(r => {
                             return {
                                 ...r,
