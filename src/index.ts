@@ -3,7 +3,6 @@ import { FilterIsReplaceValueHandler } from './filter-is-replace-handler';
 import { GetAutoRecoveryValueHandler } from './get-auto-recovery-handler';
 import { GetExpireTimeValueHandler } from './get-expire-time-handler';
 import { GetTimeValueHandler } from './get-time-handler';
-import { IValueInterceptor } from './i-value-interceptor';
 import { IValueObserver } from './i-value-observer';
 import { Reward } from './reward';
 import { RewardService } from './reward-service';
@@ -40,7 +39,6 @@ export {
     GetAutoRecoveryValueHandler,
     GetExpireTimeValueHandler,
     GetTimeValueHandler,
-    IValueInterceptor,
     IValueObserver,
     Reward,
     RewardService,

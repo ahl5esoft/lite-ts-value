@@ -10,7 +10,7 @@ export class ValueInterceptorClientPredicateHandler extends ValueInterceptorClie
     public static ctor = 'ValueInterceptorClientPredicateHandler';
 
     private m_Observer: {
-        ctor: IValueObserver;
+        ctor: IValueObserver<any>;
         predicate: (valueType: ValueTypeData) => boolean;
     }[] = [];
 
@@ -21,7 +21,7 @@ export class ValueInterceptorClientPredicateHandler extends ValueInterceptorClie
         super(m_IsValidFunc);
     }
 
-    public addObserver(predicate: (valueTypeData: ValueTypeData) => boolean, observer: IValueObserver) {
+    public addObserver(predicate: (valueTypeData: ValueTypeData) => boolean, observer: IValueObserver<any>) {
         this.m_Observer.push({
             ctor: observer,
             predicate,
@@ -44,7 +44,7 @@ export class ValueInterceptorClientPredicateHandler extends ValueInterceptorClie
         await this.next?.handle(ctx);
     }
 
-    public removeObserver(observer: IValueObserver) {
+    public removeObserver(observer: IValueObserver<any>) {
         this.m_Observer = this.m_Observer.filter(r => r.ctor != observer);
     }
 }

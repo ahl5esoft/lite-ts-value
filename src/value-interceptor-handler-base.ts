@@ -2,14 +2,14 @@
 import { EnumFactoryBase } from 'lite-ts-enum';
 import Container from 'typedi';
 
-import { IValueInterceptor } from './i-value-interceptor';
+import { IValueObserver } from './i-value-observer';
 import { InterceptorMetadata } from './interceptor-metadata';
 import { ValueHandlerBase } from './value-handler-base';
 import { ValueHandlerContext } from './value-handler-context';
 import { ValueTypeData } from './value-type-data';
 
 export abstract class ValueInterceptorHandlerBase extends ValueHandlerBase {
-    public static wrapperFunc = (interceptor: IValueInterceptor<any>) => interceptor;
+    public static wrapperFunc = (interceptor: IValueObserver<any>) => interceptor;
     protected abstract get metadata(): InterceptorMetadata;
 
     public constructor(
@@ -33,7 +33,7 @@ export abstract class ValueInterceptorHandlerBase extends ValueHandlerBase {
         if (this.metadata.valueType[option.value.valueType]) {
             let interceptor = Container.get(this.metadata.valueType[option.value.valueType]);
             Container.remove(this.metadata.valueType[option.value.valueType]);
-            const ok = ValueInterceptorHandlerBase.wrapperFunc(interceptor).intercept(option);
+            const ok = ValueInterceptorHandlerBase.wrapperFunc(interceptor).notify(option);
             if (ok)
                 return;
         }
@@ -44,7 +44,7 @@ export abstract class ValueInterceptorHandlerBase extends ValueHandlerBase {
     public static register(typer: {
         metadata: InterceptorMetadata;
     }, valueTypeOrPredicate: number | ((valueType: ValueTypeData) => boolean)) {
-        return (ctor: new () => IValueInterceptor<any>) => {
+        return (ctor: new () => IValueObserver<any>) => {
             if (typeof valueTypeOrPredicate == 'number') {
                 typer.metadata.valueType[valueTypeOrPredicate] = ctor;
             } else {

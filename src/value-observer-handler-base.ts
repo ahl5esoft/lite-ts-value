@@ -10,7 +10,7 @@ export abstract class ValueInterceptorClientHandlerBase extends ValueHandlerBase
         super();
     }
 
-    public abstract addObserver(valueTypeOrPredicates: number | ((valueTypeData: ValueTypeData) => boolean), observer: IValueObserver): void;
+    public abstract addObserver(valueTypeOrPredicates: number | ((valueTypeData: ValueTypeData) => boolean), observer: IValueObserver<any>): void;
 
-    public abstract removeObserver(observer: IValueObserver, valueType?: number): void;
+    public abstract removeObserver(observer: IValueObserver<any>, valueType?: number): void;
 }

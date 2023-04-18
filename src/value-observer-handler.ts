@@ -7,10 +7,10 @@ export class ValueInterceptorClientHandler extends ValueInterceptorClientHandler
     public static ctor = 'ValueInterceptorClientHandler';
 
     private m_Observer: {
-        [valueType: number]: IValueObserver[];
+        [valueType: number]: IValueObserver<any>[];
     } = {};
 
-    public addObserver(valueType: number, observer: IValueObserver) {
+    public addObserver(valueType: number, observer: IValueObserver<any>) {
         this.m_Observer[valueType] ??= [];
         if (!this.m_Observer[valueType].some(r => r == observer))
             this.m_Observer[valueType].push(observer);
@@ -28,7 +28,7 @@ export class ValueInterceptorClientHandler extends ValueInterceptorClientHandler
         await this.next?.handle(ctx);
     }
 
-    public removeObserver(observer: IValueObserver, valueType: number) {
+    public removeObserver(observer: IValueObserver<any>, valueType: number) {
         if (this.m_Observer[valueType]?.length)
             this.m_Observer[valueType] = this.m_Observer[valueType].filter(r => r != observer);
     }

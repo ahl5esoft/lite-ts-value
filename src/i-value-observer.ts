@@ -1,5 +1,5 @@
 import { ValueHandlerContext } from './value-handler-context';
 
-export interface IValueObserver {
-    notify(option: ValueHandlerContext): Promise<void>;
+export interface IValueObserver<T> {
+    notify(ctx: ValueHandlerContext): Promise<T>;
 }
