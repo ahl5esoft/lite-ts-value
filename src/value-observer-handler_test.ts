@@ -1,10 +1,10 @@
 import { deepStrictEqual } from 'assert';
 
-import { IValueObserver } from './i-value-observer';
+import { IObserver } from './i-observer';
 import { ValueInterceptorClientHandler } from './value-observer-handler';
 import { ValueHandlerContext } from './value-handler-context';
 
-class ValueInterceptorClient implements IValueObserver<any> {
+class ValueInterceptorClient implements IObserver<any> {
     public async notify(_: ValueHandlerContext) {
         return;
     }

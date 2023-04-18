@@ -1,4 +1,4 @@
-import { IValueObserver } from './i-value-observer';
+import { IObserver } from './i-observer';
 import { ValueHandlerBase } from './value-handler-base';
 import { ValueTypeData } from './value-type-data';
 
@@ -10,7 +10,7 @@ export abstract class ValueInterceptorClientHandlerBase extends ValueHandlerBase
         super();
     }
 
-    public abstract addObserver(valueTypeOrPredicates: number | ((valueTypeData: ValueTypeData) => boolean), observer: IValueObserver<any>): void;
+    public abstract addObserver(valueTypeOrPredicates: number | ((valueTypeData: ValueTypeData) => boolean), observer: IObserver<any>): void;
 
-    public abstract removeObserver(observer: IValueObserver<any>, valueType?: number): void;
+    public abstract removeObserver(observer: IObserver<any>, valueType?: number): void;
 }
