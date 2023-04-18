@@ -2,7 +2,7 @@ import { EnumFactoryBase } from 'lite-ts-enum';
 
 import { IValueObserver } from './i-value-observer';
 import { ValueHandlerContext } from './value-handler-context';
-import { ValueInterceptorClientHandlerBase } from './value-interceptor-client-handler-base';
+import { ValueInterceptorClientHandlerBase } from './value-observer-handler-base';
 import { ValueTypeData } from './value-type-data';
 
 export class ValueInterceptorClientPredicateHandler extends ValueInterceptorClientHandlerBase {
@@ -28,20 +28,20 @@ export class ValueInterceptorClientPredicateHandler extends ValueInterceptorClie
         });
     }
 
-    public async handle(option: ValueHandlerContext) {
+    public async handle(ctx: ValueHandlerContext) {
         if (this.m_Observer.length) {
-            const allItem = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).allItem;
-            if (allItem[option.value.valueType]) {
+            const allItem = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, ctx.areaNo).allItem;
+            if (allItem[ctx.value.valueType]) {
                 for (const r of this.m_Observer) {
-                    const ok = r.predicate(allItem[option.value.valueType]);
+                    const ok = r.predicate(allItem[ctx.value.valueType]);
                     if (ok && this.m_IsValidFunc(r.ctor))
-                        await r.ctor.notify(option);
+                        await r.ctor.notify(ctx);
                 }
             }
 
         }
 
-        await this.next?.handle(option);
+        await this.next?.handle(ctx);
     }
 
     public removeObserver(observer: IValueObserver) {

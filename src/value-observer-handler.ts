@@ -1,6 +1,6 @@
 import { IValueObserver } from './i-value-observer';
 import { ValueHandlerContext } from './value-handler-context';
-import { ValueInterceptorClientHandlerBase } from './value-interceptor-client-handler-base';
+import { ValueInterceptorClientHandlerBase } from './value-observer-handler-base';
 
 export class ValueInterceptorClientHandler extends ValueInterceptorClientHandlerBase {
 
@@ -16,16 +16,16 @@ export class ValueInterceptorClientHandler extends ValueInterceptorClientHandler
             this.m_Observer[valueType].push(observer);
     }
 
-    public async handle(option: ValueHandlerContext) {
-        if (this.m_Observer[option.value.valueType]?.length) {
-            const task = this.m_Observer[option.value.valueType].map(async r => {
+    public async handle(ctx: ValueHandlerContext) {
+        if (this.m_Observer[ctx.value.valueType]?.length) {
+            const task = this.m_Observer[ctx.value.valueType].map(async r => {
                 if (this.m_IsValidFunc(r))
-                    return r.notify(option);
+                    return r.notify(ctx);
             });
             await Promise.all(task);
         }
 
-        await this.next?.handle(option);
+        await this.next?.handle(ctx);
     }
 
     public removeObserver(observer: IValueObserver, valueType: number) {

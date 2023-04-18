@@ -4,7 +4,7 @@ import { Mock, mockAny } from 'lite-ts-mock';
 
 import { IValueObserver } from './i-value-observer';
 import { ValueHandlerContext } from './value-handler-context';
-import { ValueInterceptorClientPredicateHandler } from './value-interceptor-client-predicate-handler';
+import { ValueInterceptorClientPredicateHandler } from './value-observer-predicate-handler';
 import { ValueTypeData } from './value-type-data';
 
 class ValueInterceptorClientPredicate implements IValueObserver {

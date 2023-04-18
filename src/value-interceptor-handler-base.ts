@@ -1,3 +1,4 @@
+
 import { EnumFactoryBase } from 'lite-ts-enum';
 import Container from 'typedi';
 

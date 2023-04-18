@@ -1,7 +1,7 @@
 import { deepStrictEqual } from 'assert';
 
 import { IValueObserver } from './i-value-observer';
-import { ValueInterceptorClientHandler } from './value-interceptor-client-handler';
+import { ValueInterceptorClientHandler } from './value-observer-handler';
 import { ValueHandlerContext } from './value-handler-context';
 
 class ValueInterceptorClient implements IValueObserver {
