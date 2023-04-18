@@ -11,7 +11,7 @@ class Self extends ExpireTimeHandlerBase {
 }
 
 describe('src/expire-time-handler-base.ts', () => {
-    describe('.handle(option: ValueHandlerOption)', () => {
+    describe('.handle(option: ValueHandlerContext)', () => {
         it('无valueTypeTime', async () => {
             const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new Self(

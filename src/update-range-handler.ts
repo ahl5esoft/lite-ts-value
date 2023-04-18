@@ -1,7 +1,7 @@
 import { EnumFactoryBase } from 'lite-ts-enum';
 
 import { ValueHandlerBase } from './value-handler-base';
-import { ValueHandlerOption } from './value-handler-option';
+import { ValueHandlerContext } from './value-handler-context';
 import { ValueTypeData } from './value-type-data';
 
 export class UpdateRangeValueHandler extends ValueHandlerBase {
@@ -11,7 +11,7 @@ export class UpdateRangeValueHandler extends ValueHandlerBase {
         super();
     }
 
-    public async handle(option: ValueHandlerOption) {
+    public async handle(option: ValueHandlerContext) {
         const allItem = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).allItem;
         const range = allItem[option.value.valueType]?.range;
         if (range) {

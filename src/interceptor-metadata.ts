@@ -1,4 +1,4 @@
-import { IValueInterceptor } from './value-interceptor-handler-base';
+import { IValueInterceptor } from './i-value-interceptor';
 import { ValueTypeData } from './value-type-data';
 
 export type InterceptorMetadata = {

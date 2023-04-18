@@ -9,7 +9,7 @@ import { UpgradeData } from './upgrade-data';
 import { ValueService } from './value-service';
 
 describe('src/service/value/update-upgrade-handler.ts', () => {
-    describe('.handle(option: ValueHandlerOption)', () => {
+    describe('.handle(option: ValueHandlerContext)', () => {
         it('ok', async () => {
             const enumFactoryMock = new Mock<EnumFactoryBase>();
             const rewardServiceMock = new Mock<RewardService>();

@@ -7,7 +7,7 @@ class B extends A { }
 class C extends A { }
 
 describe('src/get-expire-time-handler.ts', () => {
-    describe('.handling(option: ValueHandlerOption, time: Time)', () => {
+    describe('.handling(option: ValueHandlerContext, time: Time)', () => {
         it('greater than', async () => {
             const b = new B();
             const c = new C();

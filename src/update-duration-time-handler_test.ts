@@ -5,7 +5,7 @@ import { UpdateDurationTimeValueHandler as Self } from './update-duration-time-h
 import { ValueService } from './value-service';
 
 describe('src/update-duration-time-handler.ts', () => {
-    describe('.handling(option: ValueHandlerOption, time: Time)', () => {
+    describe('.handling(option: ValueHandlerContext, time: Time)', () => {
         it('greater than', async () => {
             const self = new Self(
                 async () => 1,

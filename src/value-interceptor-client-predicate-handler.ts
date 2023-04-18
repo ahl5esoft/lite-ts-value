@@ -1,40 +1,41 @@
 import { EnumFactoryBase } from 'lite-ts-enum';
 
-import { ValueHandlerOption } from './value-handler-option';
+import { IValueObserver } from './i-value-observer';
+import { ValueHandlerContext } from './value-handler-context';
 import { ValueInterceptorClientHandlerBase } from './value-interceptor-client-handler-base';
-import { IValueInterceptor } from './value-interceptor-handler-base';
 import { ValueTypeData } from './value-type-data';
 
 export class ValueInterceptorClientPredicateHandler extends ValueInterceptorClientHandlerBase {
-    private m_Metadata: {
-        ctor: IValueInterceptor<any>;
-        predicates: (valueType: ValueTypeData) => boolean;
+
+    public static ctor = 'ValueInterceptorClientPredicateHandler';
+
+    private m_Observer: {
+        ctor: IValueObserver;
+        predicate: (valueType: ValueTypeData) => boolean;
     }[] = [];
 
-    public ctor: string = 'ValueInterceptorClientPredicateHandler';
-
-    constructor(
+    public constructor(
+        protected m_IsValidFunc: (observer: any) => boolean,
         private m_EnumFactory: EnumFactoryBase
     ) {
-        super();
+        super(m_IsValidFunc);
     }
 
-    public addObserver(predicates: (valueTypeData: ValueTypeData) => boolean, observer: IValueInterceptor<any>) {
-        this.m_Metadata.push({
+    public addObserver(predicate: (valueTypeData: ValueTypeData) => boolean, observer: IValueObserver) {
+        this.m_Observer.push({
             ctor: observer,
-            predicates,
+            predicate,
         });
     }
 
-    public async handle(option: ValueHandlerOption) {
-        if (this.m_Metadata.length) {
+    public async handle(option: ValueHandlerContext) {
+        if (this.m_Observer.length) {
             const allItem = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).allItem;
             if (allItem[option.value.valueType]) {
-                for (const r of this.m_Metadata) {
-                    const ok = r.predicates(allItem[option.value.valueType]);
-                    if (ok) {
-                        await r.ctor.intercept(option);
-                    }
+                for (const r of this.m_Observer) {
+                    const ok = r.predicate(allItem[option.value.valueType]);
+                    if (ok && this.m_IsValidFunc(r.ctor))
+                        await r.ctor.notify(option);
                 }
             }
 
@@ -43,7 +44,7 @@ export class ValueInterceptorClientPredicateHandler extends ValueInterceptorClie
         await this.next?.handle(option);
     }
 
-    public removeObserver(observer: IValueInterceptor<any>) {
-        this.m_Metadata = this.m_Metadata.filter(r => r.ctor != observer);
+    public removeObserver(observer: IValueObserver) {
+        this.m_Observer = this.m_Observer.filter(r => r.ctor != observer);
     }
 }

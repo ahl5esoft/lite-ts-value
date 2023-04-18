@@ -3,7 +3,7 @@ import { EnumFactoryBase } from 'lite-ts-enum';
 import { RewardService } from './reward-service';
 import { UpgradeData } from './upgrade-data';
 import { ValueHandlerBase } from './value-handler-base';
-import { ValueHandlerOption } from './value-handler-option';
+import { ValueHandlerContext } from './value-handler-context';
 import { ValueTypeData } from './value-type-data';
 import { ValueTypeUpgrade } from './value-type-upgrade';
 
@@ -18,7 +18,7 @@ export class UpdateUpgradeValueHandler extends ValueHandlerBase {
         super();
     }
 
-    public async handle(option: ValueHandlerOption) {
+    public async handle(option: ValueHandlerContext) {
         const valueTypeUpgrade = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).getReduce<ValueTypeUpgrade>(ValueTypeUpgrade.name);
         const levelValueType = valueTypeUpgrade[option.value.valueType];
         if (levelValueType && option.value.count > 0) {

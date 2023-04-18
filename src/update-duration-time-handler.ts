@@ -1,9 +1,9 @@
 import { ExpireTimeHandlerBase } from './expire-time-handler-base';
-import { ValueHandlerOption } from './value-handler-option';
+import { ValueHandlerContext } from './value-handler-context';
 import { Time } from './value-type-data';
 
 export class UpdateDurationTimeValueHandler extends ExpireTimeHandlerBase {
-    protected async handling(option: ValueHandlerOption, time: Time) {
+    protected async handling(option: ValueHandlerContext, time: Time) {
         if (!time.duration)
             return;
 

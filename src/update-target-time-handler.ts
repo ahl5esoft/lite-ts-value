@@ -2,7 +2,7 @@ import { EnumFactoryBase } from 'lite-ts-enum';
 import { RpcBase } from 'lite-ts-rpc';
 
 import { ExpireTimeHandlerBase } from './expire-time-handler-base';
-import { ValueHandlerOption } from './value-handler-option';
+import { ValueHandlerContext } from './value-handler-context';
 import { Time } from './value-type-data';
 
 export class UpdateTargetTimeValueHandler extends ExpireTimeHandlerBase {
@@ -18,7 +18,7 @@ export class UpdateTargetTimeValueHandler extends ExpireTimeHandlerBase {
         );
     }
 
-    protected async handling(option: ValueHandlerOption, time: Time) {
+    protected async handling(option: ValueHandlerContext, time: Time) {
         if (!time.targetType)
             return;
 

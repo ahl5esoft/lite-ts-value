@@ -6,7 +6,7 @@ import { UpdateExpireTimeValueHandler as Self } from './update-expire-time-handl
 import { ValueService } from './value-service';
 
 describe('src/update-expire-time-handler.ts', () => {
-    describe('.handling(option: ValueHandlerOption, time: Time)', () => {
+    describe('.handling(option: ValueHandlerContext, time: Time)', () => {
         it('ok', async () => {
             const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new Self(

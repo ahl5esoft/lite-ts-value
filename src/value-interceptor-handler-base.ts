@@ -1,14 +1,11 @@
 import { EnumFactoryBase } from 'lite-ts-enum';
 import Container from 'typedi';
 
+import { IValueInterceptor } from './i-value-interceptor';
 import { InterceptorMetadata } from './interceptor-metadata';
 import { ValueHandlerBase } from './value-handler-base';
-import { ValueHandlerOption } from './value-handler-option';
+import { ValueHandlerContext } from './value-handler-context';
 import { ValueTypeData } from './value-type-data';
-
-export interface IValueInterceptor<T> {
-    intercept(option: ValueHandlerOption): Promise<T>;
-}
 
 export abstract class ValueInterceptorHandlerBase extends ValueHandlerBase {
     public static wrapperFunc = (interceptor: IValueInterceptor<any>) => interceptor;
@@ -20,7 +17,7 @@ export abstract class ValueInterceptorHandlerBase extends ValueHandlerBase {
         super();
     };
 
-    public async handle(option: ValueHandlerOption) {
+    public async handle(option: ValueHandlerContext) {
         if (!this.metadata.valueType[option.value.valueType]) {
             const allValueTypeItem = await this.enumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).allItem;
             if (allValueTypeItem[option.value.valueType]) {

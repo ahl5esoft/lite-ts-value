@@ -3,6 +3,8 @@ import { FilterIsReplaceValueHandler } from './filter-is-replace-handler';
 import { GetAutoRecoveryValueHandler } from './get-auto-recovery-handler';
 import { GetExpireTimeValueHandler } from './get-expire-time-handler';
 import { GetTimeValueHandler } from './get-time-handler';
+import { IValueInterceptor } from './i-value-interceptor';
+import { IValueObserver } from './i-value-observer';
 import { Reward } from './reward';
 import { RewardService } from './reward-service';
 import { UpdateAutoRecoveryValueHandler } from './update-auto-recovery-handler';
@@ -18,12 +20,11 @@ import { UpdateUpgradeValueHandler } from './update-upgrade-handler';
 import { UpgradeData } from './upgrade-data';
 import { Value } from './value';
 import { ValueHandlerBase } from './value-handler-base';
-import { ValueHandlerOption } from './value-handler-option';
+import { ValueHandlerContext } from './value-handler-context';
 import { ValueAfterIntercept, ValueInterceptorAfterHandler } from './value-interceptor-after-handler';
 import { ValueBeforeIntercept, ValueInterceptorBeforeHandler } from './value-interceptor-before-handler';
 import { ValueInterceptorClientHandler } from './value-interceptor-client-handler';
 import { ValueInterceptorClientPredicateHandler } from './value-interceptor-client-predicate-handler';
-import { IValueInterceptor } from './value-interceptor-handler-base';
 import { ValueService, ValueCondition } from './value-service';
 import { ValueTypeData } from './value-type-data';
 import { ValueTypeRewardAddition } from './value-type-reward-addition';
@@ -40,6 +41,7 @@ export {
     GetExpireTimeValueHandler,
     GetTimeValueHandler,
     IValueInterceptor,
+    IValueObserver,
     Reward,
     RewardService,
     UpdateAutoRecoveryValueHandler,
@@ -58,7 +60,7 @@ export {
     ValueBeforeIntercept,
     ValueCondition,
     ValueHandlerBase,
-    ValueHandlerOption,
+    ValueHandlerContext,
     ValueInterceptorAfterHandler,
     ValueInterceptorBeforeHandler,
     ValueInterceptorClientHandler,

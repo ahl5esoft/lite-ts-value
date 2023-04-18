@@ -3,7 +3,7 @@ import moment from 'moment';
 
 import { Value } from './value';
 import { ValueHandlerBase } from './value-handler-base';
-import { ValueHandlerOption } from './value-handler-option';
+import { ValueHandlerContext } from './value-handler-context';
 import { ValueService } from './value-service';
 import { ValueTypeData } from './value-type-data';
 
@@ -15,7 +15,7 @@ export abstract class TimeValueHandlerBase extends ValueHandlerBase {
         super();
     }
 
-    public async handle(option: ValueHandlerOption) {
+    public async handle(option: ValueHandlerContext) {
         const allItem = await this.enumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).allItem;
         const time = allItem[option.value.valueType]?.time;
         if (time?.valueType) {

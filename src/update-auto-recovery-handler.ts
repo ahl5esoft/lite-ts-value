@@ -1,7 +1,7 @@
 import { EnumFactoryBase } from 'lite-ts-enum';
 
 import { ValueHandlerBase } from './value-handler-base';
-import { ValueHandlerOption } from './value-handler-option';
+import { ValueHandlerContext } from './value-handler-context';
 import { ValueTypeData } from './value-type-data';
 
 export class UpdateAutoRecoveryValueHandler extends ValueHandlerBase {
@@ -12,7 +12,7 @@ export class UpdateAutoRecoveryValueHandler extends ValueHandlerBase {
         super();
     }
 
-    public async handle(option: ValueHandlerOption) {
+    public async handle(option: ValueHandlerContext) {
         const allItem = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).allItem;
         const autoRecovery = allItem[option.value.valueType]?.autoRecovery;
         if (autoRecovery) {

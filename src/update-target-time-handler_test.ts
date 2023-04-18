@@ -7,7 +7,7 @@ import { UpdateTargetTimeValueHandler as Self } from './update-target-time-handl
 import { ValueService } from './value-service';
 
 describe('src/update-target-time-handler.ts', () => {
-    describe('.handling(option: ValueHandlerOption, time: Time)', () => {
+    describe('.handling(option: ValueHandlerContext, time: Time)', () => {
         it('ok', async () => {
             const mockRpc = new Mock<RpcBase>();
             mockRpc.expectReturn(
