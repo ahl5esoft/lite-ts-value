@@ -30,9 +30,8 @@ describe('src/service/value/update-upgrade-handler.ts', () => {
             const upgradeEnumMock = new Mock<Enum<UpgradeData>>({
                 allItem: {
                     2: {
-                        list: [
-                            null,
-                            {
+                        list: {
+                            2: {
                                 condition: [],
                                 rewards: [],
                                 consumeValues: [
@@ -42,7 +41,7 @@ describe('src/service/value/update-upgrade-handler.ts', () => {
                                     }
                                 ]
                             }
-                        ]
+                        }
                     }
                 }
             });
