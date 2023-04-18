@@ -5,7 +5,7 @@ import { UpdateDurationTimeValueHandler as Self } from './update-duration-time-h
 import { ValueService } from './value-service';
 
 describe('src/update-duration-time-handler.ts', () => {
-    describe('.handling(option: ValueHandlerContext, time: Time)', () => {
+    describe('.onHandle(ctx: ValueHandlerContext, time: Time)', () => {
         it('greater than', async () => {
             const self = new Self(
                 async () => 1,
@@ -19,7 +19,7 @@ describe('src/update-duration-time-handler.ts', () => {
             const mockValueService = new Mock<ValueService>({
                 ownValue
             });
-            const fn = Reflect.get(self, 'handling').bind(self) as (option: any, time: any) => Promise<void>;
+            const fn = Reflect.get(self, 'onHandle').bind(self) as (ctx: any, time: any) => Promise<void>;
             await fn(
                 {
                     value: {
@@ -49,7 +49,7 @@ describe('src/update-duration-time-handler.ts', () => {
             const mockValueService = new Mock<ValueService>({
                 ownValue
             });
-            const fn = Reflect.get(self, 'handling').bind(self) as (option: any, time: any) => Promise<void>;
+            const fn = Reflect.get(self, 'onHandle').bind(self) as (ctx: any, time: any) => Promise<void>;
             await fn(
                 {
                     value: {
@@ -76,7 +76,7 @@ describe('src/update-duration-time-handler.ts', () => {
             );
 
             const ownValue = {};
-            const fn = Reflect.get(self, 'handling').bind(self) as (option: any, time: any) => Promise<void>;
+            const fn = Reflect.get(self, 'onHandle').bind(self) as (ctx: any, time: any) => Promise<void>;
             await fn({}, {});
             deepStrictEqual(ownValue, {});
         });

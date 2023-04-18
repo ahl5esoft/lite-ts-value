@@ -1,17 +1,17 @@
 import { deepStrictEqual } from 'assert';
 
 import { IValueObserver } from './i-value-observer';
-import { ValueInterceptorClientHandler } from './value-interceptor-client-handler';
+import { ValueInterceptorClientHandler } from './value-observer-handler';
 import { ValueHandlerContext } from './value-handler-context';
 
-class ValueInterceptorClient implements IValueObserver {
+class ValueInterceptorClient implements IValueObserver<any> {
     public async notify(_: ValueHandlerContext) {
         return;
     }
 }
 
 describe('src/value-interceptor-client-handler.ts', () => {
-    describe('.handle(option: ValueHandlerContext)', () => {
+    describe('.handle(ctx: ValueHandlerContext)', () => {
         it('interceptor-client', async () => {
             const self = new ValueInterceptorClientHandler((value: true) => { return value; });
             const interceptClient = new ValueInterceptorClient();

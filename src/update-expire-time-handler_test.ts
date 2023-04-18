@@ -6,7 +6,7 @@ import { UpdateExpireTimeValueHandler as Self } from './update-expire-time-handl
 import { ValueService } from './value-service';
 
 describe('src/update-expire-time-handler.ts', () => {
-    describe('.handling(option: ValueHandlerContext, time: Time)', () => {
+    describe('.onHandle(ctx: ValueHandlerContext, time: Time)', () => {
         it('ok', async () => {
             const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new Self(
@@ -21,7 +21,7 @@ describe('src/update-expire-time-handler.ts', () => {
                 ownValue
             });
 
-            const option = {
+            const ctx = {
                 areaNo: 0,
                 value: {
                     count: 1,
@@ -29,9 +29,9 @@ describe('src/update-expire-time-handler.ts', () => {
                 },
                 valueService: mockValueService.actual
             } as any;
-            const fn = Reflect.get(self, 'handling').bind(self) as (option: any, time: any) => Promise<void>;
+            const fn = Reflect.get(self, 'onHandle').bind(self) as (ctx: any, time: any) => Promise<void>;
             await fn(
-                option,
+                ctx,
                 {
                     expireOnValueType: 3,
                     expireOn: 1
@@ -58,7 +58,7 @@ describe('src/update-expire-time-handler.ts', () => {
                 ownValue
             });
 
-            const option = {
+            const ctx = {
                 areaNo: 0,
                 value: {
                     count: 1,
@@ -66,9 +66,9 @@ describe('src/update-expire-time-handler.ts', () => {
                 },
                 valueService: mockValueService.actual
             } as any;
-            const fn = Reflect.get(self, 'handling').bind(self) as (option: any, time: any) => Promise<void>;
+            const fn = Reflect.get(self, 'onHandle').bind(self) as (ctx: any, time: any) => Promise<void>;
             await fn(
-                option,
+                ctx,
                 {
                     expireOnValueType: 3,
                     expireOn: 100

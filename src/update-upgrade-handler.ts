@@ -18,29 +18,29 @@ export class UpdateUpgradeValueHandler extends ValueHandlerBase {
         super();
     }
 
-    public async handle(option: ValueHandlerContext) {
-        const valueTypeUpgrade = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).getReduce<ValueTypeUpgrade>(ValueTypeUpgrade.name);
-        const levelValueType = valueTypeUpgrade[option.value.valueType];
-        if (levelValueType && option.value.count > 0) {
-            const level = await option.valueService.getCount(option.uow, levelValueType);
-            const upgradeDataAllItem = await this.m_EnumFactory.build<UpgradeData>(UpgradeData.ctor, option.areaNo).allItem;
+    public async handle(ctx: ValueHandlerContext) {
+        const valueTypeUpgrade = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, ctx.areaNo).getReduce<ValueTypeUpgrade>(ValueTypeUpgrade.name);
+        const levelValueType = valueTypeUpgrade[ctx.value.valueType];
+        if (levelValueType && ctx.value.count > 0) {
+            const level = await ctx.valueService.getCount(ctx.uow, levelValueType);
+            const upgradeDataAllItem = await this.m_EnumFactory.build<UpgradeData>(UpgradeData.ctor, ctx.areaNo).allItem;
             if (upgradeDataAllItem[levelValueType]?.list?.[level]) {
-                const ok = await option.valueService.checkConditions(option.uow, upgradeDataAllItem[levelValueType].list[level].condition);
+                const ok = await ctx.valueService.checkConditions(ctx.uow, upgradeDataAllItem[levelValueType].list[level].condition);
                 if (ok) {
                     const values = await this.m_RewardService.findResults(
-                        option.uow,
+                        ctx.uow,
                         upgradeDataAllItem[levelValueType].list[level].rewards,
-                        option.value.source
+                        ctx.value.source
                     );
-                    await option.valueService.update(
-                        option.uow,
+                    await ctx.valueService.update(
+                        ctx.uow,
                         [
                             ...values,
                             ...upgradeDataAllItem[levelValueType].list[level].consumeValues
                         ].map(r => {
                             return {
                                 ...r,
-                                source: option.value.source
+                                source: ctx.value.source
                             };
                         })
                     );
@@ -48,6 +48,6 @@ export class UpdateUpgradeValueHandler extends ValueHandlerBase {
             }
         }
 
-        await this.next?.handle?.(option);
+        await this.next?.handle?.(ctx);
     }
 }

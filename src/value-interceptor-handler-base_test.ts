@@ -2,7 +2,7 @@ import { strictEqual } from 'assert';
 import { Enum, EnumFactoryBase } from 'lite-ts-enum';
 import { Mock, mockAny } from 'lite-ts-mock';
 
-import { IValueInterceptor } from './i-value-interceptor';
+import { IValueObserver } from './i-value-observer';
 import { ValueAfterIntercept, ValueInterceptorAfterHandler } from './value-interceptor-after-handler';
 import { ValueBeforeIntercept, ValueInterceptorBeforeHandler } from './value-interceptor-before-handler';
 import { ValueInterceptorHandlerBase } from './value-interceptor-handler-base';
@@ -17,15 +17,15 @@ class AfterHandler extends ValueInterceptorHandlerBase {
 @ValueAfterIntercept((data: ValueTypeData) => {
     return data.value == 1;
 })
-class ValueAfterPredicate implements IValueInterceptor<void> {
-    public intercept(): Promise<void> {
+class ValueAfterPredicate implements IValueObserver<void> {
+    public notify(): Promise<void> {
         return;
     }
 }
 
 @ValueAfterIntercept(10)
-class ValueAfterValueType implements IValueInterceptor<void> {
-    public intercept(): Promise<void> {
+class ValueAfterValueType implements IValueObserver<void> {
+    public notify(): Promise<void> {
         return;
     }
 }
@@ -39,21 +39,21 @@ class BeforeHandler extends ValueInterceptorHandlerBase {
 @ValueBeforeIntercept((data: ValueTypeData) => {
     return data.value == 1;
 })
-class ValueBeforePredicate implements IValueInterceptor<boolean> {
-    public async intercept(): Promise<boolean> {
+class ValueBeforePredicate implements IValueObserver<boolean> {
+    public async notify(): Promise<boolean> {
         return true;
     }
 }
 
 @ValueBeforeIntercept(10)
-class ValueBeforeValueType implements IValueInterceptor<boolean> {
-    public async intercept(): Promise<boolean> {
+class ValueBeforeValueType implements IValueObserver<boolean> {
+    public async notify(): Promise<boolean> {
         return false;
     }
 }
 
 describe('src/value-interceptor-handler.ts', () => {
-    describe('.handle(option: ValueHandlerContext)', () => {
+    describe('.handle(ctx: ValueHandlerContext)', () => {
         it('after-predicate', async () => {
             const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new AfterHandler(mockEnumFactory.actual);
@@ -70,12 +70,12 @@ describe('src/value-interceptor-handler.ts', () => {
                 mockEnum.actual
             );
 
-            const option = {
+            const ctx = {
                 value: {
                     valueType: 1
                 }
             } as any;
-            await self.handle(option);
+            await self.handle(ctx);
             strictEqual(ValueInterceptorAfterHandler.metadata.valueType[1], ValueAfterPredicate);
         });
 
@@ -95,12 +95,12 @@ describe('src/value-interceptor-handler.ts', () => {
                 mockEnum.actual
             );
 
-            const option = {
+            const ctx = {
                 value: {
                     valueType: 10
                 }
             } as any;
-            await self.handle(option);
+            await self.handle(ctx);
             strictEqual(ValueInterceptorAfterHandler.metadata.valueType[10], ValueAfterValueType);
         });
 
@@ -120,12 +120,12 @@ describe('src/value-interceptor-handler.ts', () => {
                 mockEnum.actual
             );
 
-            const option = {
+            const ctx = {
                 value: {
                     valueType: 1
                 }
             } as any;
-            await self.handle(option);
+            await self.handle(ctx);
             strictEqual(ValueInterceptorBeforeHandler.metadata.valueType[1], ValueBeforePredicate);
         });
 
@@ -145,12 +145,12 @@ describe('src/value-interceptor-handler.ts', () => {
                 mockEnum.actual
             );
 
-            const option = {
+            const ctx = {
                 value: {
                     valueType: 10
                 }
             } as any;
-            await self.handle(option);
+            await self.handle(ctx);
             strictEqual(ValueInterceptorBeforeHandler.metadata.valueType[10], ValueBeforeValueType);
         });
     });

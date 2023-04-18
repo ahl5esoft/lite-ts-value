@@ -18,19 +18,19 @@ export class UpdateTargetTimeValueHandler extends ExpireTimeHandlerBase {
         );
     }
 
-    protected async handling(option: ValueHandlerContext, time: Time) {
+    protected async onHandle(ctx: ValueHandlerContext, time: Time) {
         if (!time.targetType)
             return;
 
         const now = await this.getNowFunc();
-        const ownValue = await option.valueService.ownValue;
+        const ownValue = await ctx.valueService.ownValue;
         if (now > (ownValue[time.expireOnValueType] || 0))
-            ownValue[option.value.valueType] = 0;
+            ownValue[ctx.value.valueType] = 0;
 
         const res = await this.m_Rpc.call<number>({
             route: `/${time.targetType.app}/get-expire-time`,
             body: {
-                areaNo: option.areaNo ?? 0,
+                areaNo: ctx.areaNo ?? 0,
                 userID: this.m_UserID,
                 ext: time.targetType.ext
             }

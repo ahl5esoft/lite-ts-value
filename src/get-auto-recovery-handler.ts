@@ -12,23 +12,23 @@ export class GetAutoRecoveryValueHandler extends ValueHandlerBase {
         super();
     }
 
-    public async handle(option: ValueHandlerContext) {
-        const allItem = await this.enumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).allItem;
-        const autoRecovery = allItem[option.value.valueType]?.autoRecovery;
+    public async handle(ctx: ValueHandlerContext) {
+        const allItem = await this.enumFactory.build<ValueTypeData>(ValueTypeData.ctor, ctx.areaNo).allItem;
+        const autoRecovery = allItem[ctx.value.valueType]?.autoRecovery;
         if (autoRecovery) {
-            const countdownOn = await option.valueService.getCount(option.uow, autoRecovery.countdownOnValueType);
+            const countdownOn = await ctx.valueService.getCount(ctx.uow, autoRecovery.countdownOnValueType);
             if (countdownOn) {
                 const now = await this.getNowFunc();
                 const diff = Math.floor((now - countdownOn) / autoRecovery.interval);
                 if (diff) {
-                    option.value.count += diff;
-                    const max = await option.valueService.getCount(option.uow, autoRecovery.limitValueType);
-                    if (option.value.count > max)
-                        option.value.count = max;
+                    ctx.value.count += diff;
+                    const max = await ctx.valueService.getCount(ctx.uow, autoRecovery.limitValueType);
+                    if (ctx.value.count > max)
+                        ctx.value.count = max;
                 }
             }
         }
 
-        await this.next?.handle?.(option);
+        await this.next?.handle?.(ctx);
     }
 }

@@ -19,17 +19,17 @@ export class CheckNegativeValueHandler extends ValueHandlerBase {
         super();
     }
 
-    public async handle(option: ValueHandlerContext) {
-        const count = await option.valueService.getCount(option.uow, option.value.valueType);
-        const allItem = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).allItem;
-        if (count < 0 && !allItem[option.value.valueType]?.isNegative) {
+    public async handle(ctx: ValueHandlerContext) {
+        const count = await ctx.valueService.getCount(ctx.uow, ctx.value.valueType);
+        const allItem = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, ctx.areaNo).allItem;
+        if (count < 0 && !allItem[ctx.value.valueType]?.isNegative) {
             throw new CustomError(CheckNegativeValueHandler.notEnoughErrorCode, {
-                consume: Math.abs(option.value.count),
-                count: count - option.value.count,
-                valueType: option.value.valueType,
+                consume: Math.abs(ctx.value.count),
+                count: count - ctx.value.count,
+                valueType: ctx.value.valueType,
             });
         }
 
-        await this.next?.handle?.(option);
+        await this.next?.handle?.(ctx);
     }
 }

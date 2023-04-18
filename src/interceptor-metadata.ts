@@ -1,12 +1,12 @@
-import { IValueInterceptor } from './i-value-interceptor';
+import { IValueObserver } from './i-value-observer';
 import { ValueTypeData } from './value-type-data';
 
 export type InterceptorMetadata = {
     predicates: {
-        ctor: new () => IValueInterceptor<any>;
+        ctor: new () => IValueObserver<any>;
         predicate: (valueType: ValueTypeData) => boolean;
     }[];
     valueType: {
-        [valueType: number]: new () => IValueInterceptor<any>;
+        [valueType: number]: new () => IValueObserver<any>;
     };
 };

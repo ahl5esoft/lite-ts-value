@@ -15,21 +15,21 @@ export abstract class TimeValueHandlerBase extends ValueHandlerBase {
         super();
     }
 
-    public async handle(option: ValueHandlerContext) {
-        const allItem = await this.enumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).allItem;
-        const time = allItem[option.value.valueType]?.time;
+    public async handle(ctx: ValueHandlerContext) {
+        const allItem = await this.enumFactory.build<ValueTypeData>(ValueTypeData.ctor, ctx.areaNo).allItem;
+        const time = allItem[ctx.value.valueType]?.time;
         if (time?.valueType) {
             const now = await this.getNowFunc();
-            const oldNow = await option.valueService.getCount(option.uow, time.valueType);
+            const oldNow = await ctx.valueService.getCount(ctx.uow, time.valueType);
             const ok = moment.unix(now).isSame(
                 moment.unix(oldNow),
                 allItem[time.valueType]?.time?.momentType ?? 'day'
             );
             if (!ok)
-                await this.handleDiff(time.valueType, option.value, option.valueService);
+                await this.handleDiff(time.valueType, ctx.value, ctx.valueService);
         }
 
-        await this.next?.handle?.(option);
+        await this.next?.handle?.(ctx);
     }
 
     protected abstract handleDiff(timeValueType: number, value: Value, valueService: ValueService): Promise<void>;
