@@ -1,6 +1,7 @@
-import { ValueHandlerContext } from './value-handler-context';
+import { Value } from './value';
+import { ValueTypeData } from './value-type-data';
 
-export interface IObserver<T> {
-    // TODO: predicate(valueTypeData: ValueTypeData): Promise<boolean>;
-    notify(ctx: ValueHandlerContext): Promise<T>;
+export interface IValueObserver {
+    predicate(valueTypeData: ValueTypeData): Promise<boolean>;
+    notify(value: Value): Promise<boolean | void>;
 }

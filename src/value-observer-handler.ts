@@ -1,35 +1,51 @@
-import { IObserver } from './i-observer';
+import { EnumFactoryBase } from 'lite-ts-enum';
+
+import { IValueObserver } from './i-observer';
+import { ValueHandlerBase } from './value-handler-base';
 import { ValueHandlerContext } from './value-handler-context';
-import { ValueInterceptorClientHandlerBase } from './value-observer-handler-base';
+import { ValueTypeData } from './value-type-data';
 
-export class ValueInterceptorClientHandler extends ValueInterceptorClientHandlerBase {
+export class ValueObserverHandler extends ValueHandlerBase {
+    public static ctor = 'ValueObserverHandler';
 
-    public static ctor = 'ValueInterceptorClientHandler';
+    private m_Observers: IValueObserver[] = [];
 
-    private m_Observer: {
-        [valueType: number]: IObserver<any>[];
-    } = {};
+    public constructor(
+        private m_EnumFactory: EnumFactoryBase,
+        private m_IsValidPredicate: (observer: any) => boolean,
+    ) {
+        super();
+    }
 
-    public addObserver(valueType: number, observer: IObserver<any>) {
-        this.m_Observer[valueType] ??= [];
-        if (!this.m_Observer[valueType].some(r => r == observer))
-            this.m_Observer[valueType].push(observer);
+    public addObserver(observer: IValueObserver) {
+        const isExist = this.m_Observers.some(r => r == observer);
+        if (isExist)
+            return;
+
+        this.m_Observers.push(observer);
     }
 
     public async handle(ctx: ValueHandlerContext) {
-        if (this.m_Observer[ctx.value.valueType]?.length) {
-            const task = this.m_Observer[ctx.value.valueType].map(async r => {
-                if (this.m_IsValidFunc(r))
-                    return r.notify(ctx);
-            });
-            await Promise.all(task);
+        const allItem = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, ctx.areaNo).allItem;
+        for (const r of this.m_Observers) {
+            if (!this.m_IsValidPredicate(r))
+                continue;
+
+            const ok = await r.predicate(allItem[ctx.value.valueType]);
+            if (!ok)
+                continue;
+
+            const res = await r.notify(ctx.value);
+            if (typeof res == 'boolean' && res)
+                return;
         }
 
         await this.next?.handle(ctx);
     }
 
-    public removeObserver(observer: IObserver<any>, valueType: number) {
-        if (this.m_Observer[valueType]?.length)
-            this.m_Observer[valueType] = this.m_Observer[valueType].filter(r => r != observer);
+    public removeObserver(observer: IValueObserver) {
+        this.m_Observers = this.m_Observers.filter(r => {
+            return this.m_IsValidPredicate(r) && r != observer;
+        });
     }
 }

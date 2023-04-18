@@ -22,7 +22,6 @@ export * from './value-condition';
 export * from './value-handler-base';
 export * from './value-handler-context';
 export * from './value-observer-handler';
-export * from './value-observer-predicate-handler';
 export * from './value-service';
 export * from './value-type-data';
 export * from './value-type-reward-addition';
