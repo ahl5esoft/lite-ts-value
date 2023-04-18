@@ -11,16 +11,16 @@ export class FilterIsReplaceValueHandler extends ValueHandlerBase {
         super();
     }
 
-    public async handle(option: ValueHandlerContext) {
-        const allItem = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).allItem;
-        if (allItem[option.value.valueType]?.isReplace) {
-            const count = await option.valueService.getCount(option.uow, option.value.valueType);
-            if (count == option.value.count)
+    public async handle(ctx: ValueHandlerContext) {
+        const allItem = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, ctx.areaNo).allItem;
+        if (allItem[ctx.value.valueType]?.isReplace) {
+            const count = await ctx.valueService.getCount(ctx.uow, ctx.value.valueType);
+            if (count == ctx.value.count)
                 return;
-        } else if (option.value.count == 0) {
+        } else if (ctx.value.count == 0) {
             return;
         }
 
-        await this.next.handle(option);
+        await this.next.handle(ctx);
     }
 }

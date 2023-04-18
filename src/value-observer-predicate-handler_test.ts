@@ -7,14 +7,14 @@ import { ValueHandlerContext } from './value-handler-context';
 import { ValueInterceptorClientPredicateHandler } from './value-observer-predicate-handler';
 import { ValueTypeData } from './value-type-data';
 
-class ValueInterceptorClientPredicate implements IValueObserver {
+class ValueInterceptorClientPredicate implements IValueObserver<any> {
     public async notify(_: ValueHandlerContext) {
         return;
     }
 }
 
 describe('src/value-interceptor-client-predicate-handler.ts', () => {
-    describe('.handle(option: ValueHandlerContext)', () => {
+    describe('.handle(ctx: ValueHandlerContext)', () => {
         it('interceptor-client-predicate', async () => {
             const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new ValueInterceptorClientPredicateHandler((value: true) => { return value; }, mockEnumFactory.actual);

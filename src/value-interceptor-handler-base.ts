@@ -18,27 +18,27 @@ export abstract class ValueInterceptorHandlerBase extends ValueHandlerBase {
         super();
     };
 
-    public async handle(option: ValueHandlerContext) {
-        if (!this.metadata.valueType[option.value.valueType]) {
-            const allValueTypeItem = await this.enumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).allItem;
-            if (allValueTypeItem[option.value.valueType]) {
+    public async handle(ctx: ValueHandlerContext) {
+        if (!this.metadata.valueType[ctx.value.valueType]) {
+            const allValueTypeItem = await this.enumFactory.build<ValueTypeData>(ValueTypeData.ctor, ctx.areaNo).allItem;
+            if (allValueTypeItem[ctx.value.valueType]) {
                 for (const r of this.metadata.predicates) {
-                    const ok = r.predicate(allValueTypeItem[option.value.valueType]);
+                    const ok = r.predicate(allValueTypeItem[ctx.value.valueType]);
                     if (ok)
-                        this.metadata.valueType[option.value.valueType] = r.ctor;
+                        this.metadata.valueType[ctx.value.valueType] = r.ctor;
                 }
             }
         }
 
-        if (this.metadata.valueType[option.value.valueType]) {
-            let interceptor = Container.get(this.metadata.valueType[option.value.valueType]);
-            Container.remove(this.metadata.valueType[option.value.valueType]);
-            const ok = ValueInterceptorHandlerBase.wrapperFunc(interceptor).notify(option);
+        if (this.metadata.valueType[ctx.value.valueType]) {
+            let interceptor = Container.get(this.metadata.valueType[ctx.value.valueType]);
+            Container.remove(this.metadata.valueType[ctx.value.valueType]);
+            const ok = ValueInterceptorHandlerBase.wrapperFunc(interceptor).notify(ctx);
             if (ok)
                 return;
         }
 
-        await this.next?.handle(option);
+        await this.next?.handle(ctx);
     }
 
     public static register(typer: {

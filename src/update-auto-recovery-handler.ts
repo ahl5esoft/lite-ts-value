@@ -12,30 +12,30 @@ export class UpdateAutoRecoveryValueHandler extends ValueHandlerBase {
         super();
     }
 
-    public async handle(option: ValueHandlerContext) {
-        const allItem = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).allItem;
-        const autoRecovery = allItem[option.value.valueType]?.autoRecovery;
+    public async handle(ctx: ValueHandlerContext) {
+        const allItem = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, ctx.areaNo).allItem;
+        const autoRecovery = allItem[ctx.value.valueType]?.autoRecovery;
         if (autoRecovery) {
-            const countdownOn = await option.valueService.getCount(option.uow, autoRecovery.countdownOnValueType);
+            const countdownOn = await ctx.valueService.getCount(ctx.uow, autoRecovery.countdownOnValueType);
             const now = await this.m_GetNowFunc();
             const diff = Math.floor((now - countdownOn) / autoRecovery.interval);
-            const max = await option.valueService.getCount(option.uow, autoRecovery.limitValueType);
-            const ownValue = await option.valueService.ownValue;
+            const max = await ctx.valueService.getCount(ctx.uow, autoRecovery.limitValueType);
+            const ownValue = await ctx.valueService.ownValue;
             if (diff) {
                 ownValue[autoRecovery.countdownOnValueType] = now;
-                await option.valueService.update(option.uow, [
+                await ctx.valueService.update(ctx.uow, [
                     {
                         count: diff,
-                        valueType: option.value.valueType,
-                        source: `${option.value.source}[定时恢复]`
+                        valueType: ctx.value.valueType,
+                        source: `${ctx.value.source}[定时恢复]`
                     }
                 ]);
             }
 
-            if (ownValue[option.value.valueType] + option.value.count > max)
-                option.value.count = max - ownValue[option.value.valueType];
+            if (ownValue[ctx.value.valueType] + ctx.value.count > max)
+                ctx.value.count = max - ownValue[ctx.value.valueType];
         }
 
-        await this.next?.handle?.(option);
+        await this.next?.handle?.(ctx);
     }
 }

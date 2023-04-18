@@ -7,7 +7,7 @@ import { UpdateTargetTimeValueHandler as Self } from './update-target-time-handl
 import { ValueService } from './value-service';
 
 describe('src/update-target-time-handler.ts', () => {
-    describe('.onHandle(option: ValueHandlerContext, time: Time)', () => {
+    describe('.onHandle(ctx: ValueHandlerContext, time: Time)', () => {
         it('ok', async () => {
             const mockRpc = new Mock<RpcBase>();
             mockRpc.expectReturn(
@@ -31,7 +31,7 @@ describe('src/update-target-time-handler.ts', () => {
                 ownValue
             });
 
-            const option = {
+            const ctx = {
                 areaNo: 0,
                 value: {
                     count: 1,
@@ -39,9 +39,9 @@ describe('src/update-target-time-handler.ts', () => {
                 },
                 valueService: mockValueService.actual
             } as any;
-            const fn = Reflect.get(self, 'onHandle').bind(self) as (option: any, time: any) => Promise<void>;
+            const fn = Reflect.get(self, 'onHandle').bind(self) as (ctx: any, time: any) => Promise<void>;
             await fn(
-                option,
+                ctx,
                 {
                     expireOnValueType: 3,
                     targetType: {
@@ -80,7 +80,7 @@ describe('src/update-target-time-handler.ts', () => {
                 ownValue
             });
 
-            const option = {
+            const ctx = {
                 areaNo: 0,
                 value: {
                     count: 1,
@@ -88,9 +88,9 @@ describe('src/update-target-time-handler.ts', () => {
                 },
                 valueService: mockValueService.actual
             } as any;
-            const fn = Reflect.get(self, 'onHandle').bind(self) as (option: any, time: any) => Promise<void>;
+            const fn = Reflect.get(self, 'onHandle').bind(self) as (ctx: any, time: any) => Promise<void>;
             await fn(
-                option,
+                ctx,
                 {
                     expireOnValueType: 3,
                     targetType: {

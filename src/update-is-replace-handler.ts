@@ -11,13 +11,13 @@ export class UpdateIsReplaceValueHandler extends ValueHandlerBase {
         super();
     }
 
-    public async handle(option: ValueHandlerContext) {
-        const allItem = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, option.areaNo).allItem;
-        if (allItem[option.value.valueType]?.isReplace) {
-            const ownValue = await option.valueService.ownValue;
-            ownValue[option.value.valueType] = 0;
+    public async handle(ctx: ValueHandlerContext) {
+        const allItem = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, ctx.areaNo).allItem;
+        if (allItem[ctx.value.valueType]?.isReplace) {
+            const ownValue = await ctx.valueService.ownValue;
+            ownValue[ctx.value.valueType] = 0;
         }
 
-        await this.next?.handle?.(option);
+        await this.next?.handle?.(ctx);
     }
 }

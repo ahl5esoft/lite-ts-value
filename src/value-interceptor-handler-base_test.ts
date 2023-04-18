@@ -53,7 +53,7 @@ class ValueBeforeValueType implements IValueObserver<boolean> {
 }
 
 describe('src/value-interceptor-handler.ts', () => {
-    describe('.handle(option: ValueHandlerContext)', () => {
+    describe('.handle(ctx: ValueHandlerContext)', () => {
         it('after-predicate', async () => {
             const mockEnumFactory = new Mock<EnumFactoryBase>();
             const self = new AfterHandler(mockEnumFactory.actual);
@@ -70,12 +70,12 @@ describe('src/value-interceptor-handler.ts', () => {
                 mockEnum.actual
             );
 
-            const option = {
+            const ctx = {
                 value: {
                     valueType: 1
                 }
             } as any;
-            await self.handle(option);
+            await self.handle(ctx);
             strictEqual(ValueInterceptorAfterHandler.metadata.valueType[1], ValueAfterPredicate);
         });
 
@@ -95,12 +95,12 @@ describe('src/value-interceptor-handler.ts', () => {
                 mockEnum.actual
             );
 
-            const option = {
+            const ctx = {
                 value: {
                     valueType: 10
                 }
             } as any;
-            await self.handle(option);
+            await self.handle(ctx);
             strictEqual(ValueInterceptorAfterHandler.metadata.valueType[10], ValueAfterValueType);
         });
 
@@ -120,12 +120,12 @@ describe('src/value-interceptor-handler.ts', () => {
                 mockEnum.actual
             );
 
-            const option = {
+            const ctx = {
                 value: {
                     valueType: 1
                 }
             } as any;
-            await self.handle(option);
+            await self.handle(ctx);
             strictEqual(ValueInterceptorBeforeHandler.metadata.valueType[1], ValueBeforePredicate);
         });
 
@@ -145,12 +145,12 @@ describe('src/value-interceptor-handler.ts', () => {
                 mockEnum.actual
             );
 
-            const option = {
+            const ctx = {
                 value: {
                     valueType: 10
                 }
             } as any;
-            await self.handle(option);
+            await self.handle(ctx);
             strictEqual(ValueInterceptorBeforeHandler.metadata.valueType[10], ValueBeforeValueType);
         });
     });
