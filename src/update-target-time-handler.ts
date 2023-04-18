@@ -18,7 +18,7 @@ export class UpdateTargetTimeValueHandler extends ExpireTimeHandlerBase {
         );
     }
 
-    protected async handling(option: ValueHandlerContext, time: Time) {
+    protected async onHandle(option: ValueHandlerContext, time: Time) {
         if (!time.targetType)
             return;
 

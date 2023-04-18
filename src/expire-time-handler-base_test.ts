@@ -7,7 +7,7 @@ import { ExpireTimeHandlerBase } from './expire-time-handler-base';
 import { ValueTypeData } from './value-type-data';
 
 class Self extends ExpireTimeHandlerBase {
-    protected async handling() { }
+    protected async onHandle() { }
 }
 
 describe('src/expire-time-handler-base.ts', () => {
@@ -28,7 +28,7 @@ describe('src/expire-time-handler-base.ts', () => {
             );
 
             let callCount = 0;
-            Reflect.set(self, 'handling', () => {
+            Reflect.set(self, 'onHandle', () => {
                 callCount++;
             });
 
@@ -70,7 +70,7 @@ describe('src/expire-time-handler-base.ts', () => {
                 count: 1,
                 valueType: 2,
             };
-            Reflect.set(self, 'handling', (arg: any, arg1: any) => {
+            Reflect.set(self, 'onHandle', (arg: any, arg1: any) => {
                 deepStrictEqual(arg, {
                     areaNo: 0,
                     uow: null,
