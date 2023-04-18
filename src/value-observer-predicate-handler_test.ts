@@ -2,12 +2,12 @@ import { deepStrictEqual } from 'assert';
 import { Enum, EnumFactoryBase } from 'lite-ts-enum';
 import { Mock, mockAny } from 'lite-ts-mock';
 
-import { IValueObserver } from './i-value-observer';
+import { IObserver } from './i-observer';
 import { ValueHandlerContext } from './value-handler-context';
 import { ValueInterceptorClientPredicateHandler } from './value-observer-predicate-handler';
 import { ValueTypeData } from './value-type-data';
 
-class ValueInterceptorClientPredicate implements IValueObserver<any> {
+class ValueInterceptorClientPredicate implements IObserver<any> {
     public async notify(_: ValueHandlerContext) {
         return;
     }

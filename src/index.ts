@@ -3,7 +3,7 @@ export * from './filter-is-replace-handler';
 export * from './get-auto-recovery-handler';
 export * from './get-expire-time-handler';
 export * from './get-time-handler';
-export * from './i-value-observer';
+export * from './i-observer';
 export * from './reward';
 export * from './reward-service';
 export * from './update-auto-recovery-handler';

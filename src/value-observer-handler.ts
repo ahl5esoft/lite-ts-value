@@ -1,4 +1,4 @@
-import { IValueObserver } from './i-value-observer';
+import { IObserver } from './i-observer';
 import { ValueHandlerContext } from './value-handler-context';
 import { ValueInterceptorClientHandlerBase } from './value-observer-handler-base';
 
@@ -7,10 +7,10 @@ export class ValueInterceptorClientHandler extends ValueInterceptorClientHandler
     public static ctor = 'ValueInterceptorClientHandler';
 
     private m_Observer: {
-        [valueType: number]: IValueObserver<any>[];
+        [valueType: number]: IObserver<any>[];
     } = {};
 
-    public addObserver(valueType: number, observer: IValueObserver<any>) {
+    public addObserver(valueType: number, observer: IObserver<any>) {
         this.m_Observer[valueType] ??= [];
         if (!this.m_Observer[valueType].some(r => r == observer))
             this.m_Observer[valueType].push(observer);
@@ -28,7 +28,7 @@ export class ValueInterceptorClientHandler extends ValueInterceptorClientHandler
         await this.next?.handle(ctx);
     }
 
-    public removeObserver(observer: IValueObserver<any>, valueType: number) {
+    public removeObserver(observer: IObserver<any>, valueType: number) {
         if (this.m_Observer[valueType]?.length)
             this.m_Observer[valueType] = this.m_Observer[valueType].filter(r => r != observer);
     }
