@@ -1,5 +1,5 @@
 import { EnumFactoryBase } from 'lite-ts-enum';
-import moment from 'moment';
+import { TimeBase } from 'lite-ts-time';
 
 import { Value } from './value';
 import { ValueHandlerBase } from './value-handler-base';
@@ -10,6 +10,7 @@ import { ValueTypeData } from './value-type-data';
 export abstract class TimeValueHandlerBase extends ValueHandlerBase {
     public constructor(
         protected enumFactory: EnumFactoryBase,
+        protected time: TimeBase,
         protected getNowFunc: () => Promise<number>,
     ) {
         super();
@@ -21,10 +22,7 @@ export abstract class TimeValueHandlerBase extends ValueHandlerBase {
         if (time?.valueType) {
             const now = await this.getNowFunc();
             const oldNow = await ctx.valueService.getCount(ctx.uow, time.valueType);
-            const ok = moment.unix(now).isSame(
-                moment.unix(oldNow),
-                allItem[time.valueType]?.time?.momentType ?? 'day'
-            );
+            const ok = this.time.isSameUnix(now, oldNow, allItem[time.valueType]?.time?.momentType);
             if (!ok)
                 await this.handleDiff(time.valueType, ctx.value, ctx.valueService);
         }

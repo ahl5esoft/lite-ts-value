@@ -1,5 +1,5 @@
 import { EnumItem } from 'lite-ts-enum';
-import moment from 'moment';
+import { TimeGranularity } from 'lite-ts-time';
 
 import { Reward } from './reward';
 
@@ -7,7 +7,7 @@ export type Time = {
     duration: number;
     expireOnValueType: number;
     expireOn: number;
-    momentType: moment.unitOfTime.StartOf;
+    momentType: TimeGranularity;
     targetType: {
         app: string;
         ext: any;
@@ -55,10 +55,6 @@ export class ValueTypeData extends EnumItem {
         valueTypes: number[];
     };
     public time: Time;
-
-    /**
-     * 升级数值
-     */
     public upgrade: {
         valueType: number;
     };

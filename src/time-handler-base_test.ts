@@ -1,6 +1,7 @@
 import { deepStrictEqual, strictEqual } from 'assert';
 import { Enum, EnumFactoryBase } from 'lite-ts-enum';
 import { Mock } from 'lite-ts-mock';
+import { TimeBase, TimeGranularity } from 'lite-ts-time';
 import moment from 'moment';
 
 import { TimeValueHandlerBase } from './time-handler-base';
@@ -15,10 +16,7 @@ describe('src/time-handler-base.ts', () => {
     describe('.handle(ctx: ValueHandlerContext)', () => {
         it('无valueTypeTime', async () => {
             const mockEnumFactory = new Mock<EnumFactoryBase>();
-            const self = new Self(
-                mockEnumFactory.actual,
-                null,
-            );
+            const self = new Self(mockEnumFactory.actual, null, null);
 
             const mockEnum = new Mock<Enum<ValueTypeData>>({
                 allItem: {}
@@ -47,9 +45,12 @@ describe('src/time-handler-base.ts', () => {
 
         it('diff', async () => {
             const mockEnumFactory = new Mock<EnumFactoryBase>();
+            const mockTime = new Mock<TimeBase>();
+            const now = moment().unix();
             const self = new Self(
                 mockEnumFactory.actual,
-                async () => moment().unix(),
+                mockTime.actual,
+                async () => now,
             );
 
             const mockEnum = new Mock<Enum<ValueTypeData>>({
@@ -61,7 +62,7 @@ describe('src/time-handler-base.ts', () => {
                     } as ValueTypeData,
                     3: {
                         time: {
-                            momentType: 'day'
+                            momentType: TimeGranularity.day
                         }
                     } as ValueTypeData,
                 }
@@ -75,6 +76,11 @@ describe('src/time-handler-base.ts', () => {
             mockValueService.expectReturn(
                 r => r.getCount(null, 3),
                 0
+            );
+
+            mockTime.expectReturn(
+                r => r.isSameUnix(now, 0, TimeGranularity.day),
+                false
             );
 
             const res = {
@@ -96,9 +102,12 @@ describe('src/time-handler-base.ts', () => {
 
         it('same', async () => {
             const mockEnumFactory = new Mock<EnumFactoryBase>();
+            const mockTime = new Mock<TimeBase>();
+            const now = moment().unix();
             const self = new Self(
                 mockEnumFactory.actual,
-                async () => moment().unix(),
+                mockTime.actual,
+                async () => now,
             );
 
             const mockEnum = new Mock<Enum<ValueTypeData>>({
@@ -110,7 +119,7 @@ describe('src/time-handler-base.ts', () => {
                     } as ValueTypeData,
                     3: {
                         time: {
-                            momentType: 'day'
+                            momentType: TimeGranularity.day
                         }
                     } as ValueTypeData,
                 }
@@ -123,7 +132,12 @@ describe('src/time-handler-base.ts', () => {
             const mockValueService = new Mock<ValueService>();
             mockValueService.expectReturn(
                 r => r.getCount(null, 3),
-                moment().unix()
+                now
+            );
+
+            mockTime.expectReturn(
+                r => r.isSameUnix(now, now, TimeGranularity.day),
+                true
             );
 
             const res = {
