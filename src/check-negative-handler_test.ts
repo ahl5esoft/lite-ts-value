@@ -17,7 +17,7 @@ describe('src/check-negative-handler.ts', () => {
 
             const mockValueService = new Mock<ValueService>();
             mockValueService.expectReturn(
-                r => r.getCount(null, 3),
+                r => r.getCount(undefined, 3),
                 -1
             );
 
@@ -29,7 +29,11 @@ describe('src/check-negative-handler.ts', () => {
                 }
             });
             mockEnumFactory.expectReturn(
-                r => r.build('ValueTypeData', undefined),
+                r => r.build({
+                    app: 'config',
+                    areaNo: undefined,
+                    ctor: ValueTypeData
+                }),
                 mockEnum.actual
             );
 
@@ -37,7 +41,6 @@ describe('src/check-negative-handler.ts', () => {
             self.setNext(mockNext.actual);
 
             mockNext.expected.handle({
-                uow: null,
                 value: {
                     count: -2,
                     valueType: 3
@@ -46,7 +49,6 @@ describe('src/check-negative-handler.ts', () => {
             });
 
             await self.handle({
-                uow: null,
                 value: {
                     count: -2,
                     valueType: 3
@@ -65,7 +67,11 @@ describe('src/check-negative-handler.ts', () => {
                 allItem: {}
             });
             mockEnumFactory.expectReturn(
-                r => r.build('ValueTypeData', undefined),
+                r => r.build({
+                    app: 'config',
+                    areaNo: undefined,
+                    ctor: ValueTypeData
+                }),
                 mockEnum.actual
             );
 
@@ -73,13 +79,12 @@ describe('src/check-negative-handler.ts', () => {
             try {
                 const mockValueService = new Mock<ValueService>();
                 mockValueService.expectReturn(
-                    r => r.getCount(null, 3),
+                    r => r.getCount(undefined, 3),
                     -1
                 );
 
                 await self.handle(
                     {
-                        uow: null,
                         value: {
                             count: -2,
                             valueType: 3

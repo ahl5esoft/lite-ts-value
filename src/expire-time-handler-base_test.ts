@@ -23,7 +23,11 @@ describe('src/expire-time-handler-base.ts', () => {
                 allItem: {}
             });
             mockEnumFactory.expectReturn(
-                r => r.build('ValueTypeData', undefined),
+                r => r.build({
+                    app: 'config',
+                    areaNo: undefined,
+                    ctor: ValueTypeData
+                }),
                 mockEnum.actual
             );
 
@@ -62,7 +66,11 @@ describe('src/expire-time-handler-base.ts', () => {
                 allItem
             });
             mockEnumFactory.expectReturn(
-                r => r.build('ValueTypeData', 0),
+                r => r.build({
+                    app: 'config',
+                    areaNo: 0,
+                    ctor: ValueTypeData
+                }),
                 mockEnum.actual
             );
 

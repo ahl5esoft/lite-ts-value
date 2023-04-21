@@ -10,6 +10,7 @@ describe('src/update-time-handler.ts', () => {
         it('ok', async () => {
             const self = new Self(
                 null,
+                null,
                 async () => 100,
             );
 

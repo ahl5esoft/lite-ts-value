@@ -21,7 +21,11 @@ export class CheckNegativeValueHandler extends ValueHandlerBase {
 
     public async handle(ctx: ValueHandlerContext) {
         const count = await ctx.valueService.getCount(ctx.uow, ctx.value.valueType);
-        const allItem = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, ctx.areaNo).allItem;
+        const allItem = await this.m_EnumFactory.build({
+            app: 'config',
+            areaNo: ctx.areaNo,
+            ctor: ValueTypeData,
+        }).allItem;
         if (count < 0 && !allItem[ctx.value.valueType]?.isNegative) {
             throw new CustomError(CheckNegativeValueHandler.notEnoughErrorCode, {
                 consume: Math.abs(ctx.value.count),

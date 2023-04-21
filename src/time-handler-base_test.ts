@@ -22,7 +22,11 @@ describe('src/time-handler-base.ts', () => {
                 allItem: {}
             });
             mockEnumFactory.expectReturn(
-                r => r.build('ValueTypeData', undefined),
+                r => r.build({
+                    app: 'config',
+                    areaNo: undefined,
+                    ctor: ValueTypeData
+                }),
                 mockEnum.actual
             );
 
@@ -68,7 +72,11 @@ describe('src/time-handler-base.ts', () => {
                 }
             });
             mockEnumFactory.expectReturn(
-                r => r.build('ValueTypeData', undefined),
+                r => r.build({
+                    app: 'config',
+                    areaNo: undefined,
+                    ctor: ValueTypeData
+                }),
                 mockEnum.actual
             );
 
@@ -125,7 +133,11 @@ describe('src/time-handler-base.ts', () => {
                 }
             });
             mockEnumFactory.expectReturn(
-                r => r.build('ValueTypeData', undefined),
+                r => r.build({
+                    app: 'config',
+                    areaNo: undefined,
+                    ctor: ValueTypeData
+                }),
                 mockEnum.actual
             );
 

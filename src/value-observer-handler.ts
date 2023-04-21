@@ -26,7 +26,11 @@ export class ValueObserverHandler extends ValueHandlerBase {
     }
 
     public async handle(ctx: ValueHandlerContext) {
-        const allItem = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, ctx.areaNo).allItem;
+        const allItem = await this.m_EnumFactory.build({
+            app: 'config',
+            areaNo: ctx.areaNo,
+            ctor: ValueTypeData,
+        }).allItem;
         for (const r of this.m_Observers) {
             if (!this.m_IsValidPredicate(r))
                 continue;

@@ -12,7 +12,11 @@ export class UpdateIsReplaceValueHandler extends ValueHandlerBase {
     }
 
     public async handle(ctx: ValueHandlerContext) {
-        const allItem = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, ctx.areaNo).allItem;
+        const allItem = await this.m_EnumFactory.build({
+            app: 'config',
+            areaNo: ctx.areaNo,
+            ctor: ValueTypeData,
+        }).allItem;
         if (allItem[ctx.value.valueType]?.isReplace) {
             const ownValue = await ctx.valueService.ownValue;
             ownValue[ctx.value.valueType] = 0;

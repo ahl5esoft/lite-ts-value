@@ -19,7 +19,11 @@ describe('src/update-is-replace-handler.ts', () => {
                 allItem: {}
             });
             mockEnumFactory.expectReturn(
-                r => r.build('ValueTypeData', undefined),
+                r => r.build({
+                    app: 'config',
+                    areaNo: undefined,
+                    ctor: ValueTypeData
+                }),
                 mockEnum.actual
             );
 
@@ -64,7 +68,11 @@ describe('src/update-is-replace-handler.ts', () => {
                 }
             });
             mockEnumFactory.expectReturn(
-                r => r.build('ValueTypeData', undefined),
+                r => r.build({
+                    app: 'config',
+                    areaNo: undefined,
+                    ctor: ValueTypeData
+                }),
                 mockEnum.actual
             );
 

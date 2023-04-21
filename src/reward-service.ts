@@ -144,7 +144,11 @@ export class RewardService {
     }
 
     private async findOpenRewards(uow: IUnitOfWork, valueType: number) {
-        const valueTypeEnum = this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, this.m_AreaNo);
+        const valueTypeEnum = this.m_EnumFactory.build({
+            app: 'config',
+            areaNo: this.m_AreaNo,
+            ctor: ValueTypeData,
+        });
         const openReward = await valueTypeEnum.getReduce<ValueTypeRewardOpen>(ValueTypeRewardOpen.ctor);
         if (!openReward[valueType])
             return;

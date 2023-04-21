@@ -17,7 +17,11 @@ describe('src/service/value/update-upgrade-handler.ts', () => {
 
             const valueTypeEnumMock = new Mock<Enum<ValueTypeData>>();
             enumFactoryMock.expectReturn(
-                r => r.build(ValueTypeData.name, 0),
+                r => r.build({
+                    app: 'config',
+                    areaNo: 0,
+                    ctor: ValueTypeData
+                }),
                 valueTypeEnumMock.actual
             );
             valueTypeEnumMock.expectReturn(
@@ -46,7 +50,11 @@ describe('src/service/value/update-upgrade-handler.ts', () => {
                 }
             });
             enumFactoryMock.expectReturn(
-                r => r.build(UpgradeData.name, 0),
+                r => r.build({
+                    app: 'config',
+                    areaNo: 0,
+                    ctor: UpgradeData
+                }),
                 upgradeEnumMock.actual
             );
 

@@ -12,7 +12,11 @@ export class FilterIsReplaceValueHandler extends ValueHandlerBase {
     }
 
     public async handle(ctx: ValueHandlerContext) {
-        const allItem = await this.m_EnumFactory.build<ValueTypeData>(ValueTypeData.ctor, ctx.areaNo).allItem;
+        const allItem = await this.m_EnumFactory.build({
+            app: 'config',
+            areaNo: ctx.areaNo,
+            ctor: ValueTypeData,
+        }).allItem;
         if (allItem[ctx.value.valueType]?.isReplace) {
             const count = await ctx.valueService.getCount(ctx.uow, ctx.value.valueType);
             if (count == ctx.value.count)
