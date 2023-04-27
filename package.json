@@ -5,8 +5,8 @@
   },
   "dependencies": {
     "lite-ts-db": "^1.10.4",
-    "lite-ts-enum": "^3.10.1",
-    "lite-ts-rpc": "^3.10.0",
+    "lite-ts-enum": "^3.11.1",
+    "lite-ts-rpc": "^3.11.0",
     "lite-ts-time": "^1.2.0"
   },
   "description": "线程库",
