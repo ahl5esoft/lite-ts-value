@@ -30,3 +30,4 @@ export * from './value-type-reward-open';
 export * from './value-type-reward-open-reduce';
 export * from './value-type-upgrade-reduce';
 export * from './value-type-upgrade';
+export * from './value-type';
